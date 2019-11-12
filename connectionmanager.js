@@ -5,29 +5,14 @@ const YTPL = require("ytpl");
 const YTSR = require("ytsr");
 let connection = null;
 let dispatcher = null;
-let volume = 5;
+let volume = 10;
 
 let queue = [];
-
-async function execute(message, serverQueue) {
-    const args = message.content.split(' ');
-    const voiceChannel = message.member.voiceChannel;
-    if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!');
-    const permissions =     voiceChannel.permissionsFor(message.client.user);
-    if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return message.channel.send('I need the permissions to join and   speak in your voice channel!');
-    }
-}
 
 connectionmanager.joinChannel = async function(client, channel, msg) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
-             msg.reply("Successfully joined your channel.").then(message => {
-                 setTimeout(async () => {
-                    message.delete();
-                 }, 5000)
-             });
-             msg.delete();
+             msg.reply("Successfully joined your channel.");
         }
     ).catch((error) =>{
         msg.reply("Unable to join your channel.");
@@ -68,12 +53,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
                 msg.reply("An error occurred: " + err);
                 return;
             }
-            msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.").then(message => {
-                setTimeout(async () => {
-                    message.delete();
-                }, 5000)
-            });
-            msg.delete();
+            msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
             for (let i = 0; i < playlist.items.length;i++) {
                 let s = playlist.items[i];
                 const song = {
@@ -90,21 +70,16 @@ connectionmanager.playCommand = async function (URL, msg, client) {
         });
     } else if (await YTDL.validateURL(URL)) {
         if (connection == null) {
-            connectionmanager.joinChannel(client, msg.member.voiceChannel, msg);
+            await connectionmanager.joinChannel(client, msg.member.voiceChannel, msg);
         }
-        msg.delete();
         const songInfo = await YTDL.getInfo(URL);
         const song = {
             title: songInfo.title,
-            thumbnail: songInfo.thumbnail_url,
+            thumbnail: songInfo.player_response.videoDetails.thumbnail.thumbnails[3].url,
             url: songInfo.video_url,
         };
         queue.push(song);
-        msg.reply("Song " + song.title + " added to the queue.").then(message => {
-            setTimeout(async () => {
-                message.delete();
-            }, 5000)
-        });
+        msg.reply("Song " + song.title + " added to the queue.");
         if (queue.length === 1) {
             play(song, client);
         }
@@ -131,7 +106,7 @@ async function play(song, client) {
         .on('error', error => {
             console.error(error);
         });
-    dispatcher.setVolumeLogarithmic(volume / 5);
+    dispatcher.setVolumeLogarithmic(volume / 10);
     dispatcher.setBitrate(96);
 }
 
@@ -164,10 +139,29 @@ connectionmanager.stop = function(msg, client) {
     queue = [];
     dispatcher.end();
     dispatcher = null;
+    msg.reply("Playback has stopped and the queue has been cleared.");
 };
 
 connectionmanager.nowPlaying = function(msg) {
     msg.reply("Now Playing: `" + queue[0].title + "`");
+};
+
+connectionmanager.volume = function(msg, vl) {
+    dispatcher.setVolumeLogarithmic(vl / 10);
+    msg.reply("You have set the volume to " + vl + ".");
+    volume = vl;
+
+};
+
+connectionmanager.clearQueue = function(msg) {
+    if (queue.length > 1) {
+        let currentSong = queue[0];
+        queue = [];
+        queue.push(currentSong);
+        msg.reply("The queue has been cleared.");
+    } else {
+        msg.reply("The queue is already empty.")
+    }
 };
 
 module.exports = connectionmanager;
