@@ -1,3 +1,4 @@
+const index  = {};
 const Discord = require("discord.js");
 const Punishments = require("./punishments.js");
 const token = 'NjQxMDQxNjYzMzQyNDExNzk2.XcCnoQ.EcvG7W9FE9TYoGFduk0GYyysbwM';
@@ -61,6 +62,9 @@ client.on('userUpdate', (oldUser, newUser) => {
 
 client.on('messageDelete', (message) => {
     if (message.guild != null) {
+        if (message.content.startsWith("!")||message.author.bot) {
+            return;
+        }
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by " + message.author + " was deleted in " + message.channel + ".\n" +
             "**Message**: `" + message.content + "`");
     }
@@ -68,7 +72,7 @@ client.on('messageDelete', (message) => {
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
     if (newMessage.guild != null) {
-        if (newMessage.author.id === "430323446921035776") {
+        if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
             client.guilds.get("105235654727704576").channels.get("429970564552065024").send(newMessage.author + " edited a message in " + newMessage.channel + ".\n" +
@@ -82,3 +86,5 @@ client.on('message', (msg) => {
         CommandManager.onCommand(msg, client)
     }
 });
+
+module.exports = index;
