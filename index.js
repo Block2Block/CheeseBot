@@ -24,6 +24,17 @@ client.on('guildMemberAdd', (member) => {
         .setDescription(member.user + " has joined the server.")
         .setTimestamp()
         .setColor('#00AA00'));
+    member.createDM().then(dmchannel => {
+        dmchannel.send(new Discord.RichEmbed()
+            .setAuthor("Block2Block","https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
+            .setTitle("Welcome!")
+            .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #read-me in order to get started.\n" +
+                "\n" +
+                "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
+            .setColor('#FFAB00'));
+    }).catch((reason) => {
+        console.log("Login Promise Rejection: " + reason);
+    });
 });
 
 client.on('guildMemberRemove', (member) => {
@@ -45,6 +56,36 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
             .addField("New Name", newMember.displayName)
             .setTimestamp()
             .setColor('#2980B9'));
+    } else if (oldMember.roles.size !== newMember.roles.size) {
+        if (oldMember.roles.size > newMember.roles.size) {
+            let role;
+            let roles = oldMember.roles.keyArray();
+            for (let i = 0;i < roles.length;i++) {
+                if (!newMember.roles.keyArray().includes(roles[i])) {
+                    role = roles[i];
+                    break;
+                }
+            }
+            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+                .setTitle("Role Removed")
+                .setDescription(newMember.user + " was removed from the `" + oldMember.roles.get(role).name + "` role.")
+                .setColor('#2980B9'));
+        } else {
+            let role;
+            let roles = newMember.roles.keyArray();
+            for (let i = 0;i < roles.length;i++) {
+                if (!oldMember.roles.keyArray().includes(roles[i])) {
+                    role = roles[i];
+                    break;
+                }
+            }
+            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+                .setTitle("Role Added")
+                .setDescription(newMember.user + " was given the `" + newMember.roles.get(role).name + "` role.")
+                .setColor('#2980B9'));
+        }
     }
 });
 

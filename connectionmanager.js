@@ -6,6 +6,7 @@ const YTSR = require("ytsr");
 let connection = null;
 let dispatcher = null;
 let volume = 10;
+let repeat = false;
 
 let queue = [];
 
@@ -58,7 +59,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
                 let s = playlist.items[i];
                 const song = {
                     title: s.title,
-                    thumbnail: s.thumbnail,
+                    id: s.id,
                     url: s.url_simple,
                 };
                 queue.push(song);
@@ -75,7 +76,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
         const songInfo = await YTDL.getInfo(URL);
         const song = {
             title: songInfo.title,
-            thumbnail: songInfo.player_response.videoDetails.thumbnail.thumbnails[3].url,
+            id: songInfo.video_id,
             url: songInfo.video_url,
         };
         queue.push(song);
@@ -84,7 +85,6 @@ connectionmanager.playCommand = async function (URL, msg, client) {
             play(song, client);
         }
     } else {
-        msg.delete();
         await msg.reply("That is not a valid YouTube Playlist or Video URL.");
     }
 };
@@ -96,11 +96,15 @@ async function play(song, client) {
         return;
     }
 
-    client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail(song.thumbnail).setDescription(song.title));
+    client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
 
     dispatcher = connection.playStream(YTDL(song.url, {quality: "highestaudio",filter: 'audioonly'}))
         .on('end', () => {
-            queue.shift();
+            if (repeat) {
+                queue.push(queue.shift());
+            } else {
+                queue.shift();
+            }
             play(queue[0], client);
         })
         .on('error', error => {
@@ -118,39 +122,39 @@ connectionmanager.skip = function(msg, client) {
             return msg.reply("You must be in the same channel as the bot in order to use music commands.");
         }
     }
-    if (queue.length === 0) return msg.reply('There is no song that I could skip!').then(message => {
-        setTimeout(async () => {
-            message.delete();
-        }, 5000)
-    });
-    msg.delete();
+    if (queue.length === 0) return msg.reply('There is no song that I could skip!');
     msg.reply("Song skipped.");
     dispatcher.end();
 };
 
 connectionmanager.stop = function(msg, client) {
-    if (!msg.member.voiceChannel) {
-        return msg.reply("You must be in the same channel as the bot in order to use music commands.")
-    } else if (client.voiceChannel) {
-        if (msg.member.voiceChannel.id !== client.voiceChannel.id) {
-            return msg.reply("You must be in the same channel as the bot in order to use music commands.");
-        }
+    if (queue.length > 0) {
+        queue = [];
+        dispatcher.end();
+        dispatcher = null;
+        msg.reply("Playback has stopped and the queue has been cleared.");
+    } else {
+        msg.reply("You cannot stop playback as there is nothing playing.");
     }
-    queue = [];
-    dispatcher.end();
-    dispatcher = null;
-    msg.reply("Playback has stopped and the queue has been cleared.");
 };
 
 connectionmanager.nowPlaying = function(msg) {
-    msg.reply("Now Playing: `" + queue[0].title + "`");
+    if (queue.length > 0) {
+        msg.reply("Now Playing: `" + queue[0].title + "`");
+    } else {
+        msg.reply("There is nothing currently playing.");
+    }
+
 };
 
 connectionmanager.volume = function(msg, vl) {
-    dispatcher.setVolumeLogarithmic(vl / 10);
-    msg.reply("You have set the volume to " + vl + ".");
-    volume = vl;
+    if (queue.length > 0) {
+        dispatcher.setVolumeLogarithmic(vl / 10);
+        msg.reply("You have set the volume to " + vl + ".");
+        volume = vl;
+    } else {
 
+    }
 };
 
 connectionmanager.clearQueue = function(msg) {
@@ -163,5 +167,53 @@ connectionmanager.clearQueue = function(msg) {
         msg.reply("The queue is already empty.")
     }
 };
+
+connectionmanager.pause = function(msg) {
+  if (queue.length > 0) {
+      dispatcher.pause();
+      msg.reply("Playback paused.");
+  } else {
+      msg.reply("There is nothing currently playing.");
+  }
+};
+
+connectionmanager.resume = function(msg) {
+    if (queue.length > 0) {
+        dispatcher.resume();
+        msg.reply("Playback resumed.");
+    } else {
+        msg.reply("There is nothing currently playing.");
+    }
+};
+
+connectionmanager.repeat = function(msg) {
+    if (repeat) {
+        msg.reply("Repeat mode has been disabled.");
+        repeat = false;
+    } else {
+        msg.reply("Repeat mode has been enabled.");
+        repeat = true;
+    }
+};
+
+connectionmanager.shuffle = function(msg) {
+    msg.reply("The queue has been shuffled.");
+    let currentSong = queue.shift();
+    queue  = shuffle(queue);
+    queue.unshift(currentSong);
+};
+
+function shuffle(a) {
+    let j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+
 
 module.exports = connectionmanager;
