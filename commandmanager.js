@@ -2,6 +2,7 @@ const commandmanager = {};
 const Discord = require("discord.js");
 const MySQLManager = require("./mysqlmanager.js");
 const ConnectionManager = require("./connectionmanager");
+const PunishmentManager = require("./punishments");
 
 commandmanager.onCommand = async function(msg, client) {
     if (msg.guild == null) {
@@ -360,6 +361,12 @@ commandmanager.onCommand = async function(msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been added to the role 'Event Announcements'.");
+                }
+            } else if (msg.content.startsWith("!mute")) {
+                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                    await PunishmentManager.mute(msg, client);
+                } else {
+                    await msg.reply("You do not have permission to perform this command.");
                 }
             }
         }
