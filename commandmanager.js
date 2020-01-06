@@ -62,6 +62,18 @@ commandmanager.onCommand = async function(msg, client) {
                     });
                     await msg.reply("You have been added to the role 'Stardew Valley'.");
                 }
+            } else if (msg.content.startsWith("!gameoflife")) {
+                if (msg.member.roles.keyArray().includes("659746742727737365")) {
+                    msg.member.removeRole("659746742727737365").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
+                } else {
+                    msg.member.addRole("659746742727737365").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
+                }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
                     msg.member.removeRole("631607746298380297").catch((err) => {
@@ -338,6 +350,18 @@ commandmanager.onCommand = async function(msg, client) {
                     });
                     await msg.reply("You have been added to the role 'Stardew Valley'.");
                 }
+            } else if (msg.content.startsWith("!gameoflife")) {
+                if (msg.member.roles.keyArray().includes("659746742727737365")) {
+                    msg.member.removeRole("659746742727737365").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
+                } else {
+                    msg.member.addRole("659746742727737365").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
+                }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
                     msg.member.removeRole("631607746298380297").catch((err) => {
@@ -368,7 +392,7 @@ commandmanager.onCommand = async function(msg, client) {
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
-            } else if (msg.content.startsWith("!mute")) {
+            } else if (msg.content.startsWith("!ban")) {
                 if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
                     await PunishmentManager.ban(msg, client);
                 } else {
