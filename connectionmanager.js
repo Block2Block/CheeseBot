@@ -73,7 +73,9 @@ connectionmanager.playCommand = async function (URL, msg, client) {
         if (connection == null) {
             await connectionmanager.joinChannel(client, msg.member.voiceChannel, msg);
         }
-        const songInfo = await YTDL.getInfo(URL);
+        const songInfo = await YTDL.getInfo(URL).catch((err) => {
+            console.log(err);
+        });
         const song = {
             title: songInfo.title,
             id: songInfo.video_id,

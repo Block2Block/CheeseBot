@@ -368,6 +368,12 @@ commandmanager.onCommand = async function(msg, client) {
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
+            } else if (msg.content.startsWith("!mute")) {
+                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                    await PunishmentManager.ban(msg, client);
+                } else {
+                    await msg.reply("You do not have permission to perform this command.");
+                }
             }
         }
     }
