@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
 const YTPL = require("ytpl");
 const YTSR = require("ytsr");
+const FS = require("fs");
 let connection = null;
 let dispatcher = null;
 let volume = 10;
@@ -100,7 +101,10 @@ async function play(song, client) {
 
     client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
 
-    dispatcher = connection.playStream(YTDL(song.url, {quality: "highestaudio",filter: 'audioonly'}))
+    if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
+        await YTDL(song.url, { filter: (format) => format.container === 'm4a' }).pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
+    }
+    dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
             if (repeat) {
                 queue.push(queue.shift());
