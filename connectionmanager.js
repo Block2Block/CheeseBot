@@ -102,7 +102,7 @@ async function play(song, client) {
     client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
 
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-        await YTDL(song.url, { filter: (format) => format.container === 'm4a' }).pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
+        YTDL(song.url, {quality: "m4a", filter: "audioonly"}).pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
     }
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
