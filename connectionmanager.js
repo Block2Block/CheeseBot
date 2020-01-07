@@ -4,12 +4,16 @@ const YTDL = require("ytdl-core");
 const YTPL = require("ytpl");
 const YTSR = require("ytsr");
 const FS = require("fs");
+const Stream = require("stream");
+const Util = require("util");
 let connection = null;
 let dispatcher = null;
 let volume = 10;
 let repeat = false;
 
 let queue = [];
+
+const finished = Util.promisify(Stream.finished);
 
 connectionmanager.joinChannel = async function(client, channel, msg) {
     await channel.join().then(voiceConnection => {
@@ -99,11 +103,21 @@ async function play(song, client) {
         return;
     }
 
-    client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
-
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-        YTDL(song.url, {quality: "aac", filter: "audioonly"}).pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
+		console.log("Downloading video " + song.id + " for the first time.")
+		let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
+		dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
+		dl.on('end', () => {
+			console.log("Done.")
+			play(song, client);
+		});
+		return;
     }
+	
+	
+	console.log("Playing " + song.title + " now.");
+	client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
+	
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
             if (repeat) {
