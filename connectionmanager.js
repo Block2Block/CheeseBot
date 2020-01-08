@@ -104,11 +104,11 @@ async function play(song, client) {
     }
 
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-		console.log("Downloading video " + song.id + " for the first time.")
+		console.log("Downloading video " + song.id + " for the first time.");
 		let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
-		dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"))
+		dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
 		dl.on('end', () => {
-			console.log("Done.")
+			console.log("Done.");
 			play(song, client);
 		});
 		return;
@@ -190,8 +190,8 @@ connectionmanager.clearQueue = function(msg) {
 
 connectionmanager.pause = function(msg) {
   if (queue.length > 0) {
-      dispatcher.pause();
-      msg.reply("Playback paused.");
+      //dispatcher.pause();
+      msg.reply("This functionality is temporarily disabled.");
   } else {
       msg.reply("There is nothing currently playing.");
   }
@@ -199,8 +199,8 @@ connectionmanager.pause = function(msg) {
 
 connectionmanager.resume = function(msg) {
     if (queue.length > 0) {
-        dispatcher.resume();
-        msg.reply("Playback resumed.");
+        //dispatcher.resume();
+        msg.reply("This functionality is temporarily disabled.");
     } else {
         msg.reply("There is nothing currently playing.");
     }
