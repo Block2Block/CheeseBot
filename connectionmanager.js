@@ -117,8 +117,8 @@ async function play(song, client) {
     if (queue.length > 1) {
         if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
             console.log("Downloading next song " + queue[1].id + " for the first time.");
-            let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
-            dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
+            let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
+            dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
             dl.on('end', () => {
                 console.log("Done.");
             });
