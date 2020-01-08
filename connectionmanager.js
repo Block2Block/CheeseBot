@@ -104,7 +104,7 @@ async function play(song, client) {
     }
 
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-		console.log("Downloading video " + song.id + " for the first time.");
+		console.log("Downloading song " + song.id + " for the first time.");
 		let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
 		dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
 		dl.on('end', () => {
@@ -112,6 +112,17 @@ async function play(song, client) {
 			play(song, client);
 		});
 		return;
+    }
+
+    if (queue.length > 1) {
+        if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
+            console.log("Downloading next song " + queue[1].id + " for the first time.");
+            let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
+            dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
+            dl.on('end', () => {
+                console.log("Done.");
+            });
+        }
     }
 	
 	
