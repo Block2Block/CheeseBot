@@ -74,6 +74,30 @@ commandmanager.onCommand = async function(msg, client) {
                     });
                     await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
                 }
+            } else if (msg.content.startsWith("!cah")) {
+                if (msg.member.roles.keyArray().includes("664134936185274368")) {
+                    msg.member.removeRole("664134936185274368").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                } else {
+                    msg.member.addRole("664134936185274368").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
+                }
+            } else if (msg.content.startsWith("!clue")) {
+                if (msg.member.roles.keyArray().includes("664135506115690496")) {
+                    msg.member.removeRole("664135506115690496").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                } else {
+                    msg.member.addRole("664135506115690496").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
+                }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
                     msg.member.removeRole("631607746298380297").catch((err) => {
@@ -361,6 +385,30 @@ commandmanager.onCommand = async function(msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
+                }
+            } else if (msg.content.startsWith("!cah")) {
+                if (msg.member.roles.keyArray().includes("664134936185274368")) {
+                    msg.member.removeRole("664134936185274368").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                } else {
+                    msg.member.addRole("664134936185274368").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
+                }
+            } else if (msg.content.startsWith("!clue")) {
+                if (msg.member.roles.keyArray().includes("664135506115690496")) {
+                    msg.member.removeRole("664135506115690496").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                } else {
+                    msg.member.addRole("664135506115690496").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
+                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
                 }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
