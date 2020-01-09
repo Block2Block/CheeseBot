@@ -35,6 +35,10 @@ client.on('guildMemberAdd', (member) => {
     }).catch((reason) => {
         console.log("Login Promise Rejection: " + reason);
     });
+
+    member.addRole("664631743499993098").catch((err) => {
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+    });
 });
 
 client.on('guildMemberRemove', (member) => {
