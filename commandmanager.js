@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const MySQLManager = require("./mysqlmanager.js");
 const ConnectionManager = require("./connectionmanager");
 const PunishmentManager = require("./punishments");
+const ranks = ["631519513606619157","637034819234037762","631518599365787659","642130508549193728","659746742727737365","664134936185274368","664135506115690496","631607746298380297","631607804205072394"];
 
 commandmanager.onCommand = async function(msg, client) {
     if (msg.guild == null) {
@@ -16,110 +17,227 @@ commandmanager.onCommand = async function(msg, client) {
         if (msg.channel.id === "439114503171604480") {
             if (msg.content.startsWith("!jackbox")) {
                 if (msg.member.roles.keyArray().includes("631519513606619157")) {
-                    msg.member.removeRole("631519513606619157").catch((err) => {
+                    await msg.member.removeRole("631519513606619157").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Jackbox'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631519513606619157").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Jackbox'.");
                 }
             } else if (msg.content.startsWith("!overwatch")) {
                 if (msg.member.roles.keyArray().includes("637034819234037762")) {
-                    msg.member.removeRole("637034819234037762").catch((err) => {
+                    await msg.member.removeRole("637034819234037762").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Overwatch'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("637034819234037762").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Overwatch'.");
                 }
             } else if (msg.content.startsWith("!uno")) {
                 if (msg.member.roles.keyArray().includes("631518599365787659")) {
-                    msg.member.removeRole("631518599365787659").catch((err) => {
+                    await msg.member.removeRole("631518599365787659").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'UNO'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631518599365787659").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'UNO'.");
                 }
             } else if (msg.content.startsWith("!stardewvalley")) {
                 if (msg.member.roles.keyArray().includes("642130508549193728")) {
-                    msg.member.removeRole("642130508549193728").catch((err) => {
+                    await msg.member.removeRole("642130508549193728").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Stardew Valley'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("642130508549193728").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Stardew Valley'.");
                 }
             } else if (msg.content.startsWith("!gameoflife")) {
                 if (msg.member.roles.keyArray().includes("659746742727737365")) {
-                    msg.member.removeRole("659746742727737365").catch((err) => {
+                    await msg.member.removeRole("659746742727737365").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("659746742727737365").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
                 }
             } else if (msg.content.startsWith("!cah")) {
                 if (msg.member.roles.keyArray().includes("664134936185274368")) {
-                    msg.member.removeRole("664134936185274368").catch((err) => {
+                    await msg.member.removeRole("664134936185274368").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("664134936185274368").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Cards Against Humanity'.");
                 }
             } else if (msg.content.startsWith("!clue")) {
                 if (msg.member.roles.keyArray().includes("664135506115690496")) {
-                    msg.member.removeRole("664135506115690496").catch((err) => {
+                    await msg.member.removeRole("664135506115690496").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
-                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                    await msg.reply("You have been removed from the role 'Clue/Cluedo'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("664135506115690496").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
-                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
+                    await msg.reply("You have been added to the role 'Clue/Cluedo'.");
                 }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
-                    msg.member.removeRole("631607746298380297").catch((err) => {
+                    await msg.member.removeRole("631607746298380297").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Livestream Announcements'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631607746298380297").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Livestream Announcements'.");
                 }
             } else if (msg.content.startsWith("!eventannouncments")) {
                 if (msg.member.roles.keyArray().includes("631607804205072394")) {
-                    msg.member.removeRole("631607804205072394").catch((err) => {
+                    await msg.member.removeRole("631607804205072394").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Event Announcements'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631607804205072394").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
             }
@@ -328,110 +446,227 @@ commandmanager.onCommand = async function(msg, client) {
                 }
             } else if (msg.content.startsWith("!jackbox")) {
                 if (msg.member.roles.keyArray().includes("631519513606619157")) {
-                    msg.member.removeRole("631519513606619157").catch((err) => {
+                    await msg.member.removeRole("631519513606619157").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Jackbox'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631519513606619157").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Jackbox'.");
                 }
             } else if (msg.content.startsWith("!overwatch")) {
                 if (msg.member.roles.keyArray().includes("637034819234037762")) {
-                    msg.member.removeRole("637034819234037762").catch((err) => {
+                    await msg.member.removeRole("637034819234037762").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Overwatch'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("637034819234037762").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Overwatch'.");
                 }
             } else if (msg.content.startsWith("!uno")) {
                 if (msg.member.roles.keyArray().includes("631518599365787659")) {
-                    msg.member.removeRole("631518599365787659").catch((err) => {
+                    await msg.member.removeRole("631518599365787659").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'UNO'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631518599365787659").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'UNO'.");
                 }
             } else if (msg.content.startsWith("!stardewvalley")) {
                 if (msg.member.roles.keyArray().includes("642130508549193728")) {
-                    msg.member.removeRole("642130508549193728").catch((err) => {
+                    await msg.member.removeRole("642130508549193728").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Stardew Valley'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("642130508549193728").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Stardew Valley'.");
                 }
             } else if (msg.content.startsWith("!gameoflife")) {
                 if (msg.member.roles.keyArray().includes("659746742727737365")) {
-                    msg.member.removeRole("659746742727737365").catch((err) => {
+                    await msg.member.removeRole("659746742727737365").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("659746742727737365").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'THE GAME OF LIFE'.");
                 }
             } else if (msg.content.startsWith("!cah")) {
                 if (msg.member.roles.keyArray().includes("664134936185274368")) {
-                    msg.member.removeRole("664134936185274368").catch((err) => {
+                    await msg.member.removeRole("664134936185274368").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("664134936185274368").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Cards Against Humanity'.");
                 }
             } else if (msg.content.startsWith("!clue")) {
                 if (msg.member.roles.keyArray().includes("664135506115690496")) {
-                    msg.member.removeRole("664135506115690496").catch((err) => {
+                    await msg.member.removeRole("664135506115690496").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
-                    await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
+                    await msg.reply("You have been removed from the role 'Clue/Cluedo'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("664135506115690496").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
-                    await msg.reply("You have been added to the role 'Cards Against Humanity'.");
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
+                    await msg.reply("You have been added to the role 'Clue/Cluedo'.");
                 }
             } else if (msg.content.startsWith("!livestreamannouncements")) {
                 if (msg.member.roles.keyArray().includes("631607746298380297")) {
-                    msg.member.removeRole("631607746298380297").catch((err) => {
+                    await msg.member.removeRole("631607746298380297").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Livestream Announcements'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631607746298380297").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Livestream Announcements'.");
                 }
             } else if (msg.content.startsWith("!eventannouncments")) {
                 if (msg.member.roles.keyArray().includes("631607804205072394")) {
-                    msg.member.removeRole("631607804205072394").catch((err) => {
+                    await msg.member.removeRole("631607804205072394").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Event Announcements'.");
+                    for (let x in ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
+                            return;
+                        }
+                    }
+                    msg.member.removeRole("664626926127677440").catch((err) => {
+                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                    });
                 } else {
                     msg.member.addRole("631607804205072394").catch((err) => {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
+                    if (!msg.member.roles.keyArray().includes("664626926127677440")) {
+                        msg.member.addRole("664626926127677440").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
             } else if (msg.content.startsWith("!mute")) {

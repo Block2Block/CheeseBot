@@ -105,23 +105,53 @@ async function play(song, client) {
 
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
 		console.log("Downloading song " + song.id + " for the first time.");
-		let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
-		dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
-		dl.on('end', () => {
-			console.log("Done.");
-			play(song, client);
-		});
+		try {
+            let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
+            dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
+            dl.on('end', () => {
+                console.log("Done.");
+                play(song, client);
+            });
+            dl.on('error', (err) => {
+                console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+                queue.shift();
+                play(queue[0],client);
+                return;
+            })
+        } catch (err) {
+            console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+            queue.shift();
+            play(queue[0],client);
+		    return;
+        }
 		return;
     }
 
     if (queue.length > 1) {
-        if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
-            console.log("Downloading next song " + queue[1].id + " for the first time.");
-            let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
-            dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
-            dl.on('end', () => {
-                console.log("Done.");
-            });
+        try {
+            if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
+                console.log("Downloading the next song " + queue[1].id + " for the first time.");
+                let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
+                dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
+                dl.on('end', () => {
+                    console.log("The next song has been downloaded and is ready to play.");
+                });
+                dl.on('error', (err) => {
+                    console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+                    let current = queue.shift();
+                    queue.shift();
+                    queue.unshift(current);
+                    play(queue[0], client);
+                    return;
+                })
+            }
+        } catch (err) {
+            console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+            let current = queue.shift();
+            queue.shift();
+            queue.unshift(current);
+            play(queue[0],client);
+            return;
         }
     }
 	
@@ -142,7 +172,7 @@ async function play(song, client) {
             console.error(error);
         });
     dispatcher.setVolumeLogarithmic(volume / 10);
-    dispatcher.setBitrate(96);
+    dispatcher.setBitrate(128);
 }
 
 connectionmanager.skip = function(msg, client) {
