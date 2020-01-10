@@ -159,7 +159,7 @@ async function play(song, client) {
 	
 	console.log("Playing " + song.title + " now.");
 	client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
-	client.setActivity("🎶 " + song.name + " 🎶", {type: "PLAYING"});
+	await client.user.setActivity("🎶 " + song.name + " 🎶", {type: "PLAYING"});
 	
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
