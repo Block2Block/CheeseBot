@@ -86,7 +86,8 @@ punishmentmanager.mute = async function(msg, client) {
             reason: reason,
             timer: timer,
             status: 1,
-            removal_reason: null
+            removal_reason: null,
+            remover: null
         };
 
         punishments.push(punishment);
@@ -287,6 +288,65 @@ punishmentmanager.unban = async function(msg, client) {
         .addField("Reason", reason)
         .setTimestamp()
         .setColor('#00AA00'));
+};
+
+punishmentmanager.history = async function(msg, client) {
+
+    let args = msg.content.split(" ");
+    let re = /<@![0-9]{17,18}>/;
+    let user;
+
+    if (re.test(args[1])) {
+        user = args[1].replace("<@!","").replace(">","");
+    } else {
+        re = /[0-9]{17,18}/;
+        if (re.test(args[1])) {
+            user = args[1];
+        } else {
+            await msg.reply("You must mention a user/id in order to unmute (they must be in the discord).");
+            return;
+        }
+
+    }
+    let userPunishments = await MySQLManager.getPunishments(user);
+    let richEmbed = new Discord.RichEmbed();
+    richEmbed.setTitle(client.guilds.get("105235654727704576").members.get(user).tag + "'s Punishment History'")
+        .setColor('#2980B9');
+    if (userPunishments.length !== 0) {
+        for (let punishment in userPunishments) {
+            let time = (((new Date).getTime() - punishment.timestamp) /60000/60);
+            let suffix = "hours";
+            if (time >= 24) {
+                time = (time / 24);
+                suffix = "days";
+            }
+            let time2 = ((punishment.expire - punishment.timestamp) /60000/60);
+            let suffix2 = "hours";
+            if (time >= 24) {
+                time = (time / 24);
+                suffix = "days";
+            }
+            let x = "**Punisher:** " + punishment.punisher + "\n" +
+                "**Type:** " + ((punishment.type === 2)?"Ban":"Mute") + "\n" +
+                "**When:** " + time + " " + suffix + " ago\n" +
+                "**Length:** " + ((punishment.expire === -1)?"Permanent":time + " " + suffix) + " ago\n" +
+                "**Reason:** " + punishment.reason + "";
+            if (punishment.status !== 1) {
+                if (punishment.status === 2) {
+                    x += "\n**Removed By:** CheeseBot\n**Removal Reason:** Expired";
+                } else {
+                    x += "\n**Removed By:** " + punishment.remover + "\n**Removal Reason:** " + punishment.removal_reason;
+                }
+            }
+            richEmbed.addField("Punishment #" + punishment.id, x);
+        }
+
+    } else {
+        richEmbed.setDescription("No punishment history found.");
+    }
+
+    await msg.channel.send(richEmbed);
+
 };
 
 
