@@ -100,6 +100,7 @@ async function play(song, client) {
 
     if (!song) {
         client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
+        client.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         return;
     }
 
@@ -141,8 +142,6 @@ async function play(song, client) {
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
-                    play(queue[0], client);
-                    return;
                 })
             }
         } catch (err) {
@@ -158,6 +157,7 @@ async function play(song, client) {
 	
 	console.log("Playing " + song.title + " now.");
 	client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
+	client.setActivity("🎶 " + song.name + " 🎶", {type: "PLAYING"});
 	
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {

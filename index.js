@@ -13,31 +13,203 @@ client.on('ready', () => {
     console.log("The discord bot has been successfully loaded.");
     //client.guilds.get("593184312468307977").channels.get("593193237955608627").send("The bot has been successfully started!");
     client.user.setStatus("online");
-    client.user.setActivity("on The Cult of Cheese", {type: "PLAYING"})
+    client.user.setActivity("on The Cult of Cheese", {type: "PLAYING",});
+    MySQLManagaer.getPunishOnLoad((punishments) => {
+        for (let punishment in punishments) {
+            if ((punishment.expire === -1) && punishment.status === 1) {
+                if (punishment.type === 2) {
+                    if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
+                        client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
+                            dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
+                        }).catch((reason) => {
+                            console.log("Login Promise Rejection: " + reason);
+                        });
+                        client.guilds.get("105235654727704576").members.get(punishment.discord_id).kick("Joined when banned.").then((member) => {
+                        });
+                        return;
+                    }
+                } else if (punishment.type === 1) {
+                    if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
+                        if (!client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
+                            client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
+                                dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
+                            }).catch((reason) => {
+                                console.log("Login Promise Rejection: " + reason);
+                            });
+
+                            client.guilds.get("105235654727704576").members.get(punishment.discord_id).addRole("429970242916319244").catch((err) => {
+                                client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                            });
+                        }
+                    }
+                    Punishments.addPunishment(punishment);
+                }
+            } else if (punishment.expire !== -1 && punishment.status === 1) {
+                if (punishment.expire > ((new Date).getTime())) {
+                    //Apply Punishment, still valid.
+                    if (punishment.type === 2) {
+                        if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
+                            client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
+                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
+                                let suffix = "hours";
+                                if (time >= 24) {
+                                    time = (time / 24);
+                                    suffix = "days";
+                                }
+                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                            }).catch((reason) => {
+                                console.log("Login Promise Rejection: " + reason);
+                            });
+                            client.guilds.get("105235654727704576").members.get(punishment.discord_id).kick("Joined when banned.").then((member) => {
+
+                            });
+                        }
+                        return;
+                    } else if (punishment.type === 1) {
+                        if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
+                            if (!client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
+                                client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
+                                    let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                    let suffix = "hours";
+                                    if (time >= 24) {
+                                        time = (time / 24);
+                                        suffix = "days";
+                                    }
+                                    dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                                }).catch((reason) => {
+                                    console.log("Login Promise Rejection: " + reason);
+                                });
+
+                                client.guilds.get("105235654727704576").members.get(punishment.discord_id).addRole("429970242916319244").catch((err) => {
+                                    client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                                });
+                            }
+                        }
+                        punishment.timer = setTimeout(async () => {
+                            if (client.guilds.get("105235654727704576").members.keyArray().includes(user)) {
+                                if (client.guilds.get("105235654727704576").members.get(user).roles.keyArray().includes("429970242916319244")) {
+                                    client.guilds.get("105235654727704576").members.get(user).removeRole("429970242916319244").catch((err) => {
+                                        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                                    });
+                                }
+                            }}, punishment.expire - punishment.timestamp);
+                        Punishments.addPunishment(punishment);
+                    }
+                } else {
+                    //Remove punishment, it has expired.
+                    Punishments.expire(punishment.user, punishment.id);
+                }
+            }
+        }
+    });
 });
 
 client.on('guildMemberAdd', (member) => {
-    let channel = member.guild.channels.get("429970564552065024");
-    channel.send(new Discord.RichEmbed()
-        .setTitle("User Join")
-        .setThumbnail(member.user.displayAvatarURL)
-        .setDescription(member.user + " has joined the server.")
-        .setTimestamp()
-        .setColor('#00AA00'));
-    member.createDM().then(dmchannel => {
-        dmchannel.send(new Discord.RichEmbed()
-            .setAuthor("Block2Block","https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
-            .setTitle("Welcome!")
-            .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #read-me in order to get started.\n" +
-                "\n" +
-                "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
-            .setColor('#FFAB00'));
-    }).catch((reason) => {
-        console.log("Login Promise Rejection: " + reason);
-    });
+    Punishments.getPunish(member, (punishments) => {
+        if (punishments.length !== 0) {
+            for (let punishment in punishments) {
+                if ((punishment.expire === -1) && punishment.status === 1) {
+                    if (punishment.type === 2) {
+                        member.createDM().then(dmchannel => {
+                            dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
+                        }).catch((reason) => {
+                            console.log("Login Promise Rejection: " + reason);
+                        });
+                        member.kick("Joined when banned.").then((member) => {
+                        });
+                        return;
+                    } else if (punishment.type === 1) {
+                        member.createDM().then(dmchannel => {
+                            let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                            let suffix = "hours";
+                            if (time >= 24) {
+                                time = (time / 24);
+                                suffix = "days";
+                            }
+                            dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
+                        }).catch((reason) => {
+                            console.log("Login Promise Rejection: " + reason);
+                        });
 
-    member.addRole("664631743499993098").catch((err) => {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                        member.addRole("429970242916319244").catch((err) => {
+                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                        });
+                        Punishments.addPunishment(punishment);
+                    }
+                } else if (punishment.expire !== -1 && punishment.status === 1) {
+                    if (punishment.expire > ((new Date).getTime())) {
+                        //Apply Punishment, still valid.
+                        if (punishment.type === 2) {
+                            member.createDM().then(dmchannel => {
+                                let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                let suffix = "hours";
+                                if (time >= 24) {
+                                    time = (time / 24);
+                                    suffix = "days";
+                                }
+                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                            }).catch((reason) => {
+                                console.log("Login Promise Rejection: " + reason);
+                            });
+                            member.kick("Joined when banned.").then((member) => {
+
+                            });
+                            return;
+                        } else if (punishment.type === 1) {
+                            member.createDM().then(dmchannel => {
+                                let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                let suffix = "hours";
+                                if (time >= 24) {
+                                    time = (time / 24);
+                                    suffix = "days";
+                                }
+                                dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                            }).catch((reason) => {
+                                console.log("Login Promise Rejection: " + reason);
+                            });
+
+                            member.addRole("429970242916319244").catch((err) => {
+                                client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                            });
+                            punishment.timer = setTimeout(async () => {
+                                if (client.guilds.get("105235654727704576").members.keyArray().includes(user)) {
+                                    if (client.guilds.get("105235654727704576").members.get(user).roles.keyArray().includes("429970242916319244")) {
+                                        client.guilds.get("105235654727704576").members.get(user).removeRole("429970242916319244").catch((err) => {
+                                            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                                        });
+                                    }
+                                }}, punishment.expire - punishment.timestamp);
+                            Punishments.addPunishment(punishment);
+                        }
+                    } else {
+                        //Remove punishment, it has expired.
+                        Punishments.expire(punishment.user, punishment.id);
+                    }
+                }
+            }
+        }
+        let channel = member.guild.channels.get("429970564552065024");
+        channel.send(new Discord.RichEmbed()
+            .setTitle("User Join")
+            .setThumbnail(member.user.displayAvatarURL)
+            .setDescription(member.user + " has joined the server.")
+            .setTimestamp()
+            .setColor('#00AA00'));
+        member.createDM().then(dmchannel => {
+            dmchannel.send(new Discord.RichEmbed()
+                .setAuthor("Block2Block","https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
+                .setTitle("Welcome!")
+                .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #read-me in order to get started.\n" +
+                    "\n" +
+                    "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
+                .setColor('#FFAB00'));
+        }).catch((reason) => {
+            console.log("Login Promise Rejection: " + reason);
+        });
+
+        member.addRole("664631743499993098").catch((err) => {
+            client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+        });
     });
 });
 
@@ -48,6 +220,8 @@ client.on('guildMemberRemove', (member) => {
         .setDescription(member.user + " has left the server.")
         .setTimestamp()
         .setColor('#AA0000'));
+
+        Punishments.removePunishment(member);
     }
 );
 

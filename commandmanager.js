@@ -14,6 +14,36 @@ commandmanager.onCommand = async function(msg, client) {
             msg.channel.send("You cannot send messages via PM to this bot. Please use #bot-commands.")
         }
     } else {
+        if (msg.content.startsWith("!mute")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                await PunishmentManager.mute(msg, client);
+            } else {
+                await msg.reply("You do not have permission to perform this command.");
+            }
+            return;
+        } else if (msg.content.startsWith("!ban")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                await PunishmentManager.ban(msg, client);
+            } else {
+                await msg.reply("You do not have permission to perform this command.");
+            }
+            return;
+        } else if (msg.content.startsWith("!unban")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                await PunishmentManager.unban(msg, client);
+            } else {
+                await msg.reply("You do not have permission to perform this command.");
+            }
+            return;
+        }
+        else if (msg.content.startsWith("!unmute")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                await PunishmentManager.unmute(msg, client);
+            } else {
+                await msg.reply("You do not have permission to perform this command.");
+            }
+            return;
+        }
         if (msg.channel.id === "439114503171604480") {
             if (msg.content.startsWith("!jackbox")) {
                 if (msg.member.roles.keyArray().includes("631519513606619157")) {
@@ -668,18 +698,6 @@ commandmanager.onCommand = async function(msg, client) {
                         });
                     }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
-                }
-            } else if (msg.content.startsWith("!mute")) {
-                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
-                    await PunishmentManager.mute(msg, client);
-                } else {
-                    await msg.reply("You do not have permission to perform this command.");
-                }
-            } else if (msg.content.startsWith("!ban")) {
-                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
-                    await PunishmentManager.ban(msg, client);
-                } else {
-                    await msg.reply("You do not have permission to perform this command.");
                 }
             }
         }
