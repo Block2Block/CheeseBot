@@ -33,7 +33,9 @@ connectionmanager.inChannel = function() {
 };
 
 connectionmanager.leave = function() {
-    connection.disconnect();
+    if (connection != null) {
+        connection.disconnect();
+    }
     connection = null;
     queue = [];
     if (dispatcher != null) {

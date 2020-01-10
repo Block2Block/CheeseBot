@@ -3,6 +3,8 @@ const Discord = require("discord.js");
 const MySQLManager = require("./mysqlmanager.js");
 const ConnectionManager = require("./connectionmanager");
 const PunishmentManager = require("./punishments");
+const bot = require("./bot.js");
+const git = require('simple-git');
 const ranks = ["631519513606619157","637034819234037762","631518599365787659","642130508549193728","659746742727737365","664134936185274368","664135506115690496","631607746298380297","631607804205072394"];
 
 commandmanager.onCommand = async function(msg, client) {
@@ -35,8 +37,7 @@ commandmanager.onCommand = async function(msg, client) {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
-        }
-        else if (msg.content.startsWith("!unmute")) {
+        } else if (msg.content.startsWith("!unmute")) {
             if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
                 await PunishmentManager.unmute(msg, client);
             } else {
@@ -699,6 +700,22 @@ commandmanager.onCommand = async function(msg, client) {
                     }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
+            } if (msg.content.startsWith("!pull")) {
+                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+                    msg.reply("Pulling git changes and restarting bot.");
+                    client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Pulling changes...");
+                    git().pull('origin', 'develop', {},(err, result) => {
+                        if (err) console.log(err);
+                        console.log(result);
+                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
+                            "**Insertions: **" + result.summary.insertions + "\n" +
+                            "**Deletions: **"+ result.summary.deletions);
+                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot will restart if there were any changes.");
+                    });
+                } else {
+                    await msg.reply("You do not have permission to perform this command.");
+                }
+                return;
             }
         }
     }
