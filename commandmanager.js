@@ -710,7 +710,7 @@ commandmanager.onCommand = async function(msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
                             "**Insertions: **" + result.summary.insertions + "\n" +
                             "**Deletions: **"+ result.summary.deletions);
-                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot will restart if there were any changes.");
+                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot will restart automatically if there were any changes.");
                     });
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
