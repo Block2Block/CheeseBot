@@ -310,8 +310,9 @@ punishmentmanager.history = async function(msg, client) {
     }
     await MySQLManager.getPunishments(user, (userPunishments) => {
         let richEmbed = new Discord.RichEmbed();
-        richEmbed.setTitle(client.guilds.get("105235654727704576").members.get(user).tag + "'s Punishment History'")
-            .setColor('#2980B9');
+        richEmbed.setTitle(client.guilds.get("105235654727704576").members.get(user).user.tag + "'s Punishment History'")
+            .setColor('#2980B9')
+            .setFooter("Discord ID: " + user);
         if (userPunishments.length !== 0) {
             for (let punishment in userPunishments) {
                 let time = (((new Date).getTime() - punishment.timestamp) /60000/60);
