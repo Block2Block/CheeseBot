@@ -1,4 +1,5 @@
 const MySQLManager = require("./mysqlmanager");
+const Discord = require("discord.js");
 const punishments = [];
 const punishmentmanager = {};
 
@@ -63,6 +64,12 @@ punishmentmanager.mute = async function(msg, client) {
                         client.guilds.get("105235654727704576").members.get(user).removeRole("429970242916319244").catch((err) => {
                             client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                         });
+                        client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+                            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+                            .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been unmuted.")
+                            .addField("Reason", "Expired")
+                            .setTimestamp()
+                            .setColor('#00AA00'));
                     }
                 }}, expire - timestamp);
         }
@@ -71,6 +78,7 @@ punishmentmanager.mute = async function(msg, client) {
         let punishment = {
             id: id,
             user: user,
+            discord_id: user,
             type: type,
             timestamp: timestamp,
             expire: expire,
@@ -91,6 +99,14 @@ punishmentmanager.mute = async function(msg, client) {
         }
 
         msg.channel.send("<@!" + user + "> You have been muted for " + time + " " + suffix + ". Reason: `" + reason + "`");
+        client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+            .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been muted.")
+            .addField("Punisher", msg.author.tag)
+            .addField("Length", ((expire === -1)?"Permanent":time + " " + suffix))
+            .addField("Reason", reason)
+            .setTimestamp()
+            .setColor('#AA0000'));
     });
 };
 
@@ -145,11 +161,19 @@ punishmentmanager.ban = async function(msg, client) {
         }
 
         client.guilds.get("105235654727704576").members.get(user.id).createDM().then(dmchannel => {
-            dmchannel.send("You have been banned from The Cult of Cheese Discord for **" + ((expire === -1)?"Permanent":time + suffix) + "**. Reason: **" + reason + "**");
+            dmchannel.send("You have been banned from The Cult of Cheese Discord for **" + ((expire === -1)?"Permanent":time + " " + suffix) + "**. Reason: **" + reason + "**");
         }).catch((reason) => {
             console.log("Login Promise Rejection: " + reason);
         });
-        client.guilds.get("105235654727704576").members.get(user.id).kick("Ban by Moderator. Reason: " + reason);
+        client.guilds.get("105235654727704576").members.get(user).kick("Ban by Moderator. Reason: " + reason);
+        client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+            .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been banned.")
+            .addField("Punisher", msg.author.tag)
+            .addField("Length", ((expire === -1)?"Permanent":time + " " + suffix))
+            .addField("Reason", reason)
+            .setTimestamp()
+            .setColor('#AA0000'));
     });
 };
 
@@ -225,6 +249,13 @@ punishmentmanager.unmute = async function(msg, client) {
 
     msg.reply("Punishment removed.");
     await MySQLManager.removePunishment(punish_id, reason, msg.author);
+    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+        .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been unmuted.")
+        .addField("Remover", msg.author.tag)
+        .addField("Reason", reason)
+        .setTimestamp()
+        .setColor('#00AA00'));
 
 };
 
@@ -249,6 +280,13 @@ punishmentmanager.unban = async function(msg, client) {
 
     msg.reply("Punishment removed.");
     await MySQLManager.removeBan(user, reason, msg.author);
+    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+        .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been unbanned.")
+        .addField("Remover", msg.author.tag)
+        .addField("Reason", reason)
+        .setTimestamp()
+        .setColor('#00AA00'));
 };
 
 

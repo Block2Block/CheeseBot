@@ -16,6 +16,9 @@ client.on('ready', () => {
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING",});
     MySQLManagaer.getPunishOnLoad((punishments) => {
         for (let punishment in punishments) {
+            if (!client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
+                continue;
+            }
             if ((punishment.expire === -1) && punishment.status === 1) {
                 if (punishment.type === 2) {
                     if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
@@ -56,7 +59,7 @@ client.on('ready', () => {
                                     time = (time / 24);
                                     suffix = "days";
                                 }
-                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
                             });
@@ -75,7 +78,7 @@ client.on('ready', () => {
                                         time = (time / 24);
                                         suffix = "days";
                                     }
-                                    dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                                    dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                                 }).catch((reason) => {
                                     console.log("Login Promise Rejection: " + reason);
                                 });
@@ -87,8 +90,8 @@ client.on('ready', () => {
                         }
                         punishment.timer = setTimeout(async () => {
                             if (client.guilds.get("105235654727704576").members.keyArray().includes(user)) {
-                                if (client.guilds.get("105235654727704576").members.get(user).roles.keyArray().includes("429970242916319244")) {
-                                    client.guilds.get("105235654727704576").members.get(user).removeRole("429970242916319244").catch((err) => {
+                                if (client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
+                                    client.guilds.get("105235654727704576").members.get(punishment.discord_id).removeRole("429970242916319244").catch((err) => {
                                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                     });
                                 }
@@ -98,6 +101,12 @@ client.on('ready', () => {
                 } else {
                     //Remove punishment, it has expired.
                     Punishments.expire(punishment.user, punishment.id);
+                    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+                        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+                        .setDescription(client.guilds.get("105235654727704576").members.get(punishment.discord_id).tag + " has been unpunished.")
+                        .addField("Reason", "Expired")
+                        .setTimestamp()
+                        .setColor('#00AA00'));
                 }
             }
         }
@@ -120,12 +129,6 @@ client.on('guildMemberAdd', (member) => {
                         return;
                     } else if (punishment.type === 1) {
                         member.createDM().then(dmchannel => {
-                            let time = ((punishment.expire - punishment.timestamp) /60000/60);
-                            let suffix = "hours";
-                            if (time >= 24) {
-                                time = (time / 24);
-                                suffix = "days";
-                            }
                             dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                         }).catch((reason) => {
                             console.log("Login Promise Rejection: " + reason);
@@ -147,7 +150,7 @@ client.on('guildMemberAdd', (member) => {
                                     time = (time / 24);
                                     suffix = "days";
                                 }
-                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                                dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
                             });
@@ -163,7 +166,7 @@ client.on('guildMemberAdd', (member) => {
                                     time = (time / 24);
                                     suffix = "days";
                                 }
-                                dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + suffix + "**. Reason: **" + punishment.reason + "**");
+                                dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
                             });
@@ -184,6 +187,12 @@ client.on('guildMemberAdd', (member) => {
                     } else {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
+                        client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+                            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
+                            .setDescription(client.guilds.get("105235654727704576").members.get(punishment.discord_id).tag + " has been unpunished.")
+                            .addField("Reason", "Expired")
+                            .setTimestamp()
+                            .setColor('#00AA00'));
                     }
                 }
             }
