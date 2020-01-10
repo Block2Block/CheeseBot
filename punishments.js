@@ -179,7 +179,7 @@ punishmentmanager.ban = async function(msg, client) {
 };
 
 punishmentmanager.getPunish = async function(user, callback) {
-    callback(await MySQLManager.getPunishments(user));
+    await MySQLManager.getPunishments(user, callback);
 };
 
 punishmentmanager.expire = async function(user, punishment_id) {
@@ -308,44 +308,45 @@ punishmentmanager.history = async function(msg, client) {
         }
 
     }
-    let userPunishments = await MySQLManager.getPunishments(user);
-    let richEmbed = new Discord.RichEmbed();
-    richEmbed.setTitle(client.guilds.get("105235654727704576").members.get(user).tag + "'s Punishment History'")
-        .setColor('#2980B9');
-    if (userPunishments.length !== 0) {
-        for (let punishment in userPunishments) {
-            let time = (((new Date).getTime() - punishment.timestamp) /60000/60);
-            let suffix = "hours";
-            if (time >= 24) {
-                time = (time / 24);
-                suffix = "days";
-            }
-            let time2 = ((punishment.expire - punishment.timestamp) /60000/60);
-            let suffix2 = "hours";
-            if (time >= 24) {
-                time = (time / 24);
-                suffix = "days";
-            }
-            let x = "**Punisher:** " + punishment.punisher + "\n" +
-                "**Type:** " + ((punishment.type === 2)?"Ban":"Mute") + "\n" +
-                "**When:** " + time + " " + suffix + " ago\n" +
-                "**Length:** " + ((punishment.expire === -1)?"Permanent":time + " " + suffix) + " ago\n" +
-                "**Reason:** " + punishment.reason + "";
-            if (punishment.status !== 1) {
-                if (punishment.status === 2) {
-                    x += "\n**Removed By:** CheeseBot\n**Removal Reason:** Expired";
-                } else {
-                    x += "\n**Removed By:** " + punishment.remover + "\n**Removal Reason:** " + punishment.removal_reason;
+    await MySQLManager.getPunishments(user, (userPunishments) => {
+        let richEmbed = new Discord.RichEmbed();
+        richEmbed.setTitle(client.guilds.get("105235654727704576").members.get(user).tag + "'s Punishment History'")
+            .setColor('#2980B9');
+        if (userPunishments.length !== 0) {
+            for (let punishment in userPunishments) {
+                let time = (((new Date).getTime() - punishment.timestamp) /60000/60);
+                let suffix = "hours";
+                if (time >= 24) {
+                    time = (time / 24);
+                    suffix = "days";
                 }
+                let time2 = ((punishment.expire - punishment.timestamp) /60000/60);
+                let suffix2 = "hours";
+                if (time >= 24) {
+                    time = (time / 24);
+                    suffix = "days";
+                }
+                let x = "**Punisher:** " + punishment.punisher + "\n" +
+                    "**Type:** " + ((punishment.type === 2)?"Ban":"Mute") + "\n" +
+                    "**When:** " + time + " " + suffix + " ago\n" +
+                    "**Length:** " + ((punishment.expire === -1)?"Permanent":time + " " + suffix) + " ago\n" +
+                    "**Reason:** " + punishment.reason + "";
+                if (punishment.status !== 1) {
+                    if (punishment.status === 2) {
+                        x += "\n**Removed By:** CheeseBot\n**Removal Reason:** Expired";
+                    } else {
+                        x += "\n**Removed By:** " + punishment.remover + "\n**Removal Reason:** " + punishment.removal_reason;
+                    }
+                }
+                richEmbed.addField("Punishment #" + punishment.id, x);
             }
-            richEmbed.addField("Punishment #" + punishment.id, x);
+
+        } else {
+            richEmbed.setDescription("No punishment history found.");
         }
 
-    } else {
-        richEmbed.setDescription("No punishment history found.");
-    }
-
-    await msg.channel.send(richEmbed);
+        msg.channel.send(richEmbed);
+    });
 
 };
 
