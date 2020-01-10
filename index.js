@@ -288,6 +288,14 @@ client.on('userUpdate', (oldUser, newUser) => {
     }
 });
 
+client.on('guildBanAdd', (guild, user) => {
+    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+        .setAuthor(user.tag, user.displayAvatarURL)
+        .setTitle("Manual Ban")
+        .setDescription(user + " was manually banned by an admin.")
+        .setColor('#AA0000'));
+});
+
 client.on('messageDelete', (message) => {
     if (message.guild != null) {
         if (message.content.startsWith("!")||message.author.bot) {
