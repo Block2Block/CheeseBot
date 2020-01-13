@@ -102,7 +102,7 @@ async function play(song, client) {
 
     if (!song) {
         client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
-        client.setActivity("on the Cult of Cheese", {type: "PLAYING"});
+        await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         return;
     }
 
@@ -192,7 +192,9 @@ connectionmanager.skip = function(msg, client) {
 
 connectionmanager.stop = function(msg, client) {
     if (queue.length > 0) {
+        let currentSong = queue[0];
         queue = [];
+        queue.push(currentSong);
         dispatcher.end();
         dispatcher = null;
         msg.reply("Playback has stopped and the queue has been cleared.");
