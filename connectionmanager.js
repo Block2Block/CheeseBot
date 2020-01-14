@@ -215,12 +215,18 @@ connectionmanager.nowPlaying = function(msg) {
 };
 
 connectionmanager.volume = function(msg, vl) {
-    if (queue.length > 0) {
-        dispatcher.setVolumeLogarithmic(vl / 10);
-        msg.reply("You have set the volume to " + vl + ".");
-        volume = vl;
+    if (queue.length > 0 && dispatcher != null) {
+        if (!dispatcher.destroyed) {
+            dispatcher.setVolumeLogarithmic(vl / 10);
+            msg.reply("You have set the volume to " + vl + ".");
+            volume = vl;
+        } else {
+            volume = vl;
+            msg.reply("You have set the volume to " + vl + ".")
+        }
     } else {
-
+        volume = vl;
+        msg.reply("You have set the volume to " + vl + ".")
     }
 };
 
