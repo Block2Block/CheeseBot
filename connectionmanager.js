@@ -13,8 +13,6 @@ let repeat = false;
 
 let queue = [];
 
-const finished = Util.promisify(Stream.finished);
-
 connectionmanager.joinChannel = async function(client, channel, msg) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
@@ -41,7 +39,6 @@ connectionmanager.leave = function() {
     if (dispatcher != null) {
         dispatcher.end();
     }
-    dispatcher = null;
 };
 
 connectionmanager.playCommand = async function (URL, msg, client) {
@@ -107,7 +104,6 @@ async function play(song, client) {
         client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
-        dispatcher = null;
         return;
     }
 
@@ -199,14 +195,15 @@ connectionmanager.skip = function(msg, client) {
     dispatcher.end();
 };
 
-connectionmanager.stop = function(msg, client) {
+connectionmanager.stop = async function (msg, client) {
     if (queue.length > 0) {
+        let currentSong = queue[0];
         queue = [];
+        await queue.push(currentSong);
         dispatcher.end();
-        dispatcher = null;
-        msg.reply("Playback has stopped and the queue has been cleared.");
+        await msg.reply("Playback has stopped and the queue has been cleared.");
     } else {
-        msg.reply("You cannot stop playback as there is nothing playing.");
+        await msg.reply("You cannot stop playback as there is nothing playing.");
     }
 };
 
