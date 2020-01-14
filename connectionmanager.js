@@ -95,7 +95,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
         }
     } else {
         let search = msg.content.replace("!play ","");
-        msg.reply("Searching for `" + search + "`..." );
+        await msg.reply("Searching for `" + search + "`..." );
         YTSR(search, {limit: 1}, (err, searchResults) => {
            if (err) {
                msg.reply("Something went wrong when trying to search that term. Please try again.");
