@@ -61,7 +61,6 @@ connectionmanager.playCommand = async function (URL, msg, client) {
                 msg.reply("An error occurred: " + err);
                 return;
             }
-            msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
             for (let i = 0; i < playlist.items.length;i++) {
                 let s = playlist.items[i];
                 const song = {
@@ -71,9 +70,13 @@ connectionmanager.playCommand = async function (URL, msg, client) {
                 };
                 queue.push(song);
             }
+
             if (queue.length === playlist.items.length) {
-                play(queue[0], client);
+                await play(queue[0], client);
+                msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
                 return;
+            } else {
+                msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
             }
         });
     } else if (await YTDL.validateURL(URL)) {
@@ -103,6 +106,8 @@ async function play(song, client) {
     if (!song) {
         client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
+        queue = [];
+        dispatcher = null;
         return;
     }
 
@@ -168,7 +173,11 @@ async function play(song, client) {
             } else {
                 queue.shift();
             }
-            play(queue[0], client);
+            if (queue.length === 0) {
+                play(false, client);
+            } else {
+                play(queue[0], client);
+            }
         })
         .on('error', error => {
             console.error(error);
@@ -192,9 +201,7 @@ connectionmanager.skip = function(msg, client) {
 
 connectionmanager.stop = function(msg, client) {
     if (queue.length > 0) {
-        let currentSong = queue[0];
         queue = [];
-        queue.push(currentSong);
         dispatcher.end();
         dispatcher = null;
         msg.reply("Playback has stopped and the queue has been cleared.");
