@@ -164,16 +164,16 @@ async function play(song, client) {
 	
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
+            if (queue.length === 0) {
+                play(false, client);
+                return;
+            }
             if (repeat) {
                 queue.push(queue.shift());
             } else {
                 queue.shift();
             }
-            if (queue.length === 0) {
-                play(false, client);
-            } else {
-                play(queue[0], client);
-            }
+            play(queue[0], client);
         })
         .on('error', error => {
             console.error(error);
