@@ -237,8 +237,8 @@ connectionmanager.clearQueue = function(msg) {
 
 connectionmanager.pause = function(msg) {
   if (queue.length > 0) {
-      //dispatcher.pause();
-      msg.reply("This functionality is temporarily disabled.");
+      dispatcher.pause();
+      msg.reply("Playback has been paused.");
   } else {
       msg.reply("There is nothing currently playing.");
   }
@@ -246,8 +246,8 @@ connectionmanager.pause = function(msg) {
 
 connectionmanager.resume = function(msg) {
     if (queue.length > 0) {
-        //dispatcher.resume();
-        msg.reply("This functionality is temporarily disabled.");
+        dispatcher.resume();
+        msg.reply("Playback has been resumed.");
     } else {
         msg.reply("There is nothing currently playing.");
     }
