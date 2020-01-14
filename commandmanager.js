@@ -5,9 +5,9 @@ const ConnectionManager = require("./connectionmanager");
 const PunishmentManager = require("./punishments");
 const bot = require("./bot.js");
 const git = require('simple-git');
-const ranks = ["631519513606619157","637034819234037762","631518599365787659","642130508549193728","659746742727737365","664134936185274368","664135506115690496","631607746298380297","631607804205072394"];
+const ranks = ["631519513606619157", "637034819234037762", "631518599365787659", "642130508549193728", "659746742727737365", "664134936185274368", "664135506115690496", "631607746298380297", "631607804205072394"];
 
-commandmanager.onCommand = async function(msg, client) {
+commandmanager.onCommand = async function (msg, client) {
     if (msg.guild == null) {
         if (!client.guilds.get("105235654727704576").members.keyArray().includes(msg.author.id)) {
             msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
@@ -17,35 +17,35 @@ commandmanager.onCommand = async function(msg, client) {
         }
     } else {
         if (msg.content.startsWith("!mute")) {
-            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                 await PunishmentManager.mute(msg, client);
             } else {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
         } else if (msg.content.startsWith("!ban")) {
-            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                 await PunishmentManager.ban(msg, client);
             } else {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
         } else if (msg.content.startsWith("!unban")) {
-            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                 await PunishmentManager.unban(msg, client);
             } else {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
         } else if (msg.content.startsWith("!unmute")) {
-            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                 await PunishmentManager.unmute(msg, client);
             } else {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
         } else if (msg.content.startsWith("!history")) {
-            if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+            if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                 await PunishmentManager.history(msg, client);
             } else {
                 await msg.reply("You do not have permission to perform this command.");
@@ -282,7 +282,7 @@ commandmanager.onCommand = async function(msg, client) {
         } else if (msg.channel.id === "629807458864463883") {
             if (msg.content.startsWith("!join")) {
                 if (msg.member.voiceChannel) {
-                    if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                    if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                         await ConnectionManager.joinChannel(client, msg.member.voiceChannel, msg);
                     } else {
                         await msg.reply("You do not have permission to perform this command.");
@@ -303,7 +303,7 @@ commandmanager.onCommand = async function(msg, client) {
 
             } else if (msg.content.startsWith("!play")) {
                 if (msg.content.split(" ").length >= 2) {
-                    if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                    if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                         const args = msg.content.split(" ");
                         await ConnectionManager.playCommand(args[1], msg, client);
                     } else {
@@ -313,19 +313,19 @@ commandmanager.onCommand = async function(msg, client) {
                     await msg.reply("Invalid Arguments. Correct Arguments **!play [YouTube URL/YouTube Search Query]**");
                 }
             } else if (msg.content.startsWith("!skip")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     await ConnectionManager.skip(msg, client);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!volume")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     const args = msg.content.split(" ");
                     if (args.length === 2) {
                         let volume;
                         try {
                             volume = parseInt(args[1]);
-                        } catch(err) {
+                        } catch (err) {
                             await msg.reply("Invalid Arguments. Correct Arguments **!volume [1-10]**");
                             return;
                         }
@@ -345,37 +345,37 @@ commandmanager.onCommand = async function(msg, client) {
             } else if (msg.content.startsWith("!nowplaying")) {
                 ConnectionManager.nowPlaying(msg);
             } else if (msg.content.startsWith("!pause")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.pause(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!resume")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.resume(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!clearqueue")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.clearQueue(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!repeat")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.repeat(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!shuffle")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.shuffle(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!stop")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.stop(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
@@ -384,7 +384,7 @@ commandmanager.onCommand = async function(msg, client) {
         } else if (msg.channel.id === "439114294307717131") {
             if (msg.content.startsWith("!join")) {
                 if (msg.member.voiceChannel) {
-                    if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                    if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                         await ConnectionManager.joinChannel(client, msg.member.voiceChannel, msg);
                     } else {
                         await msg.reply("You do not have permission to perform this command.");
@@ -405,7 +405,7 @@ commandmanager.onCommand = async function(msg, client) {
 
             } else if (msg.content.startsWith("!play")) {
                 if (msg.content.split(" ").length >= 2) {
-                    if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                    if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                         const args = msg.content.split(" ");
                         await ConnectionManager.playCommand(args[1], msg, client);
                     } else {
@@ -415,19 +415,19 @@ commandmanager.onCommand = async function(msg, client) {
                     await msg.reply("Invalid Arguments. Correct Arguments **!play [YouTube URL/YouTube Search Query]**");
                 }
             } else if (msg.content.startsWith("!skip")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     await ConnectionManager.skip(msg, client);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!volume")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     const args = msg.content.split(" ");
                     if (args.length === 2) {
                         let volume;
                         try {
                             volume = parseInt(args[1]);
-                        } catch(err) {
+                        } catch (err) {
                             await msg.reply("Invalid Arguments. Correct Arguments **!volume [1-10]**");
                             return;
                         }
@@ -447,37 +447,37 @@ commandmanager.onCommand = async function(msg, client) {
             } else if (msg.content.startsWith("!nowplaying")) {
                 ConnectionManager.nowPlaying(msg);
             } else if (msg.content.startsWith("!pause")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.pause(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!resume")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.resume(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!clearqueue")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.clearQueue(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!repeat")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.repeat(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!shuffle")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.shuffle(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!stop")) {
-                if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
+                if (msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906")) {
                     ConnectionManager.stop(msg);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
@@ -707,16 +707,17 @@ commandmanager.onCommand = async function(msg, client) {
                     }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
-            } if (msg.content.startsWith("!pull")) {
-                if (msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")) {
+            }
+            if (msg.content.startsWith("!pull")) {
+                if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344")) {
                     msg.reply("Pulling git changes and restarting bot.");
                     client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Pulling changes...");
-                    git().pull('origin', 'develop', {},(err, result) => {
+                    git().pull('origin', 'develop', {}, (err, result) => {
                         if (err) console.log(err);
                         console.log(result);
                         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
                             "**Insertions: **" + result.summary.insertions + "\n" +
-                            "**Deletions: **"+ result.summary.deletions);
+                            "**Deletions: **" + result.summary.deletions);
                         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot will restart automatically if there were any changes.");
                     });
                 } else {

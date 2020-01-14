@@ -3,17 +3,17 @@ const Discord = require("discord.js");
 const punishments = [];
 const punishmentmanager = {};
 
-punishmentmanager.mute = async function(msg, client) {
+punishmentmanager.mute = async function (msg, client) {
     const args = msg.content.split(" ");
     if (args.length < 4) {
         return msg.reply("Invalid arguments. Correct arguments: **!mute [user] [length] [reason]**");
     }
     let re = /<@![0-9]{17,18}>/;
-    let user,punisher,reason,timestamp,expire;
+    let user, punisher, reason, timestamp, expire;
     let type = 1;
     let status = 1;
     if (re.test(args[1])) {
-        user = args[1].replace("<@!","").replace(">","");
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
         re = /[0-9]{17,18}/;
         if (re.test(args[1])) {
@@ -32,17 +32,17 @@ punishmentmanager.mute = async function(msg, client) {
 
     punisher = msg.author.tag;
     reason = "";
-    for (let i = 3;i < args.length;i++) {
+    for (let i = 3; i < args.length; i++) {
         reason += (args[i] + " ");
     }
     reason = reason.trim();
     timestamp = (new Date()).getTime();
-    switch(args[2]) {
+    switch (args[2]) {
         case "1":
-            expire = timestamp + (60000 *60 *12);
+            expire = timestamp + (60000 * 60 * 12);
             break;
         case "2":
-            expire = timestamp + (60000 *60 *48);
+            expire = timestamp + (60000 * 60 * 48);
             break;
         case "3":
             expire = -1;
@@ -71,7 +71,8 @@ punishmentmanager.mute = async function(msg, client) {
                             .setTimestamp()
                             .setColor('#00AA00'));
                     }
-                }}, expire - timestamp);
+                }
+            }, expire - timestamp);
         }
 
 
@@ -92,7 +93,7 @@ punishmentmanager.mute = async function(msg, client) {
 
         punishments.push(punishment);
 
-        let time = ((expire - timestamp) /60000/60);
+        let time = ((expire - timestamp) / 60000 / 60);
         let suffix = "hours";
         if (time >= 24) {
             time = (time / 24);
@@ -104,24 +105,24 @@ punishmentmanager.mute = async function(msg, client) {
             .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
             .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been muted.")
             .addField("Punisher", msg.author.tag)
-            .addField("Length", ((expire === -1)?"Permanent":time + " " + suffix))
+            .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
             .addField("Reason", reason)
             .setTimestamp()
             .setColor('#AA0000'));
     });
 };
 
-punishmentmanager.ban = async function(msg, client) {
+punishmentmanager.ban = async function (msg, client) {
     const args = msg.content.split(" ");
     if (args.length < 4) {
         return msg.reply("Invalid arguments. Correct arguments: **!ban [user] [length] [reason]**");
     }
     let re = /<@![0-9]{17,18}>/;
-    let user,punisher,reason,timestamp,expire;
+    let user, punisher, reason, timestamp, expire;
     let type = 2;
     let status = 1;
     if (re.test(args[1])) {
-        user = args[1].replace("<@!","").replace(">","");
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
         re = /[0-9]{17,18}/;
         if (re.test(args[1])) {
@@ -135,17 +136,17 @@ punishmentmanager.ban = async function(msg, client) {
 
     punisher = msg.author.tag;
     reason = "";
-    for (let i = 3;i < args.length;i++) {
+    for (let i = 3; i < args.length; i++) {
         reason += (args[i] + " ");
     }
     reason = reason.trim();
     timestamp = (new Date()).getTime();
-    switch(args[2]) {
+    switch (args[2]) {
         case "1":
-            expire = timestamp + (60000 *60 *12);
+            expire = timestamp + (60000 * 60 * 12);
             break;
         case "2":
-            expire = timestamp + (60000 *60 *48);
+            expire = timestamp + (60000 * 60 * 48);
             break;
         case "3":
             expire = -1;
@@ -154,7 +155,7 @@ punishmentmanager.ban = async function(msg, client) {
 
     await MySQLManager.punish(user, type, timestamp, expire, punisher, reason, status, id => {
 
-        let time = ((expire - timestamp) /60000/60);
+        let time = ((expire - timestamp) / 60000 / 60);
         let suffix = "hours";
         if (time >= 24) {
             time = (time / 24);
@@ -162,7 +163,7 @@ punishmentmanager.ban = async function(msg, client) {
         }
 
         client.guilds.get("105235654727704576").members.get(user.id).createDM().then(dmchannel => {
-            dmchannel.send("You have been banned from The Cult of Cheese Discord for **" + ((expire === -1)?"Permanent":time + " " + suffix) + "**. Reason: **" + reason + "**");
+            dmchannel.send("You have been banned from The Cult of Cheese Discord for **" + ((expire === -1) ? "Permanent" : time + " " + suffix) + "**. Reason: **" + reason + "**");
         }).catch((reason) => {
             console.log("Login Promise Rejection: " + reason);
         });
@@ -171,37 +172,37 @@ punishmentmanager.ban = async function(msg, client) {
             .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
             .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been banned.")
             .addField("Punisher", msg.author.tag)
-            .addField("Length", ((expire === -1)?"Permanent":time + " " + suffix))
+            .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
             .addField("Reason", reason)
             .setTimestamp()
             .setColor('#AA0000'));
     });
 };
 
-punishmentmanager.getPunish = async function(user, callback) {
+punishmentmanager.getPunish = async function (user, callback) {
     await MySQLManager.getPunishments(user, callback);
 };
 
-punishmentmanager.expire = async function(user, punishment_id) {
+punishmentmanager.expire = async function (user, punishment_id) {
     await MySQLManager.expire(user, punishment_id);
 };
 
-punishmentmanager.addPunishment = async function(punishment) {
+punishmentmanager.addPunishment = async function (punishment) {
     punishments.push(punishment);
 };
 
-punishmentmanager.removePunishment = async function(user) {
-  for (let punishment in punishments) {
-      if (user.id.toString() === punishment.discord_id) {
-          if (punishment.timer != null) {
-              punishment.timer.cancel();
-              break;
-          }
-      }
-  }
+punishmentmanager.removePunishment = async function (user) {
+    for (let punishment in punishments) {
+        if (user.id.toString() === punishment.discord_id) {
+            if (punishment.timer != null) {
+                punishment.timer.cancel();
+                break;
+            }
+        }
+    }
 };
 
-punishmentmanager.unmute = async function(msg, client) {
+punishmentmanager.unmute = async function (msg, client) {
 
     let args = msg.content.split(" ");
     let re = /<@![0-9]{17,18}>/;
@@ -209,7 +210,7 @@ punishmentmanager.unmute = async function(msg, client) {
     let punish_id;
 
     if (re.test(args[1])) {
-        user = args[1].replace("<@!","").replace(">","");
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
         re = /[0-9]{17,18}/;
         if (re.test(args[1])) {
@@ -223,7 +224,7 @@ punishmentmanager.unmute = async function(msg, client) {
 
     let reason;
 
-    for (let i = 2;i < args.length;i++) {
+    for (let i = 2; i < args.length; i++) {
         reason += (args[i] + " ");
     }
     reason = reason.trim();
@@ -260,7 +261,7 @@ punishmentmanager.unmute = async function(msg, client) {
 
 };
 
-punishmentmanager.unban = async function(msg, client) {
+punishmentmanager.unban = async function (msg, client) {
     let args = msg.content.split(" ");
     let re = /[0-9]{17,18}/;
     let user;
@@ -268,13 +269,13 @@ punishmentmanager.unban = async function(msg, client) {
     if (re.test(args[1])) {
         user = args[1].toString();
     } else {
-            await msg.reply("You must include a user ID in order to unban.");
-            return;
+        await msg.reply("You must include a user ID in order to unban.");
+        return;
     }
 
     let reason;
 
-    for (let i = 2;i < args.length;i++) {
+    for (let i = 2; i < args.length; i++) {
         reason += (args[i] + " ");
     }
     reason = reason.trim();
@@ -290,14 +291,14 @@ punishmentmanager.unban = async function(msg, client) {
         .setColor('#00AA00'));
 };
 
-punishmentmanager.history = async function(msg, client) {
+punishmentmanager.history = async function (msg, client) {
 
     let args = msg.content.split(" ");
     let re = /<@![0-9]{17,18}>/;
     let user;
 
     if (re.test(args[1])) {
-        user = args[1].replace("<@!","").replace(">","");
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
         re = /[0-9]{17,18}/;
         if (re.test(args[1])) {
@@ -315,22 +316,22 @@ punishmentmanager.history = async function(msg, client) {
             .setFooter("Discord ID: " + user);
         if (userPunishments.length !== 0) {
             for (let punishment in userPunishments) {
-                let time = (((new Date).getTime() - punishment.timestamp) /60000/60);
+                let time = (((new Date).getTime() - punishment.timestamp) / 60000 / 60);
                 let suffix = "hours";
                 if (time >= 24) {
                     time = (time / 24);
                     suffix = "days";
                 }
-                let time2 = ((punishment.expire - punishment.timestamp) /60000/60);
+                let time2 = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                 let suffix2 = "hours";
                 if (time >= 24) {
                     time = (time / 24);
                     suffix = "days";
                 }
                 let x = "**Punisher:** " + punishment.punisher + "\n" +
-                    "**Type:** " + ((punishment.type === 2)?"Ban":"Mute") + "\n" +
+                    "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute") + "\n" +
                     "**When:** " + time + " " + suffix + " ago\n" +
-                    "**Length:** " + ((punishment.expire === -1)?"Permanent":time + " " + suffix) + " ago\n" +
+                    "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time + " " + suffix) + " ago\n" +
                     "**Reason:** " + punishment.reason + "";
                 if (punishment.status !== 1) {
                     if (punishment.status === 2) {

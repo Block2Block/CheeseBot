@@ -13,24 +13,24 @@ let repeat = false;
 
 let queue = [];
 
-connectionmanager.joinChannel = async function(client, channel, msg) {
+connectionmanager.joinChannel = async function (client, channel, msg) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
-             msg.reply("Successfully joined your channel.");
+            msg.reply("Successfully joined your channel.");
         }
-    ).catch((error) =>{
+    ).catch((error) => {
         msg.reply("Unable to join your channel.");
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error has occurred when trying to join a voice channel. Error: " + error);
     });
 };
 
-connectionmanager.inChannel = function() {
-    return new Promise(function(resolve, reject) {
+connectionmanager.inChannel = function () {
+    return new Promise(function (resolve, reject) {
         resolve(connection != null);
     });
 };
 
-connectionmanager.leave = function() {
+connectionmanager.leave = function () {
     if (connection != null) {
         connection.disconnect();
     }
@@ -58,7 +58,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
                 msg.reply("An error occurred: " + err);
                 return;
             }
-            for (let i = 0; i < playlist.items.length;i++) {
+            for (let i = 0; i < playlist.items.length; i++) {
                 let s = playlist.items[i];
                 const song = {
                     title: s.title,
@@ -94,16 +94,16 @@ connectionmanager.playCommand = async function (URL, msg, client) {
             play(song, client);
         }
     } else {
-        let search = msg.content.replace("!play ","");
-        await msg.reply("Searching for `" + search + "`..." );
+        let search = msg.content.replace("!play ", "");
+        await msg.reply("Searching for `" + search + "`...");
         YTSR(search, {limit: 1}, (err, searchResults) => {
-           if (err) {
-               msg.reply("Something went wrong when trying to search that term. Please try again.");
-               return;
-           }
+            if (err) {
+                msg.reply("Something went wrong when trying to search that term. Please try again.");
+                return;
+            }
 
-           connectionmanager.playCommand(searchResults.items[0].link, msg, client);
-           msg.reply("Result found, playing " + searchResults.items[0].title + ".");
+            connectionmanager.playCommand(searchResults.items[0].link, msg, client);
+            msg.reply("Result found, playing " + searchResults.items[0].title + ".");
         });
     }
 };
@@ -118,8 +118,8 @@ async function play(song, client) {
     }
 
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-		console.log("Downloading song " + song.id + " for the first time.");
-		try {
+        console.log("Downloading song " + song.id + " for the first time.");
+        try {
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
             dl.on('end', () => {
@@ -129,16 +129,16 @@ async function play(song, client) {
             dl.on('error', (err) => {
                 console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
                 queue.shift();
-                play(queue[0],client);
+                play(queue[0], client);
                 return;
             })
         } catch (err) {
             console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
             queue.shift();
-            play(queue[0],client);
-		    return;
+            play(queue[0], client);
+            return;
         }
-		return;
+        return;
     }
 
     if (queue.length > 1) {
@@ -162,16 +162,16 @@ async function play(song, client) {
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);
-            play(queue[0],client);
+            play(queue[0], client);
             return;
         }
     }
-	
-	
-	console.log("Playing " + song.title + " now.");
-	client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
-	await client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
-	
+
+
+    console.log("Playing " + song.title + " now.");
+    client.guilds.get("105235654727704576").channels.get("643571367715012638").send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
+    await client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
+
     dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
         .on('end', () => {
             if (queue.length === 0) {
@@ -192,7 +192,7 @@ async function play(song, client) {
     dispatcher.setBitrate(128);
 }
 
-connectionmanager.skip = function(msg, client) {
+connectionmanager.skip = function (msg, client) {
     if (!msg.member.voiceChannel) {
         return msg.reply("You must be in the same channel as the bot in order to use music commands.")
     } else if (client.voiceChannel) {
@@ -215,7 +215,7 @@ connectionmanager.stop = async function (msg, client) {
     }
 };
 
-connectionmanager.nowPlaying = function(msg) {
+connectionmanager.nowPlaying = function (msg) {
     if (queue.length > 0) {
         msg.reply("Now Playing: `" + queue[0].title + "`");
     } else {
@@ -224,7 +224,7 @@ connectionmanager.nowPlaying = function(msg) {
 
 };
 
-connectionmanager.volume = function(msg, vl) {
+connectionmanager.volume = function (msg, vl) {
     if (queue.length > 0 && dispatcher != null) {
         if (!dispatcher.destroyed) {
             dispatcher.setVolumeLogarithmic(vl / 10);
@@ -240,7 +240,7 @@ connectionmanager.volume = function(msg, vl) {
     }
 };
 
-connectionmanager.clearQueue = function(msg) {
+connectionmanager.clearQueue = function (msg) {
     if (queue.length > 1) {
         let currentSong = queue[0];
         queue = [];
@@ -251,16 +251,16 @@ connectionmanager.clearQueue = function(msg) {
     }
 };
 
-connectionmanager.pause = function(msg) {
-  if (queue.length > 0) {
-      dispatcher.pause();
-      msg.reply("Playback has been paused.");
-  } else {
-      msg.reply("There is nothing currently playing.");
-  }
+connectionmanager.pause = function (msg) {
+    if (queue.length > 0) {
+        dispatcher.pause();
+        msg.reply("Playback has been paused.");
+    } else {
+        msg.reply("There is nothing currently playing.");
+    }
 };
 
-connectionmanager.resume = function(msg) {
+connectionmanager.resume = function (msg) {
     if (queue.length > 0) {
         dispatcher.resume();
         msg.reply("Playback has been resumed.");
@@ -269,7 +269,7 @@ connectionmanager.resume = function(msg) {
     }
 };
 
-connectionmanager.repeat = function(msg) {
+connectionmanager.repeat = function (msg) {
     if (repeat) {
         msg.reply("Repeat mode has been disabled.");
         repeat = false;
@@ -279,10 +279,10 @@ connectionmanager.repeat = function(msg) {
     }
 };
 
-connectionmanager.shuffle = function(msg) {
+connectionmanager.shuffle = function (msg) {
     msg.reply("The queue has been shuffled.");
     let currentSong = queue.shift();
-    queue  = shuffle(queue);
+    queue = shuffle(queue);
     queue.unshift(currentSong);
 };
 
@@ -296,7 +296,6 @@ function shuffle(a) {
     }
     return a;
 }
-
 
 
 module.exports = connectionmanager;

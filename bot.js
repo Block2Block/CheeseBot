@@ -1,4 +1,4 @@
-const index  = {};
+const index = {};
 const Discord = require("discord.js");
 const Punishments = require("./punishments.js");
 const token = 'NjQxMDQxNjYzMzQyNDExNzk2.XcCnoQ.EcvG7W9FE9TYoGFduk0GYyysbwM';
@@ -75,7 +75,7 @@ client.on('ready', () => {
                         if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                             if (!client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
                                 client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
-                                    let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                    let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                                     let suffix = "hours";
                                     if (time >= 24) {
                                         time = (time / 24);
@@ -98,7 +98,8 @@ client.on('ready', () => {
                                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                     });
                                 }
-                            }}, punishment.expire - punishment.timestamp);
+                            }
+                        }, punishment.expire - punishment.timestamp);
                         Punishments.addPunishment(punishment);
                     }
                 } else {
@@ -148,7 +149,7 @@ client.on('guildMemberAdd', (member) => {
                         //Apply Punishment, still valid.
                         if (punishment.type === 2) {
                             member.createDM().then(dmchannel => {
-                                let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                                 let suffix = "hours";
                                 if (time >= 24) {
                                     time = (time / 24);
@@ -164,7 +165,7 @@ client.on('guildMemberAdd', (member) => {
                             return;
                         } else if (punishment.type === 1) {
                             member.createDM().then(dmchannel => {
-                                let time = ((punishment.expire - punishment.timestamp) /60000/60);
+                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                                 let suffix = "hours";
                                 if (time >= 24) {
                                     time = (time / 24);
@@ -185,7 +186,8 @@ client.on('guildMemberAdd', (member) => {
                                             client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                         });
                                     }
-                                }}, punishment.expire - punishment.timestamp);
+                                }
+                            }, punishment.expire - punishment.timestamp);
                             Punishments.addPunishment(punishment);
                         }
                     } else {
@@ -210,7 +212,7 @@ client.on('guildMemberAdd', (member) => {
             .setColor('#00AA00'));
         member.createDM().then(dmchannel => {
             dmchannel.send(new Discord.RichEmbed()
-                .setAuthor("Block2Block","https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
+                .setAuthor("Block2Block", "https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
                 .setTitle("Welcome!")
                 .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #read-me in order to get started.\n" +
                     "\n" +
@@ -251,7 +253,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
         if (oldMember.roles.size > newMember.roles.size) {
             let role;
             let roles = oldMember.roles.keyArray();
-            for (let i = 0;i < roles.length;i++) {
+            for (let i = 0; i < roles.length; i++) {
                 if (!newMember.roles.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
@@ -265,7 +267,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
         } else {
             let role;
             let roles = newMember.roles.keyArray();
-            for (let i = 0;i < roles.length;i++) {
+            for (let i = 0; i < roles.length; i++) {
                 if (!oldMember.roles.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
@@ -302,7 +304,7 @@ client.on('guildBanAdd', (guild, user) => {
 
 client.on('messageDelete', (message) => {
     if (message.guild != null) {
-        if (message.content.startsWith("!")||message.author.bot) {
+        if (message.content.startsWith("!") || message.author.bot) {
             return;
         }
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by " + message.author + " was deleted in " + message.channel + ".\n" +
