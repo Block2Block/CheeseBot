@@ -95,15 +95,16 @@ connectionmanager.playCommand = async function (URL, msg, client) {
         }
     } else {
         let search = msg.content.replace("!play ","");
+        msg.reply("Searching for `" + search + "`..." );
         YTSR(search, {limit: 1}, (err, searchResults) => {
            if (err) {
                msg.reply("Something went wrong when trying to search that term. Please try again.");
                return;
            }
 
-           connectionmanager.playCommand(searchResults.items[0].link, msg, client)
+           connectionmanager.playCommand(searchResults.items[0].link, msg, client);
+           msg.reply("Result found, playing " + searchResults.items[0].title + ".");
         });
-        await msg.reply("That is not a valid YouTube Playlist or Video URL.");
     }
 };
 
