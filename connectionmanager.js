@@ -197,9 +197,7 @@ connectionmanager.skip = function(msg, client) {
 
 connectionmanager.stop = async function (msg, client) {
     if (queue.length > 0) {
-        let currentSong = queue[0];
         queue = [];
-        await queue.push(currentSong);
         dispatcher.end();
         await msg.reply("Playback has stopped and the queue has been cleared.");
     } else {
