@@ -310,7 +310,7 @@ commandmanager.onCommand = async function(msg, client) {
                         await msg.reply("You do not have permission to perform this command.");
                     }
                 } else {
-                    await msg.reply("Invalid Arguments. Correct Arguments **!play [youtube URL]**");
+                    await msg.reply("Invalid Arguments. Correct Arguments **!play [YouTube URL/YouTube Search Query]**");
                 }
             } else if (msg.content.startsWith("!skip")) {
                 if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
@@ -412,7 +412,7 @@ commandmanager.onCommand = async function(msg, client) {
                         await msg.reply("You do not have permission to perform this command.");
                     }
                 } else {
-                    await msg.reply("Invalid Arguments. Correct Arguments **!play [youtube URL]**");
+                    await msg.reply("Invalid Arguments. Correct Arguments **!play [YouTube URL/YouTube Search Query]**");
                 }
             } else if (msg.content.startsWith("!skip")) {
                 if (msg.member.roles.keyArray().includes("629034598113738773")||msg.member.roles.keyArray().includes("207084647962771457")||msg.member.roles.keyArray().includes("207083210667065344")||msg.member.roles.keyArray().includes("665237632082640906")) {
