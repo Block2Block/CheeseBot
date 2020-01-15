@@ -213,7 +213,7 @@ punishmentmanager.unmute = async function (msg, client) {
 
     }
 
-    let reason;
+    let reason = "";
 
     for (let i = 2; i < args.length; i++) {
         reason += (args[i] + " ");
@@ -274,7 +274,7 @@ punishmentmanager.unban = async function (msg, client) {
         return;
     }
 
-    let reason;
+    let reason = "";
 
     for (let i = 2; i < args.length; i++) {
         reason += (args[i] + " ");
