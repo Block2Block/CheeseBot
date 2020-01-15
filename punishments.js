@@ -179,8 +179,8 @@ punishmentmanager.ban = async function (msg, client) {
     });
 };
 
-punishmentmanager.getPunish = async function (user, callback) {
-    await MySQLManager.getPunishments(user, (punishments) => {
+punishmentmanager.getPunish = function (user, callback) {
+    MySQLManager.getPunishments(user, (punishments) => {
         callback(punishments);
     });
 };
