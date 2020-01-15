@@ -116,8 +116,8 @@ client.on('ready', () => {
                     //Remove punishment, it has expired.
                     Punishments.expire(punishment.user, punishment.id);
                     client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-                        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-                        .setDescription(client.guilds.get("105235654727704576").members.get(punishment.discord_id).tag + " has been unpunished.")
+                        .setAuthor(client.guilds.get("105235654727704576").members.get(punishment.user).user.tag, client.guilds.get("105235654727704576").members.get(punishment.user).user.displayAvatarURL)
+                        .setDescription(client.guilds.get("105235654727704576").members.get(punishment.discord_id).user.tag + " has been unpunished.")
                         .addField("Reason", "Expired")
                         .setTimestamp()
                         .setColor('#00AA00'));
@@ -214,8 +214,8 @@ client.on('guildMemberAdd', (member) => {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
                         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-                            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-                            .setDescription(client.guilds.get("105235654727704576").members.get(punishment.discord_id).tag + " has been unpunished.")
+                            .setAuthor(member.user.tag, member.user.displayAvatarURL)
+                            .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
                             .setTimestamp()
                             .setColor('#00AA00'));
