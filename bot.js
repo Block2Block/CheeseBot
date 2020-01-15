@@ -119,16 +119,10 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberAdd', (member) => {
-    Punishments.getPunish(member, (punishments) => {
-        console.log("0");
-        console.log(punishments.length);
-        console.log(punishments);
+    Punishments.getPunish(member.id, (punishments) => {
         if (punishments.length !== 0) {
-            console.log("0.5");
             for (let punishment of punishments) {
-                console.log("1");
                 if ((punishment.expire === -1) && punishment.status === 1) {
-                    console.log("2");
                     if (punishment.type === 2) {
                         member.createDM().then(dmchannel => {
                             dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
@@ -151,7 +145,6 @@ client.on('guildMemberAdd', (member) => {
                         Punishments.addPunishment(punishment);
                     }
                 } else if (punishment.expire !== -1 && punishment.status === 1) {
-                    console.log("3");
                     if (parseInt(punishment.expire) > ((new Date).getTime())) {
                         //Apply Punishment, still valid.
                         if (punishment.type === 2) {
@@ -198,7 +191,6 @@ client.on('guildMemberAdd', (member) => {
                             Punishments.addPunishment(punishment);
                         }
                     } else {
-                        console.log("4");
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
                         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
