@@ -61,6 +61,7 @@ commandmanager.onCommand = async function (msg, client) {
                     await msg.reply("You have been removed from the role 'Jackbox'.");
                     for (let x in ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
+                            console.log("1");
                             return;
                         }
                     }
