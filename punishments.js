@@ -39,7 +39,7 @@ punishmentmanager.mute = async function (msg, client) {
     timestamp = (new Date()).getTime();
     switch (args[2]) {
         case "1":
-            expire = timestamp + (60000 * 60 * 12);
+            expire = timestamp + (60000);
             break;
         case "2":
             expire = timestamp + (60000 * 60 * 48);
@@ -143,7 +143,7 @@ punishmentmanager.ban = async function (msg, client) {
     timestamp = (new Date()).getTime();
     switch (args[2]) {
         case "1":
-            expire = timestamp + (60000 * 60 * 12);
+            expire = timestamp + (60000);
             break;
         case "2":
             expire = timestamp + (60000 * 60 * 48);
