@@ -121,6 +121,8 @@ client.on('ready', () => {
 client.on('guildMemberAdd', (member) => {
     Punishments.getPunish(member, (punishments) => {
         console.log("0");
+        console.log(punishments.length);
+        console.log(punishments);
         if (punishments.length !== 0) {
             console.log("0.5");
             for (let punishment of punishments) {
