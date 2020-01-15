@@ -180,7 +180,9 @@ punishmentmanager.ban = async function (msg, client) {
 };
 
 punishmentmanager.getPunish = async function (user, callback) {
-    await MySQLManager.getPunishments(user, callback);
+    await MySQLManager.getPunishments(user, (punishments) => {
+        callback(punishments);
+    });
 };
 
 punishmentmanager.expire = async function (user, punishment_id) {
