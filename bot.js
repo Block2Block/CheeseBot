@@ -56,12 +56,17 @@ client.on('ready', () => {
                     if (punishment.type === 2) {
                         if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                             client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
-                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
-                                let suffix = "hours";
-                                if (time >= 24) {
-                                    time = (time / 24);
-                                    suffix = "days";
+                                let time = ((punishment.expire - ((new Date).getTime())) / 60000);
+                                let suffix = "minutes";
+                                if (time >= 60) {
+                                    time = (time / 60);
+                                    suffix = "hours";
+                                    if (time >= 24) {
+                                        time = (time / 24);
+                                        suffix = "days";
+                                    }
                                 }
+                                time = Math.round(time);
                                 dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
@@ -75,12 +80,17 @@ client.on('ready', () => {
                         if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                             if (!client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
                                 client.guilds.get("105235654727704576").members.get(punishment.discord_id).createDM().then(dmchannel => {
-                                    let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
-                                    let suffix = "hours";
-                                    if (time >= 24) {
-                                        time = (time / 24);
-                                        suffix = "days";
+                                    let time = ((punishment.expire - ((new Date).getTime())) / 60000);
+                                    let suffix = "minutes";
+                                    if (time >= 60) {
+                                        time = (time / 60);
+                                        suffix = "hours";
+                                        if (time >= 24) {
+                                            time = (time / 24);
+                                            suffix = "days";
+                                        }
                                     }
+                                    time = Math.round(time);
                                     dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                                 }).catch((reason) => {
                                     console.log("Login Promise Rejection: " + reason);
@@ -149,12 +159,17 @@ client.on('guildMemberAdd', (member) => {
                         //Apply Punishment, still valid.
                         if (punishment.type === 2) {
                             member.createDM().then(dmchannel => {
-                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
-                                let suffix = "hours";
-                                if (time >= 24) {
-                                    time = (time / 24);
-                                    suffix = "days";
+                                let time = ((punishment.expire - ((new Date).getTime())) / 60000);
+                                let suffix = "minutes";
+                                if (time >= 60) {
+                                    time = (time / 60);
+                                    suffix = "hours";
+                                    if (time >= 24) {
+                                        time = (time / 24);
+                                        suffix = "days";
+                                    }
                                 }
+                                time = Math.round(time);
                                 dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
@@ -165,12 +180,17 @@ client.on('guildMemberAdd', (member) => {
                             return;
                         } else if (punishment.type === 1) {
                             member.createDM().then(dmchannel => {
-                                let time = ((punishment.expire - punishment.timestamp) / 60000 / 60);
-                                let suffix = "hours";
-                                if (time >= 24) {
-                                    time = (time / 24);
-                                    suffix = "days";
+                                let time = ((punishment.expire - ((new Date).getTime())) / 60000);
+                                let suffix = "minutes";
+                                if (time >= 60) {
+                                    time = (time / 60);
+                                    suffix = "hours";
+                                    if (time >= 24) {
+                                        time = (time / 24);
+                                        suffix = "days";
+                                    }
                                 }
+                                time = Math.round(time);
                                 dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 console.log("Login Promise Rejection: " + reason);
