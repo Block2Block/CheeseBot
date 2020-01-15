@@ -17,7 +17,7 @@ client.on('ready', () => {
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING",});
     MySQLManagaer.getPunishOnLoad((punishments) => {
         console.log("Loading punishments...");
-        for (let punishment in punishments) {
+        for (let punishment of punishments) {
             console.log("1");
             if (!client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                 continue;
@@ -121,7 +121,7 @@ client.on('ready', () => {
 client.on('guildMemberAdd', (member) => {
     Punishments.getPunish(member, (punishments) => {
         if (punishments.length !== 0) {
-            for (let punishment in punishments) {
+            for (let punishment of punishments) {
                 if ((punishment.expire === -1) && punishment.status === 1) {
                     if (punishment.type === 2) {
                         member.createDM().then(dmchannel => {

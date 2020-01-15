@@ -315,7 +315,7 @@ punishmentmanager.history = async function (msg, client) {
             .setColor('#2980B9')
             .setFooter("Discord ID: " + user);
         if (userPunishments.length !== 0) {
-            for (let punishment in userPunishments) {
+            for (let punishment of userPunishments) {
                 let time = (((new Date).getTime() - punishment.timestamp) / 60000 / 60);
                 let suffix = "hours";
                 if (time >= 24) {

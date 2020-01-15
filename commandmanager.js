@@ -59,10 +59,8 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Jackbox'.");
-                    for (let x in msg.member.roles.keyArray()) {
-                        console.log(x.toString());
-                        if (ranks.includes(x.toString())) {
-                            console.log("testing");
+                    for (let x of ranks) {
+                        if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
                     }
@@ -86,7 +84,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Overwatch'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -111,7 +109,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'UNO'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -136,7 +134,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Stardew Valley'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -161,7 +159,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -186,7 +184,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -211,7 +209,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Clue/Cluedo'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -236,7 +234,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Livestream Announcements'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -261,7 +259,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Event Announcements'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -490,7 +488,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Jackbox'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -515,7 +513,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Overwatch'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -540,7 +538,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'UNO'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -565,7 +563,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Stardew Valley'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -590,7 +588,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'THE GAME OF LIFE'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -615,7 +613,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Cards Against Humanity'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -640,7 +638,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Clue/Cluedo'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -665,7 +663,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Livestream Announcements'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
@@ -690,7 +688,7 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Event Announcements'.");
-                    for (let x in ranks) {
+                    for (let x of ranks) {
                         if (msg.member.roles.keyArray().includes(x)) {
                             return;
                         }
