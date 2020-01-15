@@ -253,8 +253,8 @@ punishmentmanager.unmute = async function (msg, client) {
     msg.reply("Punishment removed.");
     await MySQLManager.removePunishment(punish_id, reason, msg.author);
     client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-        .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been unmuted.")
+        .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
+        .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been unmuted.")
         .addField("Remover", msg.author.tag)
         .addField("Reason", reason)
         .setTimestamp()
@@ -284,8 +284,8 @@ punishmentmanager.unban = async function (msg, client) {
     msg.reply("Punishment removed.");
     await MySQLManager.removeBan(user, reason, msg.author);
     client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-        .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-        .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been unbanned.")
+        .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
+        .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been unbanned.")
         .addField("Remover", msg.author.tag)
         .addField("Reason", reason)
         .setTimestamp()
