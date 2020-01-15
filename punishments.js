@@ -225,10 +225,10 @@ punishmentmanager.unmute = async function (msg, client) {
     for (let punishment of punishments) {
         if (user === punishment.discord_id) {
             if (punish_id > 0 && punish_id === punishment.id) {
-                punishment.timer.cancel();
+                clearTimeout(punishment.timer);
                 continue;
             } else if (punishment.timer != null) {
-                punishment.timer.cancel();
+                clearTimeout(punishment.timer);
                 punish_id = punishment.id;
                 continue;
             } else {
