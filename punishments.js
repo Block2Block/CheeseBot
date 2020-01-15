@@ -72,6 +72,7 @@ punishmentmanager.mute = async function (msg, client) {
                             .setColor('#00AA00'));
                     }
                 }
+
             }, expire - timestamp);
         }
 
@@ -357,6 +358,16 @@ punishmentmanager.history = async function (msg, client) {
         msg.channel.send(richEmbed);
     });
 
+};
+
+punishmentmanager.removePunishment = async function (user) {
+    for (let punishment of punishments) {
+        if (user.id.toString() === punishment.discord_id) {
+            if (punishment.timer != null) {
+                clearTimeout(punishment.timer);
+            }
+        }
+    }
 };
 
 
