@@ -102,8 +102,8 @@ punishmentmanager.mute = async function (msg, client) {
 
         msg.channel.send("<@!" + user + "> You have been muted for " + time + " " + suffix + ". Reason: `" + reason + "`");
         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-            .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been muted.")
+            .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
+            .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been muted.")
             .addField("Punisher", msg.author.tag)
             .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
             .addField("Reason", reason)
