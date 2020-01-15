@@ -145,7 +145,7 @@ client.on('guildMemberAdd', (member) => {
                         Punishments.addPunishment(punishment);
                     }
                 } else if (punishment.expire !== -1 && punishment.status === 1) {
-                    if (punishment.expire > ((new Date).getTime())) {
+                    if (parseInt(punishment.expire) > ((new Date).getTime())) {
                         //Apply Punishment, still valid.
                         if (punishment.type === 2) {
                             member.createDM().then(dmchannel => {
