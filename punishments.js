@@ -1,6 +1,6 @@
 const MySQLManager = require("./mysqlmanager");
 const Discord = require("discord.js");
-const punishments = [];
+let punishments = [];
 const punishmentmanager = {};
 
 punishmentmanager.mute = async function (msg, client) {
@@ -169,8 +169,8 @@ punishmentmanager.ban = async function (msg, client) {
         });
         client.guilds.get("105235654727704576").members.get(user).kick("Ban by Moderator. Reason: " + reason);
         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-            .setAuthor(msg.member.tag, msg.member.displayAvatarURL)
-            .setDescription(client.guilds.get("105235654727704576").members.get(user).tag + " has been banned.")
+            .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
+            .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been banned.")
             .addField("Punisher", msg.author.tag)
             .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
             .addField("Reason", reason)
@@ -193,23 +193,12 @@ punishmentmanager.addPunishment = async function (punishment) {
     punishments.push(punishment);
 };
 
-punishmentmanager.removePunishment = async function (user) {
-    for (let punishment in punishments) {
-        if (user.id.toString() === punishment.discord_id) {
-            if (punishment.timer != null) {
-                punishment.timer.cancel();
-                break;
-            }
-        }
-    }
-};
-
 punishmentmanager.unmute = async function (msg, client) {
 
     let args = msg.content.split(" ");
     let re = /<@![0-9]{17,18}>/;
     let user;
-    let punish_id;
+    let punish_id = -1;
 
     if (re.test(args[1])) {
         user = args[1].replace("<@!", "").replace(">", "");
@@ -232,15 +221,25 @@ punishmentmanager.unmute = async function (msg, client) {
     reason = reason.trim();
 
 
-    for (let punishment in punishments) {
+    let newPunishments = [];
+    for (let punishment of punishments) {
         if (user === punishment.discord_id) {
-            if (punishment.timer != null) {
+            if (punish_id > 0 && punish_id === punishment.id) {
+                punishment.timer.cancel();
+                continue;
+            } else if (punishment.timer != null) {
                 punishment.timer.cancel();
                 punish_id = punishment.id;
-                break;
+                continue;
+            } else {
+                newPunishments.push(punishment)
             }
         }
+        newPunishments.push(punishment);
     }
+
+    punishments = newPunishments;
+
 
     if (client.guilds.get("105235654727704576").members.keyArray().includes(user)) {
         if (client.guilds.get("105235654727704576").members.get(user).roles.keyArray().includes("429970242916319244")) {
