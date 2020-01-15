@@ -316,12 +316,18 @@ punishmentmanager.history = async function (msg, client) {
             .setFooter("Discord ID: " + user);
         if (userPunishments.length !== 0) {
             for (let punishment of userPunishments) {
-                let time = (((new Date).getTime() - punishment.timestamp) / 60000 / 60);
-                let suffix = "hours";
-                if (time >= 24) {
-                    time = (time / 24);
-                    suffix = "days";
+                let time = (((new Date).getTime() - punishment.timestamp) / 60000);
+                let suffix = "minutes";
+                if (time >= 60) {
+                    time = (time / 60);
+                    suffix = "hours";
+                    if (time >= 24) {
+                        time = (time / 24);
+                        suffix = "days";
+                    }
                 }
+
+                time = Math.round(time);
                 let time2 = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                 let suffix2 = "hours";
                 if (time >= 24) {
@@ -331,7 +337,7 @@ punishmentmanager.history = async function (msg, client) {
                 let x = "**Punisher:** " + punishment.punisher + "\n" +
                     "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute") + "\n" +
                     "**When:** " + time + " " + suffix + " ago\n" +
-                    "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time2 + " " + suffix2) + " ago\n" +
+                    "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time2 + " " + suffix2) + "\n" +
                     "**Reason:** " + punishment.reason + "";
                 if (punishment.status !== 1) {
                     if (punishment.status === 2) {
