@@ -182,7 +182,7 @@ punishmentmanager.ban = async function (msg, client) {
 punishmentmanager.getPunish = function (user, callback) {
     MySQLManager.getPunishments(user, (punishments) => {
         callback(punishments);
-    });
+    }).then(r => callback(r));
 };
 
 punishmentmanager.expire = async function (user, punishment_id) {
