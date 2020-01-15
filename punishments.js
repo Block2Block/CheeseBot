@@ -331,7 +331,7 @@ punishmentmanager.history = async function (msg, client) {
                 let x = "**Punisher:** " + punishment.punisher + "\n" +
                     "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute") + "\n" +
                     "**When:** " + time + " " + suffix + " ago\n" +
-                    "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time + " " + suffix) + " ago\n" +
+                    "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time2 + " " + suffix2) + " ago\n" +
                     "**Reason:** " + punishment.reason + "";
                 if (punishment.status !== 1) {
                     if (punishment.status === 2) {
