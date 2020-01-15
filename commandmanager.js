@@ -59,9 +59,8 @@ commandmanager.onCommand = async function (msg, client) {
                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                     });
                     await msg.reply("You have been removed from the role 'Jackbox'.");
-                    for (let x in ranks) {
-                        if (msg.member.roles.keyArray().includes(x)) {
-                            console.log("1");
+                    for (let x in msg.member.roles.keyArray()) {
+                        if (ranks.includes(x.toString())) {
                             return;
                         }
                     }
