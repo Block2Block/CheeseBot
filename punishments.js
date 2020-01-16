@@ -110,7 +110,7 @@ punishmentmanager.mute = async function (msg, client) {
         });
         msg.reply("You have muted " + client.guilds.get("105235654727704576").members.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-            .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
+            .setAuthor(client.guilds.get("105235654727704576").members.get(user).user.tag, client.guilds.get("105235654727704576").members.get(user).user.displayAvatarURL)
             .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been muted.")
             .addField("Punisher", msg.author.tag)
             .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
