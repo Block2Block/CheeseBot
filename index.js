@@ -1,7 +1,7 @@
 const git = require('simple-git');
 const nodemon = require('nodemon');
 
-git().pull('origin', 'develop', {}, start);
+git().pull('origin', 'master', {}, start);
 
 function start(err, result) {
     if (err) console.log(err);
