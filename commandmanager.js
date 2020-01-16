@@ -89,7 +89,6 @@ commandmanager.onCommand = async function (msg, client) {
                 }).catch((err) => {
                     console.log("Promise Rejection: " + err);
                     msg.reply("You must enable PM's in order to use this command.")
-
                 });
 
             }).catch((reason) => {
