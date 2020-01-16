@@ -39,7 +39,7 @@ punishmentmanager.mute = async function (msg, client) {
     timestamp = (new Date()).getTime();
     switch (args[2]) {
         case "1":
-            expire = timestamp + (60000);
+            expire = timestamp + (60000 * 60 * 12);
             break;
         case "2":
             expire = timestamp + (60000 * 60 * 48);
@@ -151,7 +151,7 @@ punishmentmanager.ban = async function (msg, client) {
     timestamp = (new Date()).getTime();
     switch (args[2]) {
         case "1":
-            expire = timestamp + (60000);
+            expire = timestamp + (60000 * 60 * 12);
             break;
         case "2":
             expire = timestamp + (60000 * 60 * 48);
@@ -340,9 +340,9 @@ punishmentmanager.history = async function (msg, client) {
                 time = Math.round(time);
                 let time2 = ((punishment.expire - punishment.timestamp) / 60000 / 60);
                 let suffix2 = "hours";
-                if (time >= 24) {
-                    time = (time / 24);
-                    suffix = "days";
+                if (time2 >= 24) {
+                    time2 = (time2 / 24);
+                    suffix2 = "days";
                 }
                 let x = "**Punisher:** " + punishment.punisher + "\n" +
                     "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute") + "\n" +
