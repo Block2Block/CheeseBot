@@ -278,6 +278,42 @@ commandmanager.onCommand = async function (msg, client) {
                     }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
+            } else if (msg.content.startsWith("!welcomemessage")) {
+                msg.member.createDM().then(dmchannel => {
+                    dmchannel.send(new Discord.RichEmbed()
+                        .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")
+                        .setTitle("Welcome!")
+                        .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #rules carefully, as interacting in any capacity in this Discord Server is taken as confirmation that you are going to abide by and agree with our rules. After you've done that, you can do !help in #bot-commands to get started!\n" +
+                            "\n" +
+                            "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
+                        .setColor('#FFAB00'));
+                }).catch((reason) => {
+                    console.log("Login Promise Rejection: " + reason);
+                });
+            } else if (msg.content.startsWith("!help")) {
+                await msg.reply("Available commands:\n" +
+                    "**__Joinable Game Roles__**\n" +
+                    "**!jackbox** - Jackbox Games [NSFW]\n" +
+                    "**!cah** - Cards Against Humanity [NSFW]\n" +
+                    "**!uno** - UNO\n" +
+                    "**!gameoflife** - THE GAME OF LIFE\n" +
+                    "**!overwatch** - Overwatch\n" +
+                    "**!clue** - Clue/Cluedo\n" +
+                    "**!livestreamannouncements** - Livestream Announcements\n" +
+                    "**!eventannouncements** - Mineplex Event Announcements\n\n" +
+                    "**__Music Commands (must have DJ Cheese role)__**\n" +
+                    "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
+                    "**!skip** - Skips the currently playing song on the bot.\n" +
+                    "**!stop** - Stops playback and clears the queue.\n" +
+                    "**!nowplaying** - Display what is now playing.\n" +
+                    "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
+                    "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
+                    "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
+                    "**!pause** - Pauses playback of the current song.\n" +
+                    "**!resume** - Resumes playback of the current song.\n" +
+                    "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
+                    "**!repeat** - Toggle repeat mode.\n" +
+                    "**!shuffle** - Shuffles the playlist. This is irreversible.")
             }
         } else if (msg.channel.id === "629807458864463883") {
             if (msg.content.startsWith("!join")) {
@@ -380,6 +416,30 @@ commandmanager.onCommand = async function (msg, client) {
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
+            } else if (msg.content.startsWith("!help")) {
+                await msg.reply("Available commands:\n" +
+                    "**__Joinable Game Roles__**\n" +
+                    "**!jackbox** - Jackbox Games [NSFW]\n" +
+                    "**!cah** - Cards Against Humanity [NSFW]\n" +
+                    "**!uno** - UNO\n" +
+                    "**!gameoflife** - THE GAME OF LIFE\n" +
+                    "**!overwatch** - Overwatch\n" +
+                    "**!clue** - Clue/Cluedo\n" +
+                    "**!livestreamannouncements** - Livestream Announcements\n" +
+                    "**!eventannouncements** - Mineplex Event Announcements\n\n" +
+                    "**__Music Commands (must have DJ Cheese role)__**\n" +
+                    "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
+                    "**!skip** - Skips the currently playing song on the bot.\n" +
+                    "**!stop** - Stops playback and clears the queue.\n" +
+                    "**!nowplaying** - Display what is now playing.\n" +
+                    "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
+                    "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
+                    "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
+                    "**!pause** - Pauses playback of the current song.\n" +
+                    "**!resume** - Resumes playback of the current song.\n" +
+                    "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
+                    "**!repeat** - Toggle repeat mode.\n" +
+                    "**!shuffle** - Shuffles the playlist. This is irreversible.")
             }
         } else if (msg.channel.id === "439114294307717131") {
             if (msg.content.startsWith("!join")) {
@@ -707,8 +767,7 @@ commandmanager.onCommand = async function (msg, client) {
                     }
                     await msg.reply("You have been added to the role 'Event Announcements'.");
                 }
-            }
-            if (msg.content.startsWith("!pull")) {
+            } else if (msg.content.startsWith("!pull")) {
                 if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344")) {
                     msg.reply("Pulling git changes and restarting bot.");
                     client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Pulling changes...");
@@ -724,6 +783,38 @@ commandmanager.onCommand = async function (msg, client) {
                     await msg.reply("You do not have permission to perform this command.");
                 }
                 return;
+            } else if (msg.content.startsWith("!help")) {
+                await msg.reply("Available commands:\n" +
+                    "**__Joinable Game Roles__**\n" +
+                    "**!jackbox** - Jackbox Games [NSFW]\n" +
+                    "**!cah** - Cards Against Humanity [NSFW]\n" +
+                    "**!uno** - UNO\n" +
+                    "**!gameoflife** - THE GAME OF LIFE\n" +
+                    "**!overwatch** - Overwatch\n" +
+                    "**!clue** - Clue/Cluedo\n" +
+                    "**!livestreamannouncements** - Livestream Announcements\n" +
+                    "**!eventannouncements** - Mineplex Event Announcements\n\n" +
+                    "**__Music Commands (must have DJ Cheese role)__**\n" +
+                    "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
+                    "**!skip** - Skips the currently playing song on the bot.\n" +
+                    "**!stop** - Stops playback and clears the queue.\n" +
+                    "**!nowplaying** - Display what is now playing.\n" +
+                    "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
+                    "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
+                    "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
+                    "**!pause** - Pauses playback of the current song.\n" +
+                    "**!resume** - Resumes playback of the current song.\n" +
+                    "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
+                    "**!repeat** - Toggle repeat mode.\n" +
+                    "**!shuffle** - Shuffles the playlist. This is irreversible.\n\n" +
+                    "**Moderation Commands (Moderation Staff Only)__**\n" +
+                    "**!ban [Discord Tag/ID] [1-3] [Reason]** - Ban a user.\n" +
+                    "**!mute [Discord Tag/ID] [1-3] [Reason]** - Mute a user.\n" +
+                    "**!unban [Discord Tag/ID] [Reason]** - Unban a user.\n" +
+                    "**!unmute [Discord Tag/ID] [Reason]** - Unmute a user.\n" +
+                    "**!history [Discord Tag/ID]** - Check a users punishment history.\n\n" +
+                    "**__Admin Commands__**\n" +
+                    "**!pull** - Pulls any changes from GitHub and restarts the bot.");
             }
         }
     }
