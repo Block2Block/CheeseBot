@@ -6,6 +6,9 @@ const CommandManager = require("./commandmanager.js");
 const ConnectionManager = require("./connectionmanager");
 const MySQLManager = require("./mysqlmanager.js");
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const client = new Discord.Client();
 
 client.login(token);
