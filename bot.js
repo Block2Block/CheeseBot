@@ -233,9 +233,9 @@ client.on('guildMemberAdd', (member) => {
             .setColor('#00AA00'));
         member.createDM().then(dmchannel => {
             dmchannel.send(new Discord.RichEmbed()
-                .setAuthor("Block2Block", "https://images-ext-2.discordapp.net/external/_qMCj5_iGSM4MIVfSm5qD3pLLXlUNGCObv_GRVPblpk/%3Fsize%3D2048/https/cdn.discordapp.com/avatars/105235320714326016/456d3e040de0ec913b23aa309c5083e3.png")
+                .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")
                 .setTitle("Welcome!")
-                .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #read-me in order to get started.\n" +
+                .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #rules carefully, as interacting in any capacity in this Discord Server is taken as confirmation that you are going to abide by and agree with our rules. After you've done that, you can do !help in #bot-commands to get started!\n" +
                     "\n" +
                     "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
                 .setColor('#FFAB00'));
