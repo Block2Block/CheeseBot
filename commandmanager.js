@@ -807,7 +807,7 @@ commandmanager.onCommand = async function (msg, client) {
                     "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
                     "**!repeat** - Toggle repeat mode.\n" +
                     "**!shuffle** - Shuffles the playlist. This is irreversible.\n\n" +
-                    "**Moderation Commands (Moderation Staff Only)__**\n" +
+                    "**__Moderation Commands (Moderation Staff Only)__**\n" +
                     "**!ban [Discord Tag/ID] [1-3] [Reason]** - Ban a user.\n" +
                     "**!mute [Discord Tag/ID] [1-3] [Reason]** - Mute a user.\n" +
                     "**!unban [Discord Tag/ID] [Reason]** - Unban a user.\n" +
