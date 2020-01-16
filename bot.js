@@ -4,7 +4,7 @@ const Punishments = require("./punishments.js");
 const token = 'NjQxMDQxNjYzMzQyNDExNzk2.XcCnoQ.EcvG7W9FE9TYoGFduk0GYyysbwM';
 const CommandManager = require("./commandmanager.js");
 const ConnectionManager = require("./connectionmanager");
-const MySQLManagaer = require("./mysqlmanager.js");
+const MySQLManager = require("./mysqlmanager.js");
 
 const client = new Discord.Client();
 
@@ -15,10 +15,9 @@ client.on('ready', () => {
     client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot has successfully been restarted due to a crash or file changes. ");
     client.user.setStatus("online");
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING",});
-    MySQLManagaer.getPunishOnLoad((punishments) => {
+    MySQLManager.getPunishOnLoad((punishments) => {
         console.log("Loading punishments...");
         for (let punishment of punishments) {
-            console.log("1");
             if (!client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                 continue;
             }
@@ -102,13 +101,15 @@ client.on('ready', () => {
                             }
                         }
                         punishment.timer = setTimeout(async () => {
-                            if (client.guilds.get("105235654727704576").members.keyArray().includes(user)) {
+                            if (client.guilds.get("105235654727704576").members.keyArray().includes(punishment.discord_id)) {
                                 if (client.guilds.get("105235654727704576").members.get(punishment.discord_id).roles.keyArray().includes("429970242916319244")) {
                                     client.guilds.get("105235654727704576").members.get(punishment.discord_id).removeRole("429970242916319244").catch((err) => {
                                         client.guilds.get("105235654727704576").channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                     });
                                 }
                             }
+
+                            await MySQLManager.expire(punishment.discord_id, id);
                         }, punishment.expire - punishment.timestamp);
                         Punishments.addPunishment(punishment);
                     }

@@ -73,6 +73,8 @@ punishmentmanager.mute = async function (msg, client) {
                     }
                 }
 
+                await MySQLManager.expire(user, id);
+
             }, expire - timestamp);
         }
 
