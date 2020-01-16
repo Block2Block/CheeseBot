@@ -51,6 +51,51 @@ commandmanager.onCommand = async function (msg, client) {
                 await msg.reply("You do not have permission to perform this command.");
             }
             return;
+        } else if (msg.content.startsWith("!help")) {
+            msg.member.createDM().then(dmchannel => {
+                dmchannel.send("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
+                    "Available commands:\n" +
+                    "**__Joinable Game Roles__**\n" +
+                    "**!jackbox** - Jackbox Games [NSFW]\n" +
+                    "**!cah** - Cards Against Humanity [NSFW]\n" +
+                    "**!uno** - UNO\n" +
+                    "**!gameoflife** - THE GAME OF LIFE\n" +
+                    "**!overwatch** - Overwatch\n" +
+                    "**!clue** - Clue/Cluedo\n" +
+                    "**!livestreamannouncements** - Livestream Announcements\n" +
+                    "**!eventannouncements** - Mineplex Event Announcements\n\n" +
+                    ((msg.member.roles.keyArray().includes("629034598113738773") || msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906"))?"**__Music Commands (must have DJ Cheese role)__**\n" +
+                        "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
+                        "**!skip** - Skips the currently playing song on the bot.\n" +
+                        "**!stop** - Stops playback and clears the queue.\n" +
+                        "**!nowplaying** - Display what is now playing.\n" +
+                        "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
+                        "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
+                        "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
+                        "**!pause** - Pauses playback of the current song.\n" +
+                        "**!resume** - Resumes playback of the current song.\n" +
+                        "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
+                        "**!repeat** - Toggle repeat mode.\n" +
+                        "**!shuffle** - Shuffles the playlist. This is irreversible.\n\n":"") +
+                    ((msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344") || msg.member.roles.keyArray().includes("665237632082640906"))?"**__Moderation Commands (Moderation Staff Only)__**\n" +
+                        "**!ban [Discord Tag/ID] [1-3] [Reason]** - Ban a user.\n" +
+                        "**!mute [Discord Tag/ID] [1-3] [Reason]** - Mute a user.\n" +
+                        "**!unban [Discord Tag/ID] [Reason]** - Unban a user.\n" +
+                        "**!unmute [Discord Tag/ID] [Reason]** - Unmute a user.\n" +
+                        "**!history [Discord Tag/ID]** - Check a users punishment history.\n\n":"") +
+                    ((msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344"))?"**__Admin Commands__**\n" +
+                        "**!pull** - Pulls any changes from GitHub and restarts the bot.":"")).then(() => {
+                    msg.react("✅");
+                }).catch((err) => {
+                    console.log("Promise Rejection: " + err);
+                    msg.reply("You must enable PM's in order to use this command.")
+
+                });
+
+            }).catch((reason) => {
+                console.log("Promise Rejection: " + reason);
+                msg.reply("You must enable PM's in order to use this command.")
+            });
         }
         if (msg.channel.id === "439114503171604480") {
             if (msg.content.startsWith("!jackbox")) {
@@ -290,40 +335,6 @@ commandmanager.onCommand = async function (msg, client) {
                 }).catch((reason) => {
                     console.log("Login Promise Rejection: " + reason);
                 });
-            } else if (msg.content.startsWith("!help")) {
-                msg.member.createDM().then(dmchannel => {
-                    dmchannel.send("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
-                        "Available commands:\n" +
-                        "**__Joinable Game Roles__**\n" +
-                        "**!jackbox** - Jackbox Games [NSFW]\n" +
-                        "**!cah** - Cards Against Humanity [NSFW]\n" +
-                        "**!uno** - UNO\n" +
-                        "**!gameoflife** - THE GAME OF LIFE\n" +
-                        "**!overwatch** - Overwatch\n" +
-                        "**!clue** - Clue/Cluedo\n" +
-                        "**!livestreamannouncements** - Livestream Announcements\n" +
-                        "**!eventannouncements** - Mineplex Event Announcements\n\n" +
-                        "**__Music Commands (must have DJ Cheese role)__**\n" +
-                        "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
-                        "**!skip** - Skips the currently playing song on the bot.\n" +
-                        "**!stop** - Stops playback and clears the queue.\n" +
-                        "**!nowplaying** - Display what is now playing.\n" +
-                        "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
-                        "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
-                        "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
-                        "**!pause** - Pauses playback of the current song.\n" +
-                        "**!resume** - Resumes playback of the current song.\n" +
-                        "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
-                        "**!repeat** - Toggle repeat mode.\n" +
-                        "**!shuffle** - Shuffles the playlist. This is irreversible.").catch((err) => {
-                        console.log("Promise Rejection: " + err);
-                        msg.reply("You must enable PM's in order to use this command.")
-                    });
-                    msg.react("✅");
-                }).catch((reason) => {
-                    console.log("Promise Rejection: " + reason);
-                    msg.reply("You must enable PM's in order to use this command.")
-                });
             }
         } else if (msg.channel.id === "629807458864463883") {
             if (msg.content.startsWith("!join")) {
@@ -426,40 +437,6 @@ commandmanager.onCommand = async function (msg, client) {
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
                 }
-            } else if (msg.content.startsWith("!help")) {
-                msg.member.createDM().then(dmchannel => {
-                    dmchannel.send("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
-                        "Available commands:\n" +
-                        "**__Joinable Game Roles__**\n" +
-                        "**!jackbox** - Jackbox Games [NSFW]\n" +
-                        "**!cah** - Cards Against Humanity [NSFW]\n" +
-                        "**!uno** - UNO\n" +
-                        "**!gameoflife** - THE GAME OF LIFE\n" +
-                        "**!overwatch** - Overwatch\n" +
-                        "**!clue** - Clue/Cluedo\n" +
-                        "**!livestreamannouncements** - Livestream Announcements\n" +
-                        "**!eventannouncements** - Mineplex Event Announcements\n\n" +
-                        "**__Music Commands (must have DJ Cheese role)__**\n" +
-                        "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
-                        "**!skip** - Skips the currently playing song on the bot.\n" +
-                        "**!stop** - Stops playback and clears the queue.\n" +
-                        "**!nowplaying** - Display what is now playing.\n" +
-                        "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
-                        "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
-                        "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
-                        "**!pause** - Pauses playback of the current song.\n" +
-                        "**!resume** - Resumes playback of the current song.\n" +
-                        "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
-                        "**!repeat** - Toggle repeat mode.\n" +
-                        "**!shuffle** - Shuffles the playlist. This is irreversible.").catch((err) => {
-                        console.log("Promise Rejection: " + err);
-                        msg.reply("You must enable PM's in order to use this command.")
-                    });
-                    msg.react("✅");
-                }).catch((reason) => {
-                    console.log("Promise Rejection: " + reason);
-                    msg.reply("You must enable PM's in order to use this command.")
-                });
             }
         } else if (msg.channel.id === "439114294307717131") {
             if (msg.content.startsWith("!join")) {
@@ -803,48 +780,6 @@ commandmanager.onCommand = async function (msg, client) {
                     await msg.reply("You do not have permission to perform this command.");
                 }
                 return;
-            } else if (msg.content.startsWith("!help")) {
-                msg.member.createDM().then(dmchannel => {
-                    dmchannel.send("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
-                        "Available commands:\n" +
-                        "**__Joinable Game Roles__**\n" +
-                        "**!jackbox** - Jackbox Games [NSFW]\n" +
-                        "**!cah** - Cards Against Humanity [NSFW]\n" +
-                        "**!uno** - UNO\n" +
-                        "**!gameoflife** - THE GAME OF LIFE\n" +
-                        "**!overwatch** - Overwatch\n" +
-                        "**!clue** - Clue/Cluedo\n" +
-                        "**!livestreamannouncements** - Livestream Announcements\n" +
-                        "**!eventannouncements** - Mineplex Event Announcements\n\n" +
-                        "**__Music Commands (must have DJ Cheese role)__**\n" +
-                        "**!play [YouTube URL/Search Query]** - Play a song through the bot. Must be in a channel.\n" +
-                        "**!skip** - Skips the currently playing song on the bot.\n" +
-                        "**!stop** - Stops playback and clears the queue.\n" +
-                        "**!nowplaying** - Display what is now playing.\n" +
-                        "**!volume [1-10]** - Sets the bots volume. Defaults to 10.\n" +
-                        "**!join** - Forces the bot to join your current channel. Must be in a channel.\n" +
-                        "**!leave** - Forces the bot to leave the channel and clears the song queue.\n" +
-                        "**!pause** - Pauses playback of the current song.\n" +
-                        "**!resume** - Resumes playback of the current song.\n" +
-                        "**!clearqueue** - Clears the queue and leaves the currently playing song in the queue.\n" +
-                        "**!repeat** - Toggle repeat mode.\n" +
-                        "**!shuffle** - Shuffles the playlist. This is irreversible.\n\n" +
-                        "**__Moderation Commands (Moderation Staff Only)__**\n" +
-                        "**!ban [Discord Tag/ID] [1-3] [Reason]** - Ban a user.\n" +
-                        "**!mute [Discord Tag/ID] [1-3] [Reason]** - Mute a user.\n" +
-                        "**!unban [Discord Tag/ID] [Reason]** - Unban a user.\n" +
-                        "**!unmute [Discord Tag/ID] [Reason]** - Unmute a user.\n" +
-                        "**!history [Discord Tag/ID]** - Check a users punishment history.\n\n" +
-                        "**__Admin Commands__**\n" +
-                        "**!pull** - Pulls any changes from GitHub and restarts the bot.").catch((err) => {
-                        console.log("Promise Rejection: " + err);
-                        msg.reply("You must enable PM's in order to use this command.")
-                    });
-                    msg.react("✅");
-                }).catch((reason) => {
-                    console.log("Promise Rejection: " + reason);
-                    msg.reply("You must enable PM's in order to use this command.")
-                });
             }
         }
     }
