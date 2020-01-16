@@ -1,13 +1,12 @@
 const index = {};
+const dotenv = require('dotenv');
+dotenv.config();
 const Discord = require("discord.js");
 const Punishments = require("./punishments.js");
 const token = process.env.BOT_TOKEN;
 const CommandManager = require("./commandmanager.js");
 const ConnectionManager = require("./connectionmanager");
 const MySQLManager = require("./mysqlmanager.js");
-
-const dotenv = require('dotenv');
-dotenv.config();
 
 const client = new Discord.Client();
 
