@@ -291,7 +291,8 @@ commandmanager.onCommand = async function (msg, client) {
                     console.log("Login Promise Rejection: " + reason);
                 });
             } else if (msg.content.startsWith("!help")) {
-                await msg.reply("Available commands:\n" +
+                await msg.reply("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
+                    "Available commands:\n" +
                     "**__Joinable Game Roles__**\n" +
                     "**!jackbox** - Jackbox Games [NSFW]\n" +
                     "**!cah** - Cards Against Humanity [NSFW]\n" +
@@ -417,7 +418,8 @@ commandmanager.onCommand = async function (msg, client) {
                     await msg.reply("You do not have permission to perform this command.");
                 }
             } else if (msg.content.startsWith("!help")) {
-                await msg.reply("Available commands:\n" +
+                await msg.reply("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
+                    "Available commands:\n" +
                     "**__Joinable Game Roles__**\n" +
                     "**!jackbox** - Jackbox Games [NSFW]\n" +
                     "**!cah** - Cards Against Humanity [NSFW]\n" +
@@ -784,7 +786,8 @@ commandmanager.onCommand = async function (msg, client) {
                 }
                 return;
             } else if (msg.content.startsWith("!help")) {
-                await msg.reply("Available commands:\n" +
+                await msg.reply("Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
+                    "Available commands:\n" +
                     "**__Joinable Game Roles__**\n" +
                     "**!jackbox** - Jackbox Games [NSFW]\n" +
                     "**!cah** - Cards Against Humanity [NSFW]\n" +
