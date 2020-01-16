@@ -103,7 +103,12 @@ punishmentmanager.mute = async function (msg, client) {
             suffix = "days";
         }
 
-        msg.channel.send("<@!" + user + "> You have been muted for " + time + " " + suffix + ". Reason: `" + reason + "`");
+        client.guilds.get("105235654727704576").members.get(user).createDM().then(dmchannel => {
+            dmchannel.send("You have been muted in The Cult of Cheese Discord for **" + ((expire === -1) ? "Permanent" : time + " " + suffix) + "**. Reason: **" + reason + "**");
+        }).catch((reason) => {
+            console.log("Login Promise Rejection: " + reason);
+        });
+        msg.reply("You have muted " + client.guilds.get("105235654727704576").members.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
             .setAuthor(msg.author.tag, msg.author.displayAvatarURL)
             .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been muted.")
@@ -165,11 +170,12 @@ punishmentmanager.ban = async function (msg, client) {
             suffix = "days";
         }
 
-        client.guilds.get("105235654727704576").members.get(user.id).createDM().then(dmchannel => {
+        client.guilds.get("105235654727704576").members.get(user).createDM().then(dmchannel => {
             dmchannel.send("You have been banned from The Cult of Cheese Discord for **" + ((expire === -1) ? "Permanent" : time + " " + suffix) + "**. Reason: **" + reason + "**");
         }).catch((reason) => {
             console.log("Login Promise Rejection: " + reason);
         });
+        msg.reply("You have banned " + client.guilds.get("105235654727704576").members.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
         client.guilds.get("105235654727704576").members.get(user).kick("Ban by Moderator. Reason: " + reason);
         client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
             .setAuthor(client.guilds.get("105235654727704576").members.get(user).user.tag, client.guilds.get("105235654727704576").members.get(user).user.displayAvatarURL)
