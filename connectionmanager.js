@@ -110,7 +110,7 @@ connectionmanager.playCommand = async function (URL, msg, client) {
 
 async function play(song, client) {
 
-    if (!song) {
+    if (!song || connection == null) {
         client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
