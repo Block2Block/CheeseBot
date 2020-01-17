@@ -767,7 +767,7 @@ commandmanager.onCommand = async function (msg, client) {
                 if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344")) {
                     msg.reply("Pulling git changes and restarting bot.");
                     client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Pulling changes...");
-                    git().pull('origin', 'develop', {}, (err, result) => {
+                    git().pull('origin', 'master', {}, (err, result) => {
                         if (err) console.log(err);
                         console.log(result);
                         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
