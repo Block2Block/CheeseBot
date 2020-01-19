@@ -10,7 +10,15 @@ const MySQLManager = require("./mysqlmanager.js");
 
 const client = new Discord.Client();
 
-client.login(token);
+function handleDisconnect() {
+    client.login(token).catch((err) => {
+        if (err) {                                     // or restarting (takes a while sometimes).
+            console.log('error when connecting to db:', err);
+            setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        }
+    });
+}
+
 
 client.on('ready', () => {
     console.log("The discord bot has been successfully loaded.");
@@ -350,6 +358,14 @@ client.on('message', (msg) => {
     if (msg.content.startsWith("!")) {
         CommandManager.onCommand(msg, client);
     }
+});
+
+client.on('error', (error) => {
+    console.log("An error has occured. Error: " + error);
+    if (client.status === 5) {
+        handleDisconnect();
+    }
+
 });
 
 module.exports = index;
