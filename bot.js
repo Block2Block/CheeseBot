@@ -19,6 +19,7 @@ function handleDisconnect() {
     });
 }
 
+handleDisconnect();
 
 client.on('ready', () => {
     console.log("The discord bot has been successfully loaded.");
