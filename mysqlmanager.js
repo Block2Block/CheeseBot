@@ -1,5 +1,6 @@
 const mysql = require('mysql');
-const MySQLClient = mysql.createConnection({
+const bot = require('./bot.js');
+let MySQLClient = mysql.createConnection({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
@@ -9,19 +10,35 @@ const MySQLClient = mysql.createConnection({
 function handleDisconnect() {// Recreate the connection, since
     // the old one cannot be reused.
 
-    MySQLClient.connect(function (err) {              // The server is either down
-        if (err) {                                     // or restarting (takes a while sometimes).
+    MySQLClient.connect(function (err) {
+        if (err) {
+            MySQLClient.destroy();
+            MySQLClient = mysql.createConnection({
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                password: process.env.MYSQL_PASSWORD,
+                database: process.env.MYSQL_DATABASE
+            });
             console.log('error when connecting to db:', err);
-            setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-        }                                     // to avoid a hot loop, and to allow our node script to
-    });                                     // process asynchronous requests in the meantime.
-                                            // If you're also serving http, display a 503 error.
+            setTimeout(handleDisconnect, 2000);
+        }
+    });
     MySQLClient.on('error', function (err) {
         console.log('db error', err);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === "") { // Connection to the MySQL server is usually
-            handleDisconnect();                         // lost due to either server restart, or a
-        } else {                                      // connnection idle timeout (the wait_timeout
-                                                       // server variable configures this)
+        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+            MySQLClient.destroy();
+            MySQLClient = mysql.createConnection({
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                password: process.env.MYSQL_PASSWORD,
+                database: process.env.MYSQL_DATABASE
+            });
+            handleDisconnect();
+        } else {
+            let client = bot.getClient();
+            if (client.status === 3 || client.status === 0) {
+                client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.stack + "```")
+            }
         }
     });
 }
