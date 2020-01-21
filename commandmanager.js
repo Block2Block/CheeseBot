@@ -765,16 +765,20 @@ commandmanager.onCommand = async function (msg, client) {
                 }
             } else if (msg.content.startsWith("!pull")) {
                 if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344")) {
-                    msg.reply("Pulling git changes and restarting bot.");
+                    await msg.reply("Pulling git changes and restarting bot.");
                     client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Pulling changes...");
-                    git().pull('origin', 'master', {}, (err, result) => {
+                    git().pull('origin', 'master', {}, async (err, result) => {
                         if (err) console.log(err);
                         console.log(result);
-                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
-                            "**Insertions: **" + result.summary.insertions + "\n" +
-                            "**Deletions: **" + result.summary.deletions);
-                        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Restarting...");
-                        process.exit(0);
+                        if (result.summary.changes === 0 && result.summary.insertions === 0 && result.summary.deletions === 0) {
+                            await client.guilds.get("105235654727704576").channels.get("429972539905671168").send("The bot is up to date.");
+                        } else {
+                            await client.guilds.get("105235654727704576").channels.get("429972539905671168").send("**Changes: **" + result.summary.changes + "\n" +
+                                "**Insertions: **" + result.summary.insertions + "\n" +
+                                "**Deletions: **" + result.summary.deletions);
+                            await client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Restarting...");
+                            process.exit(0);
+                        }
                     });
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
@@ -782,8 +786,8 @@ commandmanager.onCommand = async function (msg, client) {
                 return;
             } else if (msg.content.startsWith("!restart")) {
                 if (msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344")) {
-                    msg.reply("Restarting bot...");
-                    client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Restarting bot...");
+                    await msg.reply("Restarting bot...");
+                    await client.guilds.get("105235654727704576").channels.get("429972539905671168").send("Restarting bot...");
                     process.exit(0);
                 } else {
                     await msg.reply("You do not have permission to perform this command.");
