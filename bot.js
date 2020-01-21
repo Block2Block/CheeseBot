@@ -375,4 +375,18 @@ index.getClient = function() {
     return client;
 };
 
+process.on('exit', () => {
+   ConnectionManager.leave();
+   client.destroy();
+});
+
+process.on('uncaughtException', function(err) {
+    if (client.status === 3 || client.status === 0) {
+        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
+            console.log('Caught exception: ' + err);
+            process.exit(1)
+        })
+    }
+});
+
 module.exports = index;
