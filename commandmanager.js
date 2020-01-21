@@ -84,7 +84,8 @@ commandmanager.onCommand = async function (msg, client) {
                         "**!unmute [Discord Tag/ID] [Reason]** - Unmute a user.\n" +
                         "**!history [Discord Tag/ID]** - Check a users punishment history.\n\n":"") +
                     ((msg.member.roles.keyArray().includes("207084647962771457") || msg.member.roles.keyArray().includes("207083210667065344"))?"**__Admin Commands__**\n" +
-                        "**!pull** - Pulls any changes from GitHub and restarts the bot.":"")).then(() => {
+                        "**!pull** - Pulls any changes from GitHub and restarts the bot if there were any changes.\n" +
+                        "**!restart** - Forces the bot to restart.":"")).then(() => {
                     msg.react("✅");
                 }).catch((err) => {
                     console.log("Promise Rejection: " + err);
