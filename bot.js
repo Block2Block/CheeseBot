@@ -365,8 +365,14 @@ client.on('error', (error) => {
     console.log("An error has occured. Error: " + error);
     if (client.status === 5) {
         handleDisconnect();
+    } else if (client.status === 3 || client.status === 0) {
+        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
     }
 
 });
+
+index.getClient = function() {
+    return client;
+};
 
 module.exports = index;
