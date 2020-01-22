@@ -97,9 +97,7 @@ commandManager.onCommand = async function (msg, client) {
                     "Available commands:";
 
                 for (let x of categories.values()) {
-                    console.log(help.split("").length + helpStrings.get(x.node).split("").length);
                     if (help.split("").length + helpStrings.get(x.node).split("").length >= 2000) {
-                        console.log("Message too long, sending current.");
                         dmchannel.send(help).catch((err) => {
                             console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                             msg.reply("You must enable PM's in order to use this command.")
@@ -119,6 +117,14 @@ commandManager.onCommand = async function (msg, client) {
                             break;
                         }
                     }
+                }
+
+                if (help.split("").length >= 1920) {
+                    dmchannel.send(help).catch((err) => {
+                        console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                        msg.reply("You must enable PM's in order to use this command.")
+                    });
+                    help = "";
                 }
                 help += "**__NOTE:__** Commands you do not have permission to use are not visible to you.";
                 dmchannel.send(help).then(() => {
