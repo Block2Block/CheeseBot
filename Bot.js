@@ -3,11 +3,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 //Loading in external libraries.
-const discord = require("discord.js");
+const Discord = require("discord.js");
 
 //Loading in constants.
 const token = process.env.BOT_TOKEN;
-const client = new discord.Client();
+const client = new Discord.Client();
 const Constants = require("./utils/Constants.js");
 const EventManager = require("./managers/EventManager.js");
 const botConstants = Constants.getBotConstants();
