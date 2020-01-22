@@ -52,7 +52,7 @@ function connect() {
 
 connect();
 
-client.on('ready', () => {EventManager.ready()});
+client.on('ready', () => {EventManager.ready(client)});
 
 client.on('guildMemberAdd', (member) => {
     EventManager.join(member);

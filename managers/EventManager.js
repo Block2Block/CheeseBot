@@ -1,7 +1,7 @@
 const eventmanager = {};
 
 //Loading internal libraries.
-const MySQLManager = require("../utils/MySQLManager.js");
+let MySQLManager;
 const Bot = require("../Bot.js");
 const Punishments = require("./PunishmentManager.js");
 
@@ -9,7 +9,8 @@ const Punishments = require("./PunishmentManager.js");
 const botConstants = Bot.getBotConstants();
 const client = Bot.getClient();
 
-eventmanager.ready = function() {
+eventmanager.ready = function(client) {
+    MySQLManager = require("../utils/MySQLManager.js");
     console.log("Bot Client Connected.");
 
     client.user.setStatus("online");
