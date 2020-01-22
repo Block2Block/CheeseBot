@@ -12,9 +12,9 @@ module.exports = {
         if (msg.member.voiceChannel) {
             await ConnectionManager.joinChannel(msg.member.voiceChannel, msg, msg.client, (success) => {
                 if (success) {
-                    msg.reply("successfully joined your channel");
+                    msg.reply("Successfully joined your channel!");
                 } else {
-                    msg.reply("Failed to join your channel")
+                    msg.reply("Failed to join your channel!")
                 }
             });
 

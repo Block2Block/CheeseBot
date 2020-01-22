@@ -67,7 +67,9 @@ connectionManager.playCommand = async function (URL, msg) {
         YTPL(URL, {limit: 0}, async function (err, playlist) {
             //If the bot is not already in the channel, force it to join.
             if (connection == null || !connection) {
-                await connectionManager.joinChannel(msg.member.voiceChannel, msg);
+                await connectionManager.joinChannel(msg.member.voiceChannel, msg, (success) => {
+
+                });
             }
 
             //If there was an error, let the user know.
@@ -100,7 +102,9 @@ connectionManager.playCommand = async function (URL, msg) {
     } else if (await YTDL.validateURL(URL)) {
         //If the bot is not already in the channel, force it to join.
         if (connection == null || !connection) {
-            await connectionManager.joinChannel(msg.member.voiceChannel, msg);
+            await connectionManager.joinChannel(msg.member.voiceChannel, msg, (success) => {
+
+            });
         }
 
         //Get the song info and put it into an object.
