@@ -55,13 +55,6 @@ connectionManager.leave = function () {
 
 connectionManager.playCommand = async function (URL, msg) {
     let client = msg.client;
-    if (!msg.member.voiceChannel) {
-        return msg.reply("You must be in the same channel as the bot in order to use music commands.")
-    } else if (client.voiceChannel) {
-        if (msg.member.voiceChannel.id !== client.voiceChannel.id) {
-            return msg.reply("You must be in the same channel as the bot in order to use music commands.");
-        }
-    }
     //If it is detected as a value YouTube Playlist URL, create an array with the URLS of each song onto it, then add that to the queue.
     if (await YTPL.validateURL(URL)) {
         YTPL(URL, {limit: 0}, async function (err, playlist) {
@@ -136,7 +129,7 @@ connectionManager.playCommand = async function (URL, msg) {
             }
 
             //Execute this function again with the URL of the first item found with the search term.
-            connectionManager.playCommand(searchResults.items[0].link, msg, client);
+            connectionManager.playCommand(searchResults.items[0].link, msg);
             msg.reply("Result found, playing " + searchResults.items[0].title + ".");
         });
     }
