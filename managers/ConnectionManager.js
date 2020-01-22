@@ -67,7 +67,7 @@ connectionManager.playCommand = async function (URL, msg) {
         YTPL(URL, {limit: 0}, async function (err, playlist) {
             //If the bot is not already in the channel, force it to join.
             if (connection == null || !connection) {
-                await connectionManager.joinChannel(msg.member.voiceChannel, msg, (success) => {
+                await connectionManager.joinChannel(msg.member.voiceChannel, msg, client, (success) => {
 
                 });
             }
@@ -102,7 +102,7 @@ connectionManager.playCommand = async function (URL, msg) {
     } else if (await YTDL.validateURL(URL)) {
         //If the bot is not already in the channel, force it to join.
         if (connection == null || !connection) {
-            await connectionManager.joinChannel(msg.member.voiceChannel, msg, (success) => {
+            await connectionManager.joinChannel(msg.member.voiceChannel, msg, client, (success) => {
 
             });
         }
