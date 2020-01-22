@@ -21,8 +21,15 @@ const botConstants = {
 };
 
 
-//Loading module export array.
-const bot = {};
+//Loading module export object.
+const bot = {
+    getClient: function () {
+        return client;
+    },
+    getBotConstants: function () {
+        return botConstants
+    }
+};
 
 //Loading in internal libraries.
 const Punishments = require("./managers/PunishmentManager.js");
@@ -158,14 +165,6 @@ client.on('error', (error) => {
     }
 
 });
-
-bot.getClient = function() {
-    return client;
-};
-
-bot.getBotConstants = function() {
-    return botConstants;
-};
 
 //Catching the process exit in order to cleanly exit.
 process.on('exit', () => {
