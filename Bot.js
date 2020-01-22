@@ -43,7 +43,7 @@ const EventManager = require("./managers/EventManager.js");
 function connect() {
     client.login(token).catch((err) => {
         if (err) {
-            console.log('error when connecting to db:', err);
+            console.error('error when connecting to db:', err);
             setTimeout(connect, 2000);
         }
     });
