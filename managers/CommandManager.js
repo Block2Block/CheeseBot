@@ -42,7 +42,7 @@ for (let x of files) {
     let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
     console.log(commandFiles);
     for (let z of commandFiles) {
-        let command = require("../commands/" + category.node + "/" + z.name.toString() + "/");
+        let command = require("../commands/" + category.node + "/" + z.name.toString());
 
         //Because I already know the category exists, I just need to check its permission
         if (!permissions.has(command.permission)) {
