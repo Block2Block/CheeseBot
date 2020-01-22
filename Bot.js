@@ -144,7 +144,7 @@ client.on('message', (msg) => {
 client.on('error', (error) => {
     console.log("An error has occured. Error: " + error);
     if (client.status === 5) {
-        handleDisconnect();
+        connect();
     } else if (client.status === 3 || client.status === 0) {
         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
     }
@@ -153,7 +153,7 @@ client.on('error', (error) => {
 
 //Catching the process exit in order to cleanly exit.
 process.on('exit', () => {
-   ConnectionManager.leave();
+   CommandManager.getConnectionManager().leave();
    client.destroy();
 });
 

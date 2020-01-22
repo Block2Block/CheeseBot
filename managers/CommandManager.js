@@ -201,7 +201,7 @@ commandManager.getPunishmentManager = function () {
     return PunishmentManager;
 };
 commandManager.getConnectionManager = function () {
-    return PunishmentManager;
+    return ConnectionManager;
 };
 
 module.exports = commandManager;
