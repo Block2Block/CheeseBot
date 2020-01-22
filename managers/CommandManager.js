@@ -97,6 +97,10 @@ commandManager.onCommand = async function (msg, client) {
                     "Available commands:";
 
                 for (let x of categories.values()) {
+                    if (help.length + helpStrings.get(x.node).length >= 2000) {
+                        dmchannel.send(help);
+                        help = "";
+                    }
                     let catPermissions = x.permission_visibility;
                     for (let y of catPermissions) {
                         let permission = permissions.get(y);
