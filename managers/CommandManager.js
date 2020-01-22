@@ -115,7 +115,7 @@ commandManager.onCommand = async function (msg, client) {
                 dmchannel.send(help).then(() => {
                     msg.react("✅");
                 }).catch((err) => {
-                    console.log("Promise Rejection: " + err);
+                    console.log("Promise Rejection: " + err.stack);
                     msg.reply("You must enable PM's in order to use this command.")
                 });
 
