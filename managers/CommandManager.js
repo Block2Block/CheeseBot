@@ -15,6 +15,7 @@ const ranks = [];
 //Load all of the permissions, categories, commands and aliases.
 //Starting off with permissions.
 let files = fs.readdirSync('./permissions/', {withFileTypes: true});
+console.log(files);
 for (let x of files) {
     let permission = require("../permissions/" + x.toString());
     permissions.set(permission.node, permission);
@@ -23,6 +24,7 @@ for (let x of files) {
 
 //Now categories and commands.
 files = fs.readdirSync('./categories/', {withFileTypes: true});
+console.log(files);
 for (let x of files) {
     let category = require("../categories/" + x.toString());
 
@@ -38,6 +40,7 @@ for (let x of files) {
 
     //Because each category has its own folder, I will now need to load in all of the commands and aliases for that category.
     let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
+    console.log(commandFiles);
     for (let z of commandFiles) {
         let command = require("../commands/" + x + "/" + z.toString() + "/");
 

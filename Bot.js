@@ -33,6 +33,7 @@ const bot = {
 
 module.exports = bot;
 
+
 //Loading in internal libraries.
 const Punishments = require("./managers/PunishmentManager.js");
 const CommandManager = require("./managers/CommandManager.js");
