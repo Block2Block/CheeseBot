@@ -16,7 +16,7 @@ const ranks = [];
 //Starting off with permissions.
 let files = fs.readdirSync('./permissions/', {withFileTypes: true});
 for (let x of files) {
-    let permission = require("../permissions/" + x);
+    let permission = require("../permissions/" + x.toString());
     permissions.set(permission.node, permission);
     console.log("Loaded permission " + x);
 }
@@ -24,7 +24,7 @@ for (let x of files) {
 //Now categories and commands.
 files = fs.readdirSync('./categories/', {withFileTypes: true});
 for (let x of files) {
-    let category = require("../categories/" + x);
+    let category = require("../categories/" + x.toString());
 
     //Checking to make sure that the permission exists for the visibility.
     for (let y of category.permission_visibility) {
@@ -39,7 +39,7 @@ for (let x of files) {
     //Because each category has its own folder, I will now need to load in all of the commands and aliases for that category.
     let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
     for (let z of commandFiles) {
-        let command = require("../permissions/" + x);
+        let command = require("../commands/" + x + "/" + z.toString() + "/");
 
         //Because I already know the category exists, I just need to check its permission
         if (!permissions.has(command.permission)) {
