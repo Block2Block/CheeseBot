@@ -98,7 +98,11 @@ commandManager.onCommand = async function (msg, client) {
 
                 for (let x of categories.values()) {
                     if (help.length + helpStrings.get(x.node).length >= 2000) {
-                        dmchannel.send(help);
+                        console.log("Message too long, sending current.");
+                        dmchannel.send(help).catch((err) => {
+                            console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                            msg.reply("You must enable PM's in order to use this command.")
+                        });
                         help = "";
                     }
                     let catPermissions = x.permission_visibility;
