@@ -17,16 +17,16 @@ const ranks = [];
 let files = fs.readdirSync('./permissions/', {withFileTypes: true});
 console.log(files);
 for (let x of files) {
-    let permission = require("../permissions/" + x.toString());
+    let permission = require("../permissions/" + x.name.toString());
     permissions.set(permission.node, permission);
-    console.log("Loaded permission " + x);
+    console.log("Loaded permission " + x.name);
 }
 
 //Now categories and commands.
 files = fs.readdirSync('./categories/', {withFileTypes: true});
 console.log(files);
 for (let x of files) {
-    let category = require("../categories/" + x.toString());
+    let category = require("../categories/" + x.name.toString());
 
     //Checking to make sure that the permission exists for the visibility.
     for (let y of category.permission_visibility) {
@@ -42,7 +42,7 @@ for (let x of files) {
     let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
     console.log(commandFiles);
     for (let z of commandFiles) {
-        let command = require("../commands/" + x + "/" + z.toString() + "/");
+        let command = require("../commands/" + x.name + "/" + z.name.toString() + "/");
 
         //Because I already know the category exists, I just need to check its permission
         if (!permissions.has(command.permission)) {
@@ -59,12 +59,12 @@ for (let x of files) {
         //Appending command to help string.
         helpString += "**" + botConstants.commandPrefix + command.arguments + "** - " + command.desc + "\n";
 
-        console.log("Loaded command " + z);
+        console.log("Loaded command " + z.name);
     }
 
     categories.set(category.node, category);
     helpStrings.set(category.node , helpString);
-    console.log("Loaded category " + x);
+    console.log("Loaded category " + x.name);
 }
 
 console.log("Successfully loaded in commands.");
