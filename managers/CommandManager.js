@@ -155,7 +155,7 @@ commandManager.onCommand = async function (msg, client) {
             }
         }
 
-        let x = msg.member.roles.keyArray().filter(value => permission.roles.includes(value));
+        let x = permission.roles.filter(value => msg.member.roles.keyArray().includes(value.toString()));
         if (x.size < 1) {
             await msg.reply("You do not have permission to perform that command.");
             return;
