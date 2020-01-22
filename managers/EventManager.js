@@ -85,7 +85,7 @@ eventmanager.ready = function(client, CommandManager) {
                                     console.log("Login Promise Rejection: " + reason);
                                 });
 
-                                client.guilds.get(botConstants.guildId).members.get(punishment.user).addRole(botConstants.mutedRole).catch((err) => {
+                                client.guilds.get(botConstants.guildId).members.get(punishment.user).add(botConstants.mutedRole).catch((err) => {
                                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                                 });
                             }
@@ -93,7 +93,7 @@ eventmanager.ready = function(client, CommandManager) {
                         punishment.timer = setTimeout(async () => {
                             if (client.guilds.get(botConstants.guildId).members.keyArray().includes(punishment.user)) {
                                 if (client.guilds.get(botConstants.guildId).members.get(punishment.user).roles.keyArray().includes(botConstants.mutedRole)) {
-                                    client.guilds.get(botConstants.guildId).members.get(punishment.user).removeRole(botConstants.mutedRole).catch((err) => {
+                                    client.guilds.get(botConstants.guildId).members.get(punishment.user).remove(botConstants.mutedRole).catch((err) => {
                                         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                                     });
                                 }
@@ -106,7 +106,7 @@ eventmanager.ready = function(client, CommandManager) {
                 } else {
                     //Remove punishment, it has expired.
                     Punishments.expire(punishment.user, punishment.id);
-                    client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.RichEmbed()
+                    client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.MessageEmbed()
                         .setAuthor(client.guilds.get(botConstants.guildId).members.get(punishment.user).user.tag, client.guilds.get(botConstants.guildId).members.get(punishment.user).user.displayAvatarURL)
                         .setDescription(client.guilds.get(botConstants.guildId).members.get(punishment.user).user.tag + " has been unpunished.")
                         .addField("Reason", "Expired")
@@ -189,7 +189,7 @@ eventmanager.join = function(member, client, CommandManager) {
                             punishment.timer = setTimeout(async () => {
                                 if (client.guilds.get(botConstants.guildId).members.keyArray().includes(user)) {
                                     if (client.guilds.get(botConstants.guildId).members.get(user).roles.keyArray().includes(botConstants.mutedRole)) {
-                                        client.guilds.get(botConstants.guildId).members.get(user).removeRole(botConstants.mutedRole).catch((err) => {
+                                        client.guilds.get(botConstants.guildId).members.get(user).remove(botConstants.mutedRole).catch((err) => {
                                             client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                         });
                                     }
@@ -200,7 +200,7 @@ eventmanager.join = function(member, client, CommandManager) {
                     } else {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
-                        client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.RichEmbed()
+                        client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.MessageEmbed()
                             .setAuthor(member.user.tag, member.user.displayAvatarURL)
                             .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
@@ -213,7 +213,7 @@ eventmanager.join = function(member, client, CommandManager) {
 
         //Now that punishment stuff is out of the way, proceed with the normal join stuff.
         let channel = member.guild.channels.get(botConstants.serverLoggingChannel);
-        channel.send(new Discord.RichEmbed()
+        channel.send(new Discord.MessageEmbed()
             .setTitle("User Join")
             .setThumbnail(member.user.displayAvatarURL)
             .setDescription(member.user + " has joined the server.")
@@ -222,7 +222,7 @@ eventmanager.join = function(member, client, CommandManager) {
 
         //Welcome message.
         member.createDM().then(dmchannel => {
-            dmchannel.send(new Discord.RichEmbed()
+            dmchannel.send(new Discord.MessageEmbed()
                 .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")
                 .setTitle("Welcome!")
                 .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #rules carefully, as interacting in any capacity in this Discord Server is taken as confirmation that you are going to abide by and agree with our rules. After you've done that, you can do !help in #bot-utils to get started!\n" +
@@ -233,7 +233,7 @@ eventmanager.join = function(member, client, CommandManager) {
             console.log("Login Promise Rejection: " + reason);
         });
 
-        member.addRole("664631743499993098").catch((err) => {
+        member.add("664631743499993098").catch((err) => {
             client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
         });
     });

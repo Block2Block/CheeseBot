@@ -74,10 +74,10 @@ console.log("Successfully loaded in commands.");
 commandManager.onCommand = async function (msg, client) {
     if (msg.guild == null) {
         if (!client.guilds.get(botConstants.guildId).members.keyArray().includes(msg.author.id)) {
-            msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
+            await msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
             return;
         } else {
-            msg.channel.send("You cannot send messages via PM to this bot. Please use #bot-commands.")
+            await msg.channel.send("You cannot send messages via PM to this bot. Please use #bot-commands.")
         }
     } else {
         //Extracts the arguments of the command.
@@ -168,27 +168,27 @@ commandManager.onCommand = async function (msg, client) {
             //This is a joinable role command. Execute role command.
             if (msg.member.roles.keyArray().includes(commandInfo.joinable_role)) {
                 //leave the role
-                await msg.member.removeRole(commandInfo.joinable_role).catch((err) => {
+                await msg.member.remove(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                 });
                 await msg.reply("You have been removed from the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
                 x = msg.member.roles.keyArray().filter(value => ranks.includes(value));
                 if (x.size < 1) {
-                    msg.member.removeRole(botConstants.gameRole).catch((err) => {
+                    msg.member.remove(botConstants.gameRole).catch((err) => {
                         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                     });
                 }
             } else {
                 //join the role
-                msg.member.addRole(commandInfo.joinable_role).catch((err) => {
+                msg.member.add(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                 });
-                if (!msg.member.roles.keyArray().includes(botConstants.gameRole)) {
-                    msg.member.addRole(botConstants.gameRole).catch((err) => {
+                if (!msg.member.roles.has(botConstants.gameRole)) {
+                    msg.member.add(botConstants.gameRole).catch((err) => {
                         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                     });
                 }
-                await msg.reply("You have been added to the role 'Jackbox'.");
+                await msg.reply("You have been added to the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
             }
         }
 

@@ -41,7 +41,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('guildMemberRemove', (member) => {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
             .setTitle("User Leave")
             .setThumbnail(member.user.displayAvatarURL)
             .setDescription(member.user + " has left the server.")
@@ -54,7 +54,7 @@ client.on('guildMemberRemove', (member) => {
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
             .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
             .setDescription(newMember + " has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
@@ -71,7 +71,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
                 .setTitle("Role Removed")
                 .setDescription(newMember.user + " was removed from the `" + oldMember.roles.get(role).name + "` role.")
@@ -85,7 +85,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
                 .setTitle("Role Added")
                 .setDescription(newMember.user + " was given the `" + newMember.roles.get(role).name + "` role.")
@@ -96,7 +96,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
             .setAuthor(newUser.tag, newUser.displayAvatarURL)
             .setDescription(newUser + " has changed their username.")
             .addField("Old Name", oldUser.username)
@@ -107,7 +107,7 @@ client.on('userUpdate', (oldUser, newUser) => {
 });
 
 client.on('guildBanAdd', (guild, user) => {
-    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
+    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.MessageEmbed()
         .setAuthor(user.tag, user.displayAvatarURL)
         .setTitle("Manual Ban")
         .setDescription(user + " was manually banned by an admin.")

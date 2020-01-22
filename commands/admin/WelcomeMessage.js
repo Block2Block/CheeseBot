@@ -8,8 +8,9 @@ module.exports = {
     allowed_channels: null,
     joinable_role: null,
     run: async function(msg, args, ConnectionManager, PunishmentManager) {
+        let Discord = require("discord.js");
         msg.member.createDM().then(dmchannel => {
-            dmchannel.send(new Discord.RichEmbed()
+            dmchannel.send(new Discord.MessageEmbed()
                 .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")
                 .setTitle("Welcome!")
                 .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read #rules carefully, as interacting in any capacity in this Discord Server is taken as confirmation that you are going to abide by and agree with our rules. After you've done that, you can do !help in #bot-utils to get started!\n" +

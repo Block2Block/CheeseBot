@@ -60,7 +60,7 @@ connectionManager.playCommand = async function (URL, msg) {
         YTPL(URL, {limit: 0}, async function (err, playlist) {
             //If the bot is not already in the channel, force it to join.
             if (connection == null || !connection) {
-                await connectionManager.joinChannel(msg.member.voiceChannel, msg, client, (success) => {
+                await connectionManager.joinChannel(msg.member.voice.channel, msg, client, (success) => {
 
                 });
             }
@@ -95,7 +95,7 @@ connectionManager.playCommand = async function (URL, msg) {
     } else if (await YTDL.validateURL(URL)) {
         //If the bot is not already in the channel, force it to join.
         if (connection == null || !connection) {
-            await connectionManager.joinChannel(msg.member.voiceChannel, msg, client, (success) => {
+            await connectionManager.joinChannel(msg.member.voice.channel, msg, client, (success) => {
 
             });
         }
@@ -116,7 +116,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
         //If it is the only song in the queue, play it.
         if (queue.length === 1) {
-            await play(song, client);
+            play(song, client);
         }
     } else {
         //It is not a valid YouTube URL, search YouTube for it instead.
@@ -156,14 +156,14 @@ async function play(song, client) {
                 play(song, client);
             });
             dl.on('error', (err) => {
-                console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+                console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
                 queue.shift();
                 play(queue[0], client);
             })
         } catch (err) {
-            console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+            console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
             queue.shift();
-            await play(queue[0], client);
+            play(queue[0], client);
             return;
         }
         return;
@@ -180,14 +180,14 @@ async function play(song, client) {
                     console.log("The next song has been downloaded and is ready to play.");
                 });
                 dl.on('error', (err) => {
-                    console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+                    console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
                 })
             }
         } catch (err) {
-            console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
+            console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);
@@ -195,14 +195,14 @@ async function play(song, client) {
         }
     }
 
-
-    console.debug("Playing " + song.title + " now.");
-    client.guilds.get(botConstants.guildId).channels.get(botConstants.nowPlayingChannel).send(new Discord.RichEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
-    await client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
-
     //Create the dispatcher and play the song.
-    dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
-        .on('end', () => {
+    dispatcher = connection.play("./musiccache/" + song.id + ".m4a")
+        .on('start', () => {
+            console.debug("Playing " + song.title + " now.");
+            client.guilds.get(botConstants.guildId).channels.get(botConstants.nowPlayingChannel).send(new Discord.MessageEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
+            client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
+        })
+        .on('finish', () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
                 play(false, client);
@@ -228,12 +228,13 @@ async function play(song, client) {
 }
 
 connectionManager.skip = function (msg) {
+    let client = msg.client;
 
     //Making sure the user is in the same voice channel as the bot.
-    if (!msg.member.voiceChannel) {
+    if (!msg.member.voice.channel) {
         return msg.reply("You must be in the same channel as the bot in order to use music commands.")
-    } else if (client.voiceChannel) {
-        if (msg.member.voiceChannel.id !== client.voiceChannel.id) {
+    } else if (client.voice.connections.size > 1) {
+        if (msg.member.voice.channel.id !== client.voice.connections.first().id) {
             return msg.reply("You must be in the same channel as the bot in order to use music commands.");
         }
     }

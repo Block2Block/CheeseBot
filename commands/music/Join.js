@@ -9,8 +9,8 @@ module.exports = {
     joinable_role: null,
     run: async function(msg, args, ConnectionManager, PunishmentManager) {
 
-        if (msg.member.voiceChannel) {
-            await ConnectionManager.joinChannel(msg.member.voiceChannel, msg, msg.client, (success) => {
+        if (msg.member.voice.channel) {
+            await ConnectionManager.joinChannel(msg.member.voice.channel, msg, msg.client, (success) => {
                 if (success) {
                     msg.reply("Successfully joined your channel!");
                 } else {
