@@ -97,7 +97,7 @@ commandManager.onCommand = async function (msg, client) {
                     "Available commands:";
 
                 for (let x of categories.values()) {
-                    if (help.length + helpStrings.get(x.node).length >= 2000) {
+                    if (help.split("").length + helpStrings.get(x.node).split("").length >= 2000) {
                         console.log("Message too long, sending current.");
                         dmchannel.send(help).catch((err) => {
                             console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
