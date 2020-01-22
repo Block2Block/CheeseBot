@@ -1,5 +1,5 @@
 const commandManager = {};
-const Bot = require("../../utils/Constants.js");
+const Bot = require("../utils/Constants.js");
 const fs = require("fs");
 
 //loading internal libraries.
