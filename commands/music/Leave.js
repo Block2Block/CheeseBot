@@ -17,6 +17,7 @@ module.exports = {
             if (client.voiceConnections.keyArray().includes(botConstants.guildId)) {
                 if (client.voiceConnections.get(botConstants.guildId).channel.id === msg.member.voiceChannel.id) {
                     await ConnectionManager.leave(msg);
+                    await msg.reply("The bot has left your channel");
                 } else {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");
                 }
