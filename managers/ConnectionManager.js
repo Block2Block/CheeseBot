@@ -146,11 +146,11 @@ async function play(song, client) {
     }
 
     //If the current song doesn't already exist in the cache, download it.
-    if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
+    if (!FS.existsSync("musiccache/" + song.id + ".mp3")) {
         console.debug("Downloading song " + song.id + " for the first time.");
         try {
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
-            dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
+            dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".mp3"));
             dl.on('end', () => {
                 console.log("Done.");
                 play(song, client);
@@ -172,10 +172,10 @@ async function play(song, client) {
     //If the next song exists, and is not already in cache, download it in preparation for playing next.
     if (queue.length > 1) {
         try {
-            if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
+            if (!FS.existsSync("musiccache/" + queue[1].id + ".mp3")) {
                 console.log("Downloading the next song " + queue[1].id + " for the first time.");
                 let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
-                dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
+                dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".mp3"));
                 dl.on('end', () => {
                     console.log("The next song has been downloaded and is ready to play.");
                 });
@@ -201,7 +201,7 @@ async function play(song, client) {
     await client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
 
     //Create the dispatcher and play the song.
-    dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".m4a")
+    dispatcher = connection.playFile(__dirname + "/musiccache/" + song.id + ".mp3")
         .on('end', () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
