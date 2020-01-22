@@ -10,11 +10,15 @@ module.exports = {
     run: async function(msg, args, ConnectionManager, PunishmentManager) {
 
         if (msg.member.voiceChannel) {
-            if (await ConnectionManager.joinChannel(msg.member.voiceChannel, msg, msg.client)) {
-                await msg.reply("Successfully joined your channel!");
-            } else {
-                await msg.reply("Failed to join your channel!");
-            }
+            await ConnectionManager.joinChannel(msg.member.voiceChannel, msg, msg.client, (success) => {
+                if (success) {
+                    msg.reply("successfully joined your channel");
+                } else {
+                    msg.reply("Failed to join your channel")
+                }
+            });
+
+
         } else {
             await msg.reply("You must be in a voice channel first.");
         }

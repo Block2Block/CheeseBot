@@ -25,14 +25,14 @@ let repeat = false;
 //Initialising the queue.
 let queue = [];
 
-connectionManager.joinChannel = async function (channel, msg, client) {
+connectionManager.joinChannel = async function (channel, msg, client, callback) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
-            return true;
+            callback(true);
         }
     ).catch((error) => {
         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error has occurred when trying to join a voice channel. Error: " + error);
-        return false;
+        callback(false);
     });
 };
 
