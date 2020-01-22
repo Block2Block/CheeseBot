@@ -104,7 +104,7 @@ commandManager.onCommand = async function (msg, client) {
                             help += helpStrings.get(x.node);
                             break;
                         }
-                        let z = msg.member.roles.keyArray().filter(value => permission.roles.includes(value));
+                        let z = msg.member.roles.keyArray().filter(value => permission.roles.includes(value.toString()));
                         if (z.size >= 1) {
                             help += helpStrings.get(x.node);
                             break;
