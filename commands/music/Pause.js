@@ -9,7 +9,7 @@ module.exports = {
     joinable_role: null,
     run: async function(msg, args) {
         const ConnectionManager = require("../../managers/ConnectionManager.js");
-        const Bot = require("../../Bot.js");
+        const Bot = require("../../managers/EventManager.js");
 
         const client = Bot.getClient();
         const botConstants = Bot.getBotConstants();

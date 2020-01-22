@@ -8,17 +8,8 @@ const discord = require("discord.js");
 //Loading in constants.
 const token = process.env.BOT_TOKEN;
 const client = new discord.Client();
-const botConstants = {
-    guildId: "105235654727704576",
-    botLoggingChannel: "429972539905671168",
-    moderationLoggingChannel: "434005566801707009",
-    serverLoggingChannel: "429970564552065024",
-    mutedRole: "429970242916319244",
-    memberRole: "664631743499993098",
-    gameRole: "664626926127677440",
-    nowPlayingChannel: "643571367715012638",
-    commandPrefix: "!"
-};
+const EventManager = require("./managers/EventManager.js");
+const botConstants = EventManager.getBotConstants();
 
 
 //Loading module export object.
@@ -38,7 +29,6 @@ module.exports = bot;
 const Punishments = require("./managers/PunishmentManager.js");
 const CommandManager = require("./managers/CommandManager.js");
 const ConnectionManager = require("./managers/ConnectionManager.js");
-const EventManager = require("./managers/EventManager.js");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {

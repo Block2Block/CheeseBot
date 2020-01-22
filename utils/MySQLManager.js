@@ -1,13 +1,6 @@
 //Loading external libraries.
 const mysql = require('mysql');
 
-//Loading internal libraries.
-const bot = require('../Bot.js');
-
-//Loading bot info.
-const client = bot.getClient();
-const botConstants = bot.getBotConstants();
-
 //Initialising module export.
 const mySQLManager = {};
 
@@ -49,11 +42,6 @@ function connect() {
                 database: process.env.MYSQL_DATABASE
             });
             connect();
-        } else {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
         }
     });
 }
@@ -63,10 +51,7 @@ connect();
 mySQLManager.getPunishOnLoad = async function (callback) {
     MySQLClient.query("SELECT *  FROM punishments WHERE status = 1", function (err, result) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            console.log(err);
         }
         let punishments = [];
         for (let x of result) {
@@ -91,10 +76,7 @@ mySQLManager.getPunishOnLoad = async function (callback) {
 mySQLManager.getPunishments = async function (user, callback) {
     MySQLClient.query("SELECT * FROM punishments WHERE discord_id = '" + user + "'", function (err, result) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            console.log(err)
         }
         let punishments = [];
         //For each record, create a punishment object.
@@ -122,17 +104,11 @@ mySQLManager.getPunishments = async function (user, callback) {
 mySQLManager.punish = async function (user, type, timestamp, expire, punisher, reason, status, callback) {
     MySQLClient.query("INSERT INTO `punishments`(discord_id,punisher,type,reason,timestamp,expire,status) VALUES ('" + user + "','" + punisher + "'," + type + ",'" + reason + "','" + timestamp + "','" + expire + "',1)", function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            console.log(err)
         }
         MySQLClient.query("SELECT id FROM `punishments` WHERE (timestamp = '" + timestamp + "') AND (discord_id = '" + user + "')", function (err, result) {
             if (err) {
-                //send a message into the logging channel.
-                if (client.status === 3 || client.status === 0) {
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-                }
+                console.log(err)
             }
             callback(result[0].id);
         })
@@ -142,10 +118,7 @@ mySQLManager.punish = async function (user, type, timestamp, expire, punisher, r
 mySQLManager.expire = async function (punishment_id) {
     MySQLClient.query("UPDATE punishments SET status = 2, removal_reason = 'Expired' WHERE id = " + punishment_id, function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            console.log(err)
         }
     });
 };
@@ -153,10 +126,7 @@ mySQLManager.expire = async function (punishment_id) {
 mySQLManager.removePunishment = async function (user, type, reason, remover) {
     MySQLClient.query("UPDATE punishments SET status = 3, removal_reason = '" + reason + "', remover = '" + remover.tag + "' WHERE discord_id = " + user + " AND type = " + type, function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            console.log(err)
         }
     });
     return true;

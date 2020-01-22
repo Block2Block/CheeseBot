@@ -1,5 +1,5 @@
 const commandManager = {};
-const Bot = require("../Bot.js");
+const Bot = require("./EventManager.js");
 const fs = require("fs");
 
 const client = Bot.getClient();

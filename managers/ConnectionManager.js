@@ -8,7 +8,7 @@ const YTSR = require("ytsr");
 const FS = require("fs");
 
 //Loading internal libraries.
-const Bot = require("../Bot.js");
+const Bot = require("./EventManager.js");
 
 //Loading bot variables.
 const client = Bot.getClient();

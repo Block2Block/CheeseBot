@@ -1,7 +1,9 @@
 //Loading external libraries.
 const MySQLManager = require("../utils/MySQLManager");
 const Discord = require("discord.js");
-const Bot = require("../Bot.js");
+const Bot = require("./EventManager.js");
+
+//Getting bot variables
 const client = Bot.getClient();
 const botConstants = Bot.getBotConstants();
 
