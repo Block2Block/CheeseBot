@@ -2,26 +2,13 @@ const eventmanager = {};
 
 //Loading internal libraries.
 let MySQLManager;
-const Punishments = require("./PunishmentManager.js");
+const Bot = require("../utils/Constants.js");
 
 //Bot variables.
-const botConstants = {
-    guildId: "105235654727704576",
-    botLoggingChannel: "429972539905671168",
-    moderationLoggingChannel: "434005566801707009",
-    serverLoggingChannel: "429970564552065024",
-    mutedRole: "429970242916319244",
-    memberRole: "664631743499993098",
-    gameRole: "664626926127677440",
-    nowPlayingChannel: "643571367715012638",
-    commandPrefix: "!"
-};
-let botClient;
+const botConstants = Bot.getBotConstants();
 
-eventmanager.ready = function(client) {
-    botClient = client;
-
-    MySQLManager = require("../utils/MySQLManager.js");
+eventmanager.ready = function(client, CommandManager) {
+    let MySQLManager = CommandManager.getPunishmentManager().getMySQLManager();
     console.log("Bot Client Connected.");
 
     client.user.setStatus("online");
@@ -133,7 +120,8 @@ eventmanager.ready = function(client) {
     });
 };
 
-eventmanager.join = function(member) {
+eventmanager.join = function(member, client, CommandManager) {
+    let Punishments = CommandManager.getPunishmentManager();
     Punishments.getPunish(member.id, (punishments) => {
         //If they have punishments, see if any of them are active.
         if (punishments.length !== 0) {
@@ -157,7 +145,7 @@ eventmanager.join = function(member) {
                         });
 
                         member.addRole(botConstants.mutedRole).catch((err) => {
-                            botClient.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                            client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
                         });
                         Punishments.addToCache(punishment);
                     }
@@ -195,13 +183,13 @@ eventmanager.join = function(member) {
                             });
 
                             member.addRole(botConstants.mutedRole).catch((err) => {
-                                botClient.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                                client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
                             });
                             punishment.timer = setTimeout(async () => {
-                                if (botClient.guilds.get(botConstants.guildId).members.keyArray().includes(user)) {
-                                    if (botClient.guilds.get(botConstants.guildId).members.get(user).roles.keyArray().includes(botConstants.mutedRole)) {
-                                        botClient.guilds.get(botConstants.guildId).members.get(user).removeRole(botConstants.mutedRole).catch((err) => {
-                                            botClient.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                                if (client.guilds.get(botConstants.guildId).members.keyArray().includes(user)) {
+                                    if (client.guilds.get(botConstants.guildId).members.get(user).roles.keyArray().includes(botConstants.mutedRole)) {
+                                        client.guilds.get(botConstants.guildId).members.get(user).removeRole(botConstants.mutedRole).catch((err) => {
+                                            client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
                                         });
                                     }
                                 }
@@ -211,7 +199,7 @@ eventmanager.join = function(member) {
                     } else {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
-                        botClient.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.RichEmbed()
+                        client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.RichEmbed()
                             .setAuthor(member.user.tag, member.user.displayAvatarURL)
                             .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
@@ -245,19 +233,9 @@ eventmanager.join = function(member) {
         });
 
         member.addRole("664631743499993098").catch((err) => {
-            botClient.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+            client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
         });
     });
-};
-
-
-//Putting these here as this class does not use any initialising code (so the bot client doesnt get loaded like 5 times. (And to prevent circular dependencies).
-eventmanager.getBotConstants = function () {
-    return botConstants;
-};
-
-eventmanager.getClient = function () {
-    return botClient;
 };
 
 

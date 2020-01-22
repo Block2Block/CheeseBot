@@ -7,8 +7,7 @@ module.exports = {
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
     joinable_role: null,
-    run: async function(msg, args) {
-        const ConnectionManager = require("../../managers/ConnectionManager.js");
+    run: async function(msg, args, ConnectionManager, PunishmentManager) {
 
         if (msg.member.voiceChannel) {
             if (await ConnectionManager.joinChannel(msg.member.voiceChannel, msg)) {

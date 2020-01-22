@@ -7,7 +7,7 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager) {
         msg.member.createDM().then(dmchannel => {
             dmchannel.send(new Discord.RichEmbed()
                 .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")

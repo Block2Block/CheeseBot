@@ -8,27 +8,19 @@ const discord = require("discord.js");
 //Loading in constants.
 const token = process.env.BOT_TOKEN;
 const client = new discord.Client();
+const Constants = require("./utils/Constants.js");
 const EventManager = require("./managers/EventManager.js");
-const botConstants = EventManager.getBotConstants();
+const botConstants = Constants.getBotConstants();
 
 
 //Loading module export object.
-const bot = {
-    getClient: function () {
-        return client;
-    },
-    getBotConstants: function () {
-        return botConstants
-    }
-};
+const bot = {};
 
 module.exports = bot;
 
 
 //Loading in internal libraries.
-const Punishments = require("./managers/PunishmentManager.js");
 const CommandManager = require("./managers/CommandManager.js");
-const ConnectionManager = require("./managers/ConnectionManager.js");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {
@@ -42,10 +34,10 @@ function connect() {
 
 connect();
 
-client.on('ready', () => {EventManager.ready(client)});
+client.on('ready', () => {EventManager.ready(client, CommandManager)});
 
 client.on('guildMemberAdd', (member) => {
-    EventManager.join(member);
+    EventManager.join(member, client, CommandManager);
 });
 
 client.on('guildMemberRemove', (member) => {
@@ -56,7 +48,7 @@ client.on('guildMemberRemove', (member) => {
             .setTimestamp()
             .setColor('#AA0000'));
 
-        Punishments.removePunishment(member);
+
     }
 );
 
@@ -145,7 +137,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
 client.on('message', (msg) => {
     if (msg.content.startsWith(botConstants.commandPrefix)) {
-        CommandManager.onCommand(msg);
+        CommandManager.onCommand(msg, client);
     }
 });
 

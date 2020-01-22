@@ -7,10 +7,10 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args) {
-        const Bot = require("../../managers/EventManager.js");
+    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+        const Bot = require("../../utils/Constants.js");
 
-        const client = Bot.getClient();
+        const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("Restarting bot...");

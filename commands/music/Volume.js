@@ -7,11 +7,10 @@ module.exports = {
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
     joinable_role: null,
-    run: async function(msg, args) {
-        const ConnectionManager = require("../../managers/ConnectionManager.js");
-        const Bot = require("../../managers/EventManager.js");
+    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+        const Bot = require("../../utils/Constants.js");
 
-        const client = Bot.getClient();
+        const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
 

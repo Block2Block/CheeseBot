@@ -1,10 +1,9 @@
 //Loading external libraries.
 const MySQLManager = require("../utils/MySQLManager");
 const Discord = require("discord.js");
-const Bot = require("./EventManager.js");
+const Bot = require("../utils/Constants.js");
 
 //Getting bot variables
-const client = Bot.getClient();
 const botConstants = Bot.getBotConstants();
 
 //Initialising module export.
@@ -24,7 +23,7 @@ let cache = new Map();
     Status 2 = Expired.
     Status 3 = Removed.
  */
-punishmentManager.punish = async function (msg, args, type) {
+punishmentManager.punish = async function (msg, args, type, client) {
 
     //If there aren't enough args, say so.
     if (args.length < 3) {
@@ -172,7 +171,7 @@ punishmentManager.punish = async function (msg, args, type) {
     });
 };
 
-punishmentManager.unpunish = async function(msg, args, type) {
+punishmentManager.unpunish = async function(msg, args, type, client) {
     //Setting required variables.
     let re = /<@![0-9]{17,18}>/;
     let user;
@@ -339,5 +338,9 @@ punishmentManager.getPunish = async function (user, callback) {
         callback(punishments);
     });
 };
+
+punishmentManager.getMySQLManager = function() {
+    return MySQLManager;
+}
 
 module.exports = punishmentManager;
