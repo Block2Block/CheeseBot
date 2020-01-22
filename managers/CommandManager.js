@@ -96,7 +96,7 @@ commandManager.onCommand = async function (msg, client) {
                 let help = "Bot Commands are only available to use in #bot-commands, with music utils only being usable in #music-commands.\n\n" +
                     "Available commands:";
 
-                for (let x of categories.keys()) {
+                for (let x of categories.values()) {
                     let catPermissions = x.permission_visibility;
                     for (let y of catPermissions) {
                         let permission = permissions.get(y);
