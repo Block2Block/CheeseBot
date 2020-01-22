@@ -12,7 +12,6 @@ const Bot = require("../utils/Constants.js");
 
 
 //Loading bot variables.
-const client = Bot.getClient();
 const botConstants = Bot.getBotConstants();
 
 //Connection variables.
@@ -26,7 +25,7 @@ let repeat = false;
 //Initialising the queue.
 let queue = [];
 
-connectionManager.joinChannel = async function (channel, msg) {
+connectionManager.joinChannel = async function (channel, msg, client) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
             return true;
@@ -55,6 +54,7 @@ connectionManager.leave = function () {
 };
 
 connectionManager.playCommand = async function (URL, msg) {
+    let client = msg.client;
     if (!msg.member.voiceChannel) {
         return msg.reply("You must be in the same channel as the bot in order to use music commands.")
     } else if (client.voiceChannel) {
@@ -89,7 +89,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
             //If lengths are the same, then the queue was empty before we started, so start playing the songs.
             if (queue.length === playlist.items.length) {
-                await play(queue[0]);
+                await play(queue[0], client);
                 await msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
             } else {
                 await msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
@@ -119,7 +119,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
         //If it is the only song in the queue, play it.
         if (queue.length === 1) {
-            await play(song);
+            await play(song, client);
         }
     } else {
         //It is not a valid YouTube URL, search YouTube for it instead.
@@ -138,7 +138,7 @@ connectionManager.playCommand = async function (URL, msg) {
     }
 };
 
-async function play(song) {
+async function play(song, client) {
 
     //If there are no more songs in the playlist or the connection has ended, state playback has ended.
     if (!song || connection == null) {
@@ -156,17 +156,17 @@ async function play(song) {
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
             dl.on('end', () => {
                 console.log("Done.");
-                play(song);
+                play(song, client);
             });
             dl.on('error', (err) => {
                 console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
                 queue.shift();
-                play(queue[0]);
+                play(queue[0], client);
             })
         } catch (err) {
             console.log("An error occured while trying to download a song. Skipping song. Error: " + err);
             queue.shift();
-            await play(queue[0]);
+            await play(queue[0], client);
             return;
         }
         return;
@@ -208,7 +208,7 @@ async function play(song) {
         .on('end', () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
-                play(false);
+                play(false, client);
                 return;
             }
 
@@ -220,7 +220,7 @@ async function play(song) {
             }
 
             //Play the next song.
-            play(queue[0]);
+            play(queue[0], client);
         })
         //If theres an error, log the error.
         .on('error', error => {
