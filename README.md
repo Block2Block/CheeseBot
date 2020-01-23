@@ -1,11 +1,11 @@
-#CheeseBot
+# CheeseBot
 This  is the official Cult of Cheese Discord Bot GitHub Repository. This is used to host the source code for the bot.
 
 
-##About the Discord Server
+## About the Discord Server
 The Cult of Cheese is a Discord server owned by Block2Block, Bunni and SimplyBrandon. As the name suggests, we are a Cheese themed Discord. Join [here](https://discord.gg/).
 
-##How to host the bot
+## How to host the bot
 The bot is currently setup for use in our Discord, but adapting it for use in other servers is super easy. Heres the step by step:
  1) Use `git clone https://github.com/Block2Block/CheeseBot` in a folder of your choice.
  2) Go into the CheeseBot Folder.
@@ -28,7 +28,7 @@ The bot is currently setup for use in our Discord, but adapting it for use in ot
  14) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
  15) Once all of the dependencies are installed, do `node Bot.js`. This will start the bot.
 
-##FAQ
+## FAQ
 >**Q:** How do I get the bot to run forever, after a crash or force restart?
 
 **A:** In order to do that, there are a number of methods you could choose. The method I recommend (if you are not using a hosting providor) is to install pm2 using npm. Execute `npm install -g pm2` to install this, then run `pm2 start Bot.js`.
