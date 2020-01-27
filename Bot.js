@@ -119,7 +119,7 @@ client.on('messageDelete', (message) => {
         if (message.content.startsWith("!") || message.author.bot) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in " + message.channel + ".\n" +
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
             "**Message**: `" + message.content + "`");
     }
 });
@@ -129,7 +129,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in " + newMessage.channel + ".\n" +
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
             "**Old**: `" + oldMessage.content + "`\n" +
             "**New**: `" + newMessage.content + "`");
     }
