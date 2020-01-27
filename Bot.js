@@ -43,8 +43,8 @@ client.on('guildMemberAdd', (member) => {
 client.on('guildMemberRemove', (member) => {
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
             .setTitle("User Leave")
-            .setThumbnail(member.user.displayAvatarURL)
-            .setDescription(member.user + " has left the server.")
+            .setThumbnail(member.user.avatarURL())
+            .setDescription(member.user.tag + " has left the server.")
             .setTimestamp()
             .setColor('#AA0000'));
 
@@ -55,8 +55,8 @@ client.on('guildMemberRemove', (member) => {
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
-            .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
-            .setDescription(newMember + " has changed their nickname.")
+            .setAuthor(newMember.user.tag, newMember.user.avatarURL())
+            .setDescription("<@" + newMember + "> has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
             .addField("New Name", newMember.displayName)
             .setTimestamp()
@@ -72,9 +72,9 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                 }
             }
             client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+                .setAuthor(newMember.user.tag, newMember.user.avatarURL())
                 .setTitle("Role Removed")
-                .setDescription(newMember.user + " was removed from the `" + oldMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.get(role).name + "` role.")
                 .setColor('#2980B9'));
         } else {
             let role;
@@ -86,9 +86,9 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                 }
             }
             client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+                .setAuthor(newMember.user.tag, newMember.user.avatarURL())
                 .setTitle("Role Added")
-                .setDescription(newMember.user + " was given the `" + newMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.get(role).name + "` role.")
                 .setColor('#2980B9'));
         }
     }
@@ -97,7 +97,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
-            .setAuthor(newUser.tag, newUser.displayAvatarURL)
+            .setAuthor(newUser.tag, newUser.avatarURL())
             .setDescription(newUser + " has changed their username.")
             .addField("Old Name", oldUser.username)
             .addField("New Name", newUser.username)
@@ -108,9 +108,9 @@ client.on('userUpdate', (oldUser, newUser) => {
 
 client.on('guildBanAdd', (guild, user) => {
     client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.MessageEmbed()
-        .setAuthor(user.tag, user.displayAvatarURL)
+        .setAuthor(user.tag, user.avatarURL())
         .setTitle("Manual Ban")
-        .setDescription(user + " was manually banned by an admin.")
+        .setDescription(user.tag + " was manually banned by an admin.")
         .setColor('#AA0000'));
 });
 
@@ -119,7 +119,7 @@ client.on('messageDelete', (message) => {
         if (message.content.startsWith("!") || message.author.bot) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by " + message.author + " was deleted in " + message.channel + ".\n" +
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in " + message.channel + ".\n" +
             "**Message**: `" + message.content + "`");
     }
 });
@@ -129,7 +129,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(newMessage.author + " edited a message in " + newMessage.channel + ".\n" +
+        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in " + newMessage.channel + ".\n" +
             "**Old**: `" + oldMessage.content + "`\n" +
             "**New**: `" + newMessage.content + "`");
     }

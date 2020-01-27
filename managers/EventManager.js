@@ -145,7 +145,7 @@ eventmanager.join = function(member, client, CommandManager) {
                             console.log("Login Promise Rejection: " + reason);
                         });
 
-                        member.addRole(botConstants.mutedRole).catch((err) => {
+                        member.roles.add(botConstants.mutedRole).catch((err) => {
                             client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
                         });
                         Punishments.addToCache(punishment);
@@ -183,7 +183,7 @@ eventmanager.join = function(member, client, CommandManager) {
                                 console.log("Login Promise Rejection: " + reason);
                             });
 
-                            member.addRole(botConstants.mutedRole).catch((err) => {
+                            member.roles.add(botConstants.mutedRole).catch((err) => {
                                 client.guilds.get(botConstants.guildId).channels.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
                             });
                             punishment.timer = setTimeout(async () => {
@@ -201,7 +201,7 @@ eventmanager.join = function(member, client, CommandManager) {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
                         client.guilds.get(botConstants.guildId).channels.get("434005566801707009").send(new Discord.MessageEmbed()
-                            .setAuthor(member.user.tag, member.user.displayAvatarURL)
+                            .setAuthor(member.user.tag, member.user.avatarURL())
                             .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
                             .setTimestamp()
@@ -215,7 +215,7 @@ eventmanager.join = function(member, client, CommandManager) {
         let channel = member.guild.channels.get(botConstants.serverLoggingChannel);
         channel.send(new Discord.MessageEmbed()
             .setTitle("User Join")
-            .setThumbnail(member.user.displayAvatarURL)
+            .setThumbnail(member.user.avatarURL())
             .setDescription(member.user + " has joined the server.")
             .setTimestamp()
             .setColor('#00AA00'));
