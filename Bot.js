@@ -13,14 +13,9 @@ const EventManager = require("./managers/EventManager.js");
 const botConstants = Constants.getBotConstants();
 
 
-//Loading module export object.
-const bot = {};
-
-module.exports = bot;
-
-
 //Loading in internal libraries.
 const CommandManager = require("./managers/CommandManager.js");
+const StreamManager = require("./managers/StreamManager.js");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {
@@ -34,7 +29,10 @@ function connect() {
 
 connect();
 
-client.on('ready', () => {EventManager.ready(client, CommandManager)});
+client.on('ready', () => {
+    EventManager.ready(client, CommandManager);
+    StreamManager.load(client);
+});
 
 client.on('guildMemberAdd', (member) => {
     EventManager.join(member, client, CommandManager);
@@ -98,7 +96,7 @@ client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
         client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
             .setAuthor(newUser.tag, newUser.avatarURL())
-            .setDescription(newUser + " has changed their username.")
+            .setDescription("<@" + newUser + "> has changed their username.")
             .addField("Old Name", oldUser.username)
             .addField("New Name", newUser.username)
             .setTimestamp()
@@ -155,6 +153,7 @@ client.on('error', (error) => {
 process.on('exit', () => {
    CommandManager.getConnectionManager().leave();
    client.destroy();
+   StreamManager.end();
 });
 
 //Catching any uncaught exceptions, then restarting the  process.

@@ -1,7 +1,6 @@
 const eventmanager = {};
 
 //Loading internal libraries.
-let MySQLManager;
 const Bot = require("../utils/Constants.js");
 const Discord = require("discord.js");
 
