@@ -21,7 +21,7 @@ streammanager.load = async function (client) {
                 let game = "";
                 stream.getGame().then((twitchGame) => {
                     game = twitchGame.name;
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + "/!");
+                    client.guilds.get(botConstants.guildId).channels.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + " !");
                 });
             }
         }));
