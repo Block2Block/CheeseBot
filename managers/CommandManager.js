@@ -93,7 +93,7 @@ commandManager.onCommand = async function (msg, client) {
         } else if (command === "help") {
             msg.member.createDM().then(dmchannel => {
                 //Build string of commands.
-                let help = "Bot Commands are only available to use in #bot-commands, with music utils only being usable in #music-commands.\n\n" +
+                let help = "Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
                     "Available commands:";
 
                 for (let x of categories.values()) {
