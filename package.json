@@ -14,13 +14,13 @@
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^3.0.0",
-    "mysql": "^2.17.1",
+    "mysql": "^2.18.1",
     "node-opus": "^0.3.3",
-    "simple-git": "^1.129.0",
+    "simple-git": "^1.131.0",
     "twitch": "^3.7.1",
     "twitch-webhooks": "^3.7.1",
     "ytdl-core": "^1.0.7",
-    "ytpl": "^0.1.17",
+    "ytpl": "^0.1.19",
     "ytsr": "^0.1.10"
   }
 }
