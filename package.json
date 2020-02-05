@@ -20,7 +20,7 @@
     "twitch": "^3.7.1",
     "twitch-webhooks": "^3.7.1",
     "ytdl-core": "^1.0.7",
-    "ytpl": "^0.1.19",
+    "ytpl": "github:NotArandomGUY/node-ytpl#master",
     "ytsr": "^0.1.10"
   }
 }
