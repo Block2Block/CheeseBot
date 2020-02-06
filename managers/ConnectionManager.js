@@ -343,9 +343,9 @@ connectionManager.nextSong = function (msg) {
 
 connectionManager.queueInfo = function (msg) {
     if (queue) {
-        let i = ((queue.length < 10)?queue.length:10);
+        let i = ((queue.length < 11)?queue.length - 1:10);
         let reply = "There are currently " + queue.length + " songs in the queue. The next " + i + " songs are:\n";
-        for (let counter = 0;counter <= i;counter++) {
+        for (let counter = 1;counter <= i;counter++) {
             reply += (counter) +  ") `" + queue[counter].title + ((counter !== i)?"`\n":"`")
         }
         msg.reply(reply);
