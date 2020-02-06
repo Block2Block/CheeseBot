@@ -171,7 +171,7 @@ commandManager.onCommand = async function (msg, client) {
             //This is a joinable role command. Execute role command.
             if (msg.member.roles.keyArray().includes(commandInfo.joinable_role)) {
                 //leave the role
-                await msg.member.remove(commandInfo.joinable_role).catch((err) => {
+                await msg.member.roles.remove(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                 });
                 await msg.reply("You have been removed from the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
