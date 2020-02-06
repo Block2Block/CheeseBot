@@ -155,11 +155,14 @@ commandManager.onCommand = async function (msg, client) {
             }
         }
 
-        let x = permission.roles.filter(value => msg.member.roles.keyArray().includes(value.toString()));
-        if (x.size < 1) {
-            await msg.reply("You do not have permission to perform that command.");
-            return;
+        if (permission.roles != null) {
+            let x = permission.roles.filter(value => msg.member.roles.keyArray().includes(value.toString()));
+            if (x.size < 1) {
+                await msg.reply("You do not have permission to perform that command.");
+                return;
+            }
         }
+
 
         if (commandInfo.joinable_role == null) {
             //Run the command,
