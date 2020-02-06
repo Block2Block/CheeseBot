@@ -348,6 +348,7 @@ connectionManager.queueInfo = function (msg) {
         for (let counter = 0;counter >= i;counter++) {
             reply += (counter + 1) +  ") `" + queue[counter].title + ((counter !== i)?"`\n":"`")
         }
+        msg.reply(reply);
     } else {
         msg.reply("The queue is empty.");
     }
