@@ -84,12 +84,12 @@ commandManager.onCommand = async function (msg, client) {
         let args = msg.content.split(" ");
 
         //Extracting the command from the arguments.
-        let command = args.shift().replace("!","");
+        let command = args.shift().replace("!", "");
         command = command.toLowerCase();
 
         //If it is an alias, get the command it is an alias for. If it is the help command, just output the help. If it does not exist, return;
         if (aliases.has(command)) {
-            command =  aliases.get(command);
+            command = aliases.get(command);
         } else if (command === "help") {
             msg.member.createDM().then(dmchannel => {
                 //Build string of commands.
@@ -175,9 +175,9 @@ commandManager.onCommand = async function (msg, client) {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                 });
                 await msg.reply("You have been removed from the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
-                x = msg.member.roles.keyArray().filter(value => ranks.includes(value));
+                let x = msg.member.roles.keyArray().filter(value => ranks.includes(value));
                 if (x.size < 1) {
-                    msg.member.remove(botConstants.gameRole).catch((err) => {
+                    msg.member.roles.remove(botConstants.gameRole).catch((err) => {
                         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                     });
                 }
@@ -187,7 +187,7 @@ commandManager.onCommand = async function (msg, client) {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                 });
                 if (!msg.member.roles.has(botConstants.gameRole)) {
-                    msg.member.add(botConstants.gameRole).catch((err) => {
+                    msg.member.roles.add(botConstants.gameRole).catch((err) => {
                         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                     });
                 }
