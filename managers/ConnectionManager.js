@@ -327,6 +327,32 @@ connectionManager.shuffle = function (msg) {
     queue.unshift(currentSong);
 };
 
+connectionManager.nextSong = function (msg) {
+    if (queue) {
+        if (queue.length >= 2) {
+            msg.reply("The next song is: " + queue[1].title)
+        } else {
+            if (repeat) {
+                msg.reply("The next song is: " + queue[0].title)
+            }
+        }
+    } else {
+        msg.reply("There isn't anything playing.");
+    }
+};
+
+connectionManager.queueInfo = function (msg) {
+    if (queue) {
+        let i = ((queue.length < 10)?queue.length:10) - 1;
+        let reply = "There are currently " + queue.length + "songs in the queue. The next " + (i + 1) + " songs are:\n";
+        for (let counter = 0;counter >= i;counter++) {
+            reply += (counter + 1) +  ") `" + queue[counter].title + ((counter !== i)?"`\n":"`")
+        }
+    } else {
+        msg.reply("The queue is empty.");
+    }
+};
+
 function shuffle(a) {
     let j, x, i;
     for (i = a.length - 1; i > 0; i--) {
