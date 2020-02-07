@@ -183,7 +183,7 @@ commandManager.onCommand = async function (msg, client) {
                 }
             } else {
                 //join the role
-                msg.member.add(commandInfo.joinable_role).catch((err) => {
+                msg.member.roles.add(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                 });
                 if (!msg.member.roles.has(botConstants.gameRole)) {
