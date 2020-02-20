@@ -9,14 +9,14 @@ const botConstants = Bot.getBotConstants();
 
 eventmanager.ready = function(client, CommandManager, logger) {
     let MySQLManager = CommandManager.getPunishmentManager().getMySQLManager();
-    logger.log("Bot Client Connected.");
+    logger.info("Bot Client Connected.");
 
     client.user.setStatus("online");
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING"});
 
     //Get all of the *active* punishments from the database.
     MySQLManager.getPunishOnLoad((punishments) => {
-        logger.log("Loading punishments...");
+        logger.info("Loading punishments...");
         for (let punishment of punishments) {
             if (!client.guilds.get(botConstants.guildId).members.keyArray().includes(punishment.user)) {
                 continue;

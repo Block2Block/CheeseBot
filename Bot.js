@@ -14,10 +14,10 @@ const botConstants = Constants.getBotConstants();
 
 const log4js = require('log4js');
 log4js.configure({
-    appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + ((new Date()).toDateString()) + '.log' }, CheeseBotConsole: {type: 'console'}},
+    appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + ((new Date()).toUTCString()) + '.log' }, CheeseBotConsole: {type: 'console'}},
     categories: { default: { appenders: ['CheeseBotFile','CheeseBotConsole'], level: 'debug' } }
 });
-const logger = log4js.getLogger();
+const logger = log4js.getLogger("CheeseBot");
 
 
 //Loading in internal libraries.
@@ -168,11 +168,11 @@ process.on('exit', () => {
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
-            logger.log('Caught exception: ' + err);
+            logger.error('Caught exception: ' + err);
             process.exit(1)
         })
     } else {
-        logger.log('Caught exception: ' + err);
+        logger.error('Caught exception: ' + err);
         process.exit(1)
     }
 });

@@ -102,7 +102,7 @@ connectionManager.playCommand = async function (URL, msg, logger) {
 
         //Get the song info and put it into an object.
         const songInfo = await YTDL.getInfo(URL).catch((err) => {
-            logger.log(err);
+            logger.error(err);
         });
         const song = {
             title: songInfo.title,
@@ -152,16 +152,16 @@ async function play(song, client, logger) {
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
             dl.on('end', () => {
-                logger.log("Done.");
+                logger.info("Done.");
                 play(song, client, logger);
             });
             dl.on('error', (err) => {
-                logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
                 queue.shift();
                 play(queue[0], client, logger);
             })
         } catch (err) {
-            logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
             queue.shift();
             play(queue[0], client, logger);
             return;
@@ -173,21 +173,21 @@ async function play(song, client, logger) {
     if (queue.length > 1) {
         try {
             if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
-                logger.log("Downloading the next song " + queue[1].id + " for the first time.");
+                logger.info("Downloading the next song " + queue[1].id + " for the first time.");
                 let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
                 dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
                 dl.on('end', () => {
-                    logger.log("The next song has been downloaded and is ready to play.");
+                    logger.info("The next song has been downloaded and is ready to play.");
                 });
                 dl.on('error', (err) => {
-                    logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                    logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
                 })
             }
         } catch (err) {
-            logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);

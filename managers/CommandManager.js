@@ -22,7 +22,7 @@ commandManager.load = function (logger) {
     for (let x of files) {
         let permission = require("../permissions/" + x.name.toString());
         permissions.set(permission.node, permission);
-        logger.log("Loaded permission " + x.name);
+        logger.info("Loaded permission " + x.name);
     }
 
     //Now categories and commands.
@@ -33,7 +33,7 @@ commandManager.load = function (logger) {
         //Checking to make sure that the permission exists for the visibility.
         for (let y of category.permission_visibility) {
             if (!permissions.has(y)) {
-                logger.log("Cannot find permission of " + y + ".")
+                logger.info("Cannot find permission of " + y + ".")
             }
         }
 
@@ -47,7 +47,7 @@ commandManager.load = function (logger) {
 
             //Because I already know the category exists, I just need to check its permission
             if (!permissions.has(command.permission)) {
-                logger.log("Could not find permission of " + command.permission)
+                logger.info("Could not find permission of " + command.permission)
             }
 
             commands.set(command.cmd, command);
@@ -60,12 +60,12 @@ commandManager.load = function (logger) {
             //Appending command to help string.
             helpString += "**" + botConstants.commandPrefix + command.arguments + "** - " + command.desc + "\n";
 
-            logger.log("Loaded command " + z.name);
+            logger.info("Loaded command " + z.name);
         }
 
         categories.set(category.node, category);
         helpStrings.set(category.node , helpString);
-        logger.log("Loaded category " + x.name);
+        logger.info("Loaded category " + x.name);
     }
 
     logger.log("Successfully loaded in commands.");

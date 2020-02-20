@@ -51,7 +51,7 @@ mySQLManager.connect = function(logger) {
 mySQLManager.getPunishOnLoad = async function (callback, logger) {
     MySQLClient.query("SELECT *  FROM punishments WHERE status = 1", function (err, result) {
         if (err) {
-            logger.log(err);
+            logger.error(err);
         }
         let punishments = [];
         for (let x of result) {
@@ -76,7 +76,7 @@ mySQLManager.getPunishOnLoad = async function (callback, logger) {
 mySQLManager.getPunishments = async function (user, callback, logger) {
     MySQLClient.query("SELECT * FROM punishments WHERE discord_id = '" + user + "'", function (err, result) {
         if (err) {
-            logger.log(err)
+            logger.error(err)
         }
         let punishments = [];
         //For each record, create a punishment object.
@@ -104,11 +104,11 @@ mySQLManager.getPunishments = async function (user, callback, logger) {
 mySQLManager.punish = async function (user, type, timestamp, expire, punisher, reason, status, callback, logger) {
     MySQLClient.query("INSERT INTO `punishments`(discord_id,punisher,type,reason,timestamp,expire,status) VALUES ('" + user + "','" + punisher + "'," + type + ",'" + reason + "','" + timestamp + "','" + expire + "',1)", function (err) {
         if (err) {
-            logger.log(err)
+            logger.error(err)
         }
         MySQLClient.query("SELECT id FROM `punishments` WHERE (timestamp = '" + timestamp + "') AND (discord_id = '" + user + "')", function (err, result) {
             if (err) {
-                logger.log(err)
+                logger.error(err)
             }
             callback(result[0].id);
         })
@@ -118,7 +118,7 @@ mySQLManager.punish = async function (user, type, timestamp, expire, punisher, r
 mySQLManager.expire = async function (punishment_id, logger) {
     MySQLClient.query("UPDATE punishments SET status = 2, removal_reason = 'Expired' WHERE id = " + punishment_id, function (err) {
         if (err) {
-            logger.log(err)
+            logger.error(err)
         }
     });
 };
@@ -126,7 +126,7 @@ mySQLManager.expire = async function (punishment_id, logger) {
 mySQLManager.removePunishment = async function (user, type, reason, remover, logger) {
     MySQLClient.query("UPDATE punishments SET status = 3, removal_reason = '" + reason + "', remover = '" + remover.tag + "' WHERE discord_id = " + user + " AND type = " + type, function (err) {
         if (err) {
-            logger.log(err)
+            logger.error(err)
         }
     });
     return true;
