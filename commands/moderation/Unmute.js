@@ -7,7 +7,7 @@ module.exports = {
     permission: "moderation",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args, ConnectionManager, PunishmentManager) {
-        await PunishmentManager.unpunish(msg, args, 1);
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+        await PunishmentManager.unpunish(msg, args, 1, msg.client, logger);
     }
 };

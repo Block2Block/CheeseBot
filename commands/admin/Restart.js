@@ -7,7 +7,7 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         const Bot = require("../../utils/Constants.js");
 
         const client = msg.client;

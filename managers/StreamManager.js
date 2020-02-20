@@ -11,18 +11,28 @@ const WebHookListener = require('twitch-webhooks').default;
 let listener;
 let subscriptions = [];
 
-streammanager.load = async function (client) {
+let live = [];
+
+streammanager.load = async function (client, logger) {
     listener = await WebHookListener.create(twitchClient, {port: 8090});
     listener.listen();
     const botConstants = require("../utils/Constants.js").getBotConstants();
     for (let x of botConstants.twitchSubscriptions) {
         subscriptions.push(await listener.subscribeToStreamChanges(x, async (stream) => {
             if (stream) {
+                if (live.includes(x)) {
+                    return;
+                }
                 let game = "";
                 stream.getGame().then((twitchGame) => {
                     game = twitchGame.name;
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + " !");
+                    live.push(x)
                 });
+            } else {
+                if (live.includes(x)) {
+                    live.splice(live.indexOf(x),1);
+                }
             }
         }));
     }

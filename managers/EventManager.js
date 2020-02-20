@@ -7,16 +7,16 @@ const Discord = require("discord.js");
 //Bot variables.
 const botConstants = Bot.getBotConstants();
 
-eventmanager.ready = function(client, CommandManager) {
+eventmanager.ready = function(client, CommandManager, logger) {
     let MySQLManager = CommandManager.getPunishmentManager().getMySQLManager();
-    console.log("Bot Client Connected.");
+    logger.log("Bot Client Connected.");
 
     client.user.setStatus("online");
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING"});
 
     //Get all of the *active* punishments from the database.
     MySQLManager.getPunishOnLoad((punishments) => {
-        console.log("Loading punishments...");
+        logger.log("Loading punishments...");
         for (let punishment of punishments) {
             if (!client.guilds.get(botConstants.guildId).members.keyArray().includes(punishment.user)) {
                 continue;
@@ -27,7 +27,7 @@ eventmanager.ready = function(client, CommandManager) {
                         client.guilds.get(botConstants.guildId).members.get(punishment.user).createDM().then(dmchannel => {
                             dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                         }).catch((reason) => {
-                            console.log("Login Promise Rejection: " + reason);
+                            logger.log("Login Promise Rejection: " + reason);
                         });
                         client.guilds.get(botConstants.guildId).members.get(punishment.user).kick("Joined when banned.").then((member) => {
                         });
@@ -39,7 +39,7 @@ eventmanager.ready = function(client, CommandManager) {
                             client.guilds.get(botConstants.guildId).members.get(punishment.user).createDM().then(dmchannel => {
                                 dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
-                                console.log("Login Promise Rejection: " + reason);
+                                logger.log("Login Promise Rejection: " + reason);
                             });
 
                             client.guilds.get(botConstants.guildId).members.get(punishment.user).addRole(botConstants.mutedRole).catch((err) => {
@@ -68,7 +68,7 @@ eventmanager.ready = function(client, CommandManager) {
                             client.guilds.get(botConstants.guildId).members.get(punishment.user).createDM().then(dmchannel => {
                                 dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
-                                console.log("Login Promise Rejection: " + reason);
+                                logger.log("Login Promise Rejection: " + reason);
                             });
                             client.guilds.get(botConstants.guildId).members.get(punishment.user).kick("Joined when banned.").then((member) => {
 
@@ -81,7 +81,7 @@ eventmanager.ready = function(client, CommandManager) {
                                 client.guilds.get(botConstants.guildId).members.get(punishment.user).createDM().then(dmchannel => {
                                     dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                                 }).catch((reason) => {
-                                    console.log("Login Promise Rejection: " + reason);
+                                    logger.log("Login Promise Rejection: " + reason);
                                 });
 
                                 client.guilds.get(botConstants.guildId).members.get(punishment.user).add(botConstants.mutedRole).catch((err) => {
@@ -114,13 +114,13 @@ eventmanager.ready = function(client, CommandManager) {
                 }
             }
         }
-        console.info("Punishments Successfully Loaded.");
+        logger.info("Punishments Successfully Loaded.");
         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Bot successfully loaded.");
-        console.info("The bot has been successfully loaded.")
+        logger.info("The bot has been successfully loaded.")
     });
 };
 
-eventmanager.join = function(member, client, CommandManager) {
+eventmanager.join = function(member, client, CommandManager, logger) {
     let Punishments = CommandManager.getPunishmentManager();
     Punishments.getPunish(member.id, (punishments) => {
         //If they have punishments, see if any of them are active.
@@ -132,7 +132,7 @@ eventmanager.join = function(member, client, CommandManager) {
                         member.createDM().then(dmchannel => {
                             dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                         }).catch((reason) => {
-                            console.log("Login Promise Rejection: " + reason);
+                            logger.log("Login Promise Rejection: " + reason);
                         });
                         member.kick("Joined when banned.").then((member) => {
                         });
@@ -141,7 +141,7 @@ eventmanager.join = function(member, client, CommandManager) {
                         member.createDM().then(dmchannel => {
                             dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                         }).catch((reason) => {
-                            console.log("Login Promise Rejection: " + reason);
+                            logger.log("Login Promise Rejection: " + reason);
                         });
 
                         member.roles.add(botConstants.mutedRole).catch((err) => {
@@ -169,7 +169,7 @@ eventmanager.join = function(member, client, CommandManager) {
 
                                 dmchannel.send("You are banned from The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
-                                console.log("Login Promise Rejection: " + reason);
+                                logger.log("Login Promise Rejection: " + reason);
                             });
                             member.kick("Joined when banned.").then((member) => {
 
@@ -179,7 +179,7 @@ eventmanager.join = function(member, client, CommandManager) {
                             member.createDM().then(dmchannel => {
                                 dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
-                                console.log("Login Promise Rejection: " + reason);
+                                logger.log("Login Promise Rejection: " + reason);
                             });
 
                             member.roles.add(botConstants.mutedRole).catch((err) => {
@@ -229,7 +229,7 @@ eventmanager.join = function(member, client, CommandManager) {
                     "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
                 .setColor('#FFAB00'));
         }).catch((reason) => {
-            console.log("Login Promise Rejection: " + reason);
+            logger.log("Login Promise Rejection: " + reason);
         });
 
         member.add("664631743499993098").catch((err) => {

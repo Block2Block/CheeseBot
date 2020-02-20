@@ -7,7 +7,7 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         let Discord = require("discord.js");
         msg.member.createDM().then(dmchannel => {
             dmchannel.send(new Discord.MessageEmbed()
@@ -18,7 +18,7 @@ module.exports = {
                     "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
                 .setColor('#FFAB00'));
         }).catch((reason) => {
-            console.log("Login Promise Rejection: " + reason);
+            logger.log("Login Promise Rejection: " + reason);
         });
     }
 };

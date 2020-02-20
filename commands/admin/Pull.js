@@ -7,7 +7,7 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         const Bot = require("../../utils/Constants.js");
         const git = require("simple-git");
 
@@ -17,8 +17,8 @@ module.exports = {
         await msg.reply("Pulling git changes and restarting bot.");
         client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Pulling changes...");
         git().pull('origin', 'master', {}, async (err, result) => {
-            if (err) console.log(err);
-            console.log(result);
+            if (err) logger.error(err);
+            logger.error(result);
             if (result.summary.changes === 0 && result.summary.insertions === 0 && result.summary.deletions === 0) {
                 await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("The bot is up to date.");
             } else {

@@ -15,63 +15,65 @@ const permissions = new Map();
 const helpStrings = new Map();
 const ranks = [];
 
-//Load all of the permissions, categories, commands and aliases.
-//Starting off with permissions.
-let files = fs.readdirSync('./permissions/', {withFileTypes: true});
-for (let x of files) {
-    let permission = require("../permissions/" + x.name.toString());
-    permissions.set(permission.node, permission);
-    console.log("Loaded permission " + x.name);
-}
-
-//Now categories and commands.
-files = fs.readdirSync('./categories/', {withFileTypes: true});
-for (let x of files) {
-    let category = require("../categories/" + x.name.toString());
-
-    //Checking to make sure that the permission exists for the visibility.
-    for (let y of category.permission_visibility) {
-        if (!permissions.has(y)) {
-            console.log("Cannot find permission of " + y + ".")
-        }
+commandManager.load = function (logger) {
+    //Load all of the permissions, categories, commands and aliases.
+    //Starting off with permissions.
+    let files = fs.readdirSync('./permissions/', {withFileTypes: true});
+    for (let x of files) {
+        let permission = require("../permissions/" + x.name.toString());
+        permissions.set(permission.node, permission);
+        console.log("Loaded permission " + x.name);
     }
 
-    //Starting build of help strings.
-    let helpString = "\n**__" + category.help_header + "__**\n";
+    //Now categories and commands.
+    files = fs.readdirSync('./categories/', {withFileTypes: true});
+    for (let x of files) {
+        let category = require("../categories/" + x.name.toString());
 
-    //Because each category has its own folder, I will now need to load in all of the commands and aliases for that category.
-    let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
-    for (let z of commandFiles) {
-        let command = require("../commands/" + category.node + "/" + z.name.toString());
-
-        //Because I already know the category exists, I just need to check its permission
-        if (!permissions.has(command.permission)) {
-            console.log("Could not find permission of " + command.permission)
+        //Checking to make sure that the permission exists for the visibility.
+        for (let y of category.permission_visibility) {
+            if (!permissions.has(y)) {
+                logger.log("Cannot find permission of " + y + ".")
+            }
         }
 
-        commands.set(command.cmd, command);
+        //Starting build of help strings.
+        let helpString = "\n**__" + category.help_header + "__**\n";
 
-        //Now to add each alias.
-        for (let a of command.aliases) {
-            aliases.set(a, command.cmd);
+        //Because each category has its own folder, I will now need to load in all of the commands and aliases for that category.
+        let commandFiles = fs.readdirSync('./commands/' + category.node + '/', {withFileTypes: true});
+        for (let z of commandFiles) {
+            let command = require("../commands/" + category.node + "/" + z.name.toString());
+
+            //Because I already know the category exists, I just need to check its permission
+            if (!permissions.has(command.permission)) {
+                logger.log("Could not find permission of " + command.permission)
+            }
+
+            commands.set(command.cmd, command);
+
+            //Now to add each alias.
+            for (let a of command.aliases) {
+                aliases.set(a, command.cmd);
+            }
+
+            //Appending command to help string.
+            helpString += "**" + botConstants.commandPrefix + command.arguments + "** - " + command.desc + "\n";
+
+            logger.log("Loaded command " + z.name);
         }
 
-        //Appending command to help string.
-        helpString += "**" + botConstants.commandPrefix + command.arguments + "** - " + command.desc + "\n";
-
-        console.log("Loaded command " + z.name);
+        categories.set(category.node, category);
+        helpStrings.set(category.node , helpString);
+        logger.log("Loaded category " + x.name);
     }
 
-    categories.set(category.node, category);
-    helpStrings.set(category.node , helpString);
-    console.log("Loaded category " + x.name);
-}
-
-console.log("Successfully loaded in commands.");
+    logger.log("Successfully loaded in commands.");
+};
 
 
 
-commandManager.onCommand = async function (msg, client) {
+commandManager.onCommand = async function (msg, client, logger) {
     if (msg.guild == null) {
         if (!client.guilds.get(botConstants.guildId).members.keyArray().includes(msg.author.id)) {
             await msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
@@ -99,7 +101,7 @@ commandManager.onCommand = async function (msg, client) {
                 for (let x of categories.values()) {
                     if (help.split("").length + helpStrings.get(x.node).split("").length >= 2000) {
                         dmchannel.send(help).catch((err) => {
-                            console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                            logger.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                             msg.reply("You must enable PM's in order to use this command.")
                         });
                         help = "";
@@ -121,7 +123,7 @@ commandManager.onCommand = async function (msg, client) {
 
                 if (help.split("").length >= 1920) {
                     dmchannel.send(help).catch((err) => {
-                        console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                        logger.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                         msg.reply("You must enable PM's in order to use this command.")
                     });
                     help = "";
@@ -130,12 +132,12 @@ commandManager.onCommand = async function (msg, client) {
                 dmchannel.send(help).then(() => {
                     msg.react("✅");
                 }).catch((err) => {
-                    console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                    logger.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                     msg.reply("You must enable PM's in order to use this command.")
                 });
 
             }).catch((err) => {
-                console.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                logger.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                 msg.reply("You must enable PM's in order to use this command.")
             });
             return;
@@ -166,7 +168,7 @@ commandManager.onCommand = async function (msg, client) {
 
         if (commandInfo.joinable_role == null) {
             //Run the command,
-            commandInfo.run(msg, args, ConnectionManager, PunishmentManager);
+            commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
         } else {
             //This is a joinable role command. Execute role command.
             if (msg.member.roles.keyArray().includes(commandInfo.joinable_role)) {

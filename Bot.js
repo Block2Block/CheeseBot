@@ -12,16 +12,23 @@ const Constants = require("./utils/Constants.js");
 const EventManager = require("./managers/EventManager.js");
 const botConstants = Constants.getBotConstants();
 
+const log4js = require('log4js');
+log4js.configure({
+    appenders: { cheese: { type: 'file', filename: 'logs/' + ((new Date()).toDateString()) + '.log' }}
+});
+const logger = log4js.getLogger('cheese');
+
 
 //Loading in internal libraries.
 const CommandManager = require("./managers/CommandManager.js");
+CommandManager.load(logger);
 const StreamManager = require("./managers/StreamManager.js");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {
     client.login(token).catch((err) => {
         if (err) {
-            console.error('error when connecting to db:', err);
+            logger.error('error when connecting to db:', err);
             setTimeout(connect, 2000);
         }
     });
@@ -30,12 +37,12 @@ function connect() {
 connect();
 
 client.on('ready', () => {
-    EventManager.ready(client, CommandManager);
-    StreamManager.load(client);
+    EventManager.ready(client, CommandManager, logger);
+    StreamManager.load(client, logger);
 });
 
 client.on('guildMemberAdd', (member) => {
-    EventManager.join(member, client, CommandManager);
+    EventManager.join(member, client, CommandManager, logger);
 });
 
 client.on('guildMemberRemove', (member) => {
@@ -135,7 +142,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
 client.on('message', (msg) => {
     if (msg.content.startsWith(botConstants.commandPrefix)) {
-        CommandManager.onCommand(msg, client);
+        CommandManager.onCommand(msg, client, logger);
     }
 });
 
@@ -160,11 +167,11 @@ process.on('exit', () => {
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
         client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
-            console.log('Caught exception: ' + err);
+            logger.log('Caught exception: ' + err);
             process.exit(1)
         })
     } else {
-        console.log('Caught exception: ' + err);
+        logger.log('Caught exception: ' + err);
         process.exit(1)
     }
 });

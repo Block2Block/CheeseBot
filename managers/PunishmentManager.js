@@ -23,7 +23,7 @@ let cache = new Map();
     Status 2 = Expired.
     Status 3 = Removed.
  */
-punishmentManager.punish = async function (msg, args, type, client) {
+punishmentManager.punish = async function (msg, args, type, client, logger) {
 
     //If there aren't enough args, say so.
     if (args.length < 3) {
@@ -144,7 +144,7 @@ punishmentManager.punish = async function (msg, args, type, client) {
         client.guilds.get(botConstants.guildId).members.get(user).createDM().then(dmchannel => {
             dmchannel.send("You have been " + ((type === 1)?"muted":"banned") + " in The Cult of Cheese Discord for **" + ((expire === -1) ? "Permanent" : time + " " + suffix) + "**. Reason: **" + reason + "**");
         }).catch((reason) => {
-            console.debug("Create DM Promise Rejection: " + reason);
+            logger.debug("Create DM Promise Rejection: " + reason);
         });
 
 
@@ -168,10 +168,10 @@ punishmentManager.punish = async function (msg, args, type, client) {
                 cache.delete(user);
             }
         }
-    });
+    }, logger);
 };
 
-punishmentManager.unpunish = async function(msg, args, type, client) {
+punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     //Setting required variables.
     let re = /<@![0-9]{17,18}>/;
     let user;
@@ -216,7 +216,7 @@ punishmentManager.unpunish = async function(msg, args, type, client) {
     }
 
     await msg.reply("Punishment removed.");
-    await MySQLManager.removePunishment(user, type, reason, msg.author);
+    await MySQLManager.removePunishment(user, type, reason, msg.author, logger);
     client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.MessageEmbed()
         .setAuthor(client.guilds.get("105235654727704576").members.get(user).user.tag, client.guilds.get("105235654727704576").members.get(user).user.displayAvatarURL)
         .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
@@ -226,7 +226,7 @@ punishmentManager.unpunish = async function(msg, args, type, client) {
         .setColor('#00AA00'));
 };
 
-punishmentManager.history = async function (msg) {
+punishmentManager.history = async function (msg, logger) {
     let client = msg.client;
 
     //Initialise required variables.
@@ -308,14 +308,14 @@ punishmentManager.history = async function (msg) {
 
         //Send the rich embed.
         msg.channel.send(richEmbed);
-    });
+    }, logger);
 
 };
 
 
-punishmentManager.expire = async function (user, punishment_id) {
+punishmentManager.expire = async function (user, punishment_id, logger) {
     //Set it as expired in the database.
-    await MySQLManager.expire(punishment_id);
+    await MySQLManager.expire(punishment_id, logger);
 
     //Remove it from cache (will remove the mute if it is set.
     if (cache.get(user) !== undefined) {
@@ -334,10 +334,10 @@ punishmentManager.removePunishment = async function (user) {
     }
 };
 
-punishmentManager.getPunish = async function (user, callback) {
+punishmentManager.getPunish = async function (user, callback, logger) {
     await MySQLManager.getPunishments(user, (punishments) => {
         callback(punishments);
-    });
+    }, logger);
 };
 
 punishmentManager.getMySQLManager = function() {

@@ -7,7 +7,7 @@ module.exports = {
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
     joinable_role: null,
-    run: async function(msg, args, ConnectionManager, PunishmentManager) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
 
         if (msg.member.voice.channel) {
             await ConnectionManager.joinChannel(msg.member.voice.channel, msg, msg.client, (success) => {

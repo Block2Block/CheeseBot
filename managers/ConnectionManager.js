@@ -53,7 +53,7 @@ connectionManager.leave = function () {
     }
 };
 
-connectionManager.playCommand = async function (URL, msg) {
+connectionManager.playCommand = async function (URL, msg, logger) {
     let client = msg.client;
     //If it is detected as a value YouTube Playlist URL, create an array with the URLS of each song onto it, then add that to the queue.
     if (await YTPL.validateURL(URL)) {
@@ -84,7 +84,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
             //If lengths are the same, then the queue was empty before we started, so start playing the songs.
             if (queue.length === playlist.items.length) {
-                await play(queue[0], client);
+                await play(queue[0], client, logger);
                 await msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
             } else {
                 await msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
@@ -102,7 +102,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
         //Get the song info and put it into an object.
         const songInfo = await YTDL.getInfo(URL).catch((err) => {
-            console.log(err);
+            logger.log(err);
         });
         const song = {
             title: songInfo.title,
@@ -116,7 +116,7 @@ connectionManager.playCommand = async function (URL, msg) {
 
         //If it is the only song in the queue, play it.
         if (queue.length === 1) {
-            play(song, client);
+            play(song, client, logger);
         }
     } else {
         //It is not a valid YouTube URL, search YouTube for it instead.
@@ -129,13 +129,13 @@ connectionManager.playCommand = async function (URL, msg) {
             }
 
             //Execute this function again with the URL of the first item found with the search term.
-            connectionManager.playCommand(searchResults.items[0].link, msg);
+            connectionManager.playCommand(searchResults.items[0].link, msg, logger);
             msg.reply("Result found, playing " + searchResults.items[0].title + ".");
         });
     }
 };
 
-async function play(song, client) {
+async function play(song, client, logger) {
 
     //If there are no more songs in the playlist or the connection has ended, state playback has ended.
     if (!song || connection == null) {
@@ -147,23 +147,23 @@ async function play(song, client) {
 
     //If the current song doesn't already exist in the cache, download it.
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-        console.debug("Downloading song " + song.id + " for the first time.");
+        logger.debug("Downloading song " + song.id + " for the first time.");
         try {
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
             dl.on('end', () => {
-                console.log("Done.");
-                play(song, client);
+                logger.log("Done.");
+                play(song, client, logger);
             });
             dl.on('error', (err) => {
-                console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
                 queue.shift();
-                play(queue[0], client);
+                play(queue[0], client, logger);
             })
         } catch (err) {
-            console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
             queue.shift();
-            play(queue[0], client);
+            play(queue[0], client, logger);
             return;
         }
         return;
@@ -173,21 +173,21 @@ async function play(song, client) {
     if (queue.length > 1) {
         try {
             if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
-                console.log("Downloading the next song " + queue[1].id + " for the first time.");
+                logger.log("Downloading the next song " + queue[1].id + " for the first time.");
                 let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
                 dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
                 dl.on('end', () => {
-                    console.log("The next song has been downloaded and is ready to play.");
+                    logger.log("The next song has been downloaded and is ready to play.");
                 });
                 dl.on('error', (err) => {
-                    console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                    logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
                 })
             }
         } catch (err) {
-            console.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.log("An error occurred while trying to download a song. Skipping song. Error: " + err);
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);
@@ -198,14 +198,14 @@ async function play(song, client) {
     //Create the dispatcher and play the song.
     dispatcher = connection.play("./musiccache/" + song.id + ".m4a")
         .on('start', () => {
-            console.debug("Playing " + song.title + " now.");
+            logger.debug("Playing " + song.title + " now.");
             client.guilds.get(botConstants.guildId).channels.get(botConstants.nowPlayingChannel).send(new Discord.MessageEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
             client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
         })
         .on('finish', () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
-                play(false, client);
+                play(false, client, logger);
                 return;
             }
 
@@ -217,11 +217,11 @@ async function play(song, client) {
             }
 
             //Play the next song.
-            play(queue[0], client);
+            play(queue[0], client, logger);
         })
         //If theres an error, log the error.
         .on('error', error => {
-            console.error(error);
+            logger.error(error);
         });
     dispatcher.setVolumeLogarithmic(volume / 10);
     dispatcher.setBitrate(128);
