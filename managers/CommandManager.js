@@ -68,7 +68,7 @@ commandManager.load = function (logger) {
         logger.info("Loaded category " + x.name);
     }
 
-    logger.log("Successfully loaded in commands.");
+    logger.info("Successfully loaded in commands.");
 };
 
 
