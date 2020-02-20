@@ -22,7 +22,7 @@ commandManager.load = function (logger) {
     for (let x of files) {
         let permission = require("../permissions/" + x.name.toString());
         permissions.set(permission.node, permission);
-        console.log("Loaded permission " + x.name);
+        logger.log("Loaded permission " + x.name);
     }
 
     //Now categories and commands.
