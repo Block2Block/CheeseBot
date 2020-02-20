@@ -13,8 +13,9 @@ const EventManager = require("./managers/EventManager.js");
 const botConstants = Constants.getBotConstants();
 
 const log4js = require('log4js');
+let date = new Date();
 log4js.configure({
-    appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + ((new Date()).toUTCString()) + '.log' }, CheeseBotConsole: {type: 'console'}},
+    appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + date.toDateString() + '-' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds() + '.log' }, CheeseBotConsole: {type: 'console'}},
     categories: { default: { appenders: ['CheeseBotFile','CheeseBotConsole'], level: 'debug' } }
 });
 const logger = log4js.getLogger("CheeseBot");
