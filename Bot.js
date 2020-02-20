@@ -14,10 +14,10 @@ const botConstants = Constants.getBotConstants();
 
 const log4js = require('log4js');
 log4js.configure({
-    appenders: { cheese: { type: 'file', filename: 'logs/' + ((new Date()).toDateString()) + '.log' }},
+    appenders: { CheeseBot: { type: 'file', filename: 'logs/' + ((new Date()).toDateString()) + '.log' }},
     categories: { default: { appenders: ['CheeseBot'], level: 'debug' } }
 });
-const logger = log4js.getLogger('cheese');
+const logger = log4js.getLogger('CheeseBot');
 
 
 //Loading in internal libraries.
