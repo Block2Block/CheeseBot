@@ -118,7 +118,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
         logger.info("Punishments Successfully Loaded.");
         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Bot successfully loaded.");
         logger.info("The bot has been successfully loaded.")
-    });
+    }, logger);
 };
 
 eventmanager.join = function(member, client, CommandManager, logger) {

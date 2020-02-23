@@ -157,10 +157,12 @@ commandManager.onCommand = async function (msg, client, logger) {
             }
         }
 
+
         if (permission.roles != null) {
-            let x = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
-            if (x.size < 1) {
-                await msg.reply("You do not have permission to perform that command.");
+            logger.debug("Roles is not null");
+            let z = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
+            if (z.length < 1) {
+                await msg.reply("You do not have permission to execute this command");
                 return;
             }
         }
