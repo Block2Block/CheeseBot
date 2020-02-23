@@ -113,7 +113,7 @@ commandManager.onCommand = async function (msg, client, logger) {
                             help += helpStrings.get(x.node);
                             break;
                         }
-                        let z = permission.roles.filter(value => msg.member.roles.keyArray().includes(value.toString()));
+                        let z = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
                         if (z.length >= 1) {
                             help += helpStrings.get(x.node);
                             break;
@@ -137,7 +137,7 @@ commandManager.onCommand = async function (msg, client, logger) {
                 });
 
             }).catch((err) => {
-                logger.log("Promise Rejection: " + err.stack + " line " + err.lineNumber);
+                logger.info("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                 msg.reply("You must enable PM's in order to use this command.")
             });
             return;
@@ -158,7 +158,7 @@ commandManager.onCommand = async function (msg, client, logger) {
         }
 
         if (permission.roles != null) {
-            let x = permission.roles.filter(value => msg.member.roles.keyArray().includes(value.toString()));
+            let x = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
             if (x.size < 1) {
                 await msg.reply("You do not have permission to perform that command.");
                 return;
@@ -171,16 +171,16 @@ commandManager.onCommand = async function (msg, client, logger) {
             commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
         } else {
             //This is a joinable role command. Execute role command.
-            if (msg.member.roles.keyArray().includes(commandInfo.joinable_role)) {
+            if (msg.member.roles.cache.keyArray().includes(commandInfo.joinable_role)) {
                 //leave the role
                 await msg.member.roles.remove(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                 });
-                await msg.reply("You have been removed from the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
-                let x = msg.member.roles.keyArray().filter(value => ranks.includes(value));
+                await msg.reply("You have been removed from the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
+                let x = msg.member.roles.cache.keyArray().filter(value => ranks.includes(value));
                 if (x.size < 1) {
                     msg.member.roles.remove(botConstants.gameRole).catch((err) => {
-                        client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                     });
                 }
             } else {
@@ -188,12 +188,12 @@ commandManager.onCommand = async function (msg, client, logger) {
                 msg.member.roles.add(commandInfo.joinable_role).catch((err) => {
                     client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                 });
-                if (!msg.member.roles.has(botConstants.gameRole)) {
+                if (!msg.member.roles.cache.has(botConstants.gameRole)) {
                     msg.member.roles.add(botConstants.gameRole).catch((err) => {
-                        client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
+                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                     });
                 }
-                await msg.reply("You have been added to the role '" + client.guilds.get(botConstants.guildId).roles.get(commandInfo.joinable_role).name + "'.");
+                await msg.reply("You have been added to the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
             }
         }
 

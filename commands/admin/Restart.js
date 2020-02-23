@@ -14,7 +14,7 @@ module.exports = {
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("Restarting bot...");
-        await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Restarting bot...");
+        await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Restarting bot...");
         process.exit(0);
     }
 };

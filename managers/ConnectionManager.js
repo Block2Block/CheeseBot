@@ -139,7 +139,7 @@ async function play(song, client, logger) {
 
     //If there are no more songs in the playlist or the connection has ended, state playback has ended.
     if (!song || connection == null) {
-        client.guilds.get("105235654727704576").channels.get("643571367715012638").send("Playback ended.");
+        client.guilds.cache.get("105235654727704576").channels.cache.get("643571367715012638").send("Playback ended.");
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
         return;
@@ -147,7 +147,7 @@ async function play(song, client, logger) {
 
     //If the current song doesn't already exist in the cache, download it.
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
-        logger.debug("Downloading song " + song.id + " for the first time.");
+        logger.info("Downloading song " + song.title + " (ID: " + song.id + ") for the first time.");
         try {
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
@@ -173,7 +173,7 @@ async function play(song, client, logger) {
     if (queue.length > 1) {
         try {
             if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
-                logger.info("Downloading the next song " + queue[1].id + " for the first time.");
+                logger.info("Downloading the next song ," + queue[1].title + " (ID: " + queue[1].id + "), for the first time.");
                 let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
                 dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
                 dl.on('end', () => {
@@ -198,8 +198,8 @@ async function play(song, client, logger) {
     //Create the dispatcher and play the song.
     dispatcher = connection.play("./musiccache/" + song.id + ".m4a")
         .on('start', () => {
-            logger.debug("Playing " + song.title + " now.");
-            client.guilds.get(botConstants.guildId).channels.get(botConstants.nowPlayingChannel).send(new Discord.MessageEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
+            logger.info("Playing " + song.title + " now.");
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.nowPlayingChannel).send(new Discord.MessageEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
             client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
         })
         .on('finish', () => {

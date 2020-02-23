@@ -73,6 +73,10 @@ Eventually the bot will have downloaded a large enough cache to the point where 
 
 **A:** Unfortunately, due the the nature of YouTube updates, this often breaks youtube-dl, the library that is used to download the songs. In the case that this should happen, I should normally be able to update the bot relatively quickly. If this takes too long, simply do `npm install ytdl-core@latest`, which should install the latest version of the JavaScript wrapper for youtube-dl.
 
+>**Q:** Help! The bot stopped working after I updated it from GitHub!
+
+**A:** If I have updated dependencies in a specific update, it can sometimes mean that you need to re-install the dependencies to bring them up to date. In order to do this, just run `npm install` again and it will update all dependencies for you.
+
 >**Q:** My question isn't listed here!
 
 **A:** Join the Cult of Cheese Discord (linked above) and tag me (@Block2Block#0001). I will be much more responsive on there.

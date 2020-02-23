@@ -14,10 +14,12 @@ let subscriptions = [];
 let live = [];
 
 streammanager.load = async function (client, logger) {
+    logger.info("Loading Twitch Webhooks...");
     listener = await WebHookListener.create(twitchClient, {port: 8090});
     listener.listen();
     const botConstants = require("../utils/Constants.js").getBotConstants();
     for (let x of botConstants.twitchSubscriptions) {
+        logger.info("Webhook for twitch ID " + x + " loaded.");
         subscriptions.push(await listener.subscribeToStreamChanges(x, async (stream) => {
             if (stream) {
                 if (live.includes(x)) {
@@ -26,7 +28,7 @@ streammanager.load = async function (client, logger) {
                 let game = "";
                 stream.getGame().then((twitchGame) => {
                     game = twitchGame.name;
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + " !");
+                    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + " !");
                     live.push(x)
                 });
             } else {
@@ -36,6 +38,7 @@ streammanager.load = async function (client, logger) {
             }
         }));
     }
+    logger.info("Twitch Webhooks loaded successfully!")
 };
 
 streammanager.end = function() {

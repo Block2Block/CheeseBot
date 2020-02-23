@@ -16,7 +16,7 @@ const log4js = require('log4js');
 let date = new Date();
 log4js.configure({
     appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + date.toDateString() + '-' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds() + '.log' }, CheeseBotConsole: {type: 'console'}},
-    categories: { default: { appenders: ['CheeseBotFile','CheeseBotConsole'], level: 'debug' } }
+    categories: { default: { appenders: ['CheeseBotFile','CheeseBotConsole'], level: 'info' } }
 });
 const logger = log4js.getLogger("CheeseBot");
 
@@ -25,20 +25,24 @@ const logger = log4js.getLogger("CheeseBot");
 const CommandManager = require("./managers/CommandManager.js");
 CommandManager.load(logger);
 const StreamManager = require("./managers/StreamManager.js");
+logger.info("All libraries loaded.");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {
     client.login(token).catch((err) => {
         if (err) {
-            logger.error('error when connecting to db:', err);
+            logger.error('error when connecting to bot testing:', err);
             setTimeout(connect, 2000);
+        } else {
+            logger.info("Something went majorly wrong...");
         }
     });
 }
 
 connect();
-
+logger.info("Connecting...");
 client.on('ready', () => {
+    logger.info("Bot is ready!");
     EventManager.ready(client, CommandManager, logger);
     StreamManager.load(client, logger);
 });
@@ -48,7 +52,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('guildMemberRemove', (member) => {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
             .setTitle("User Leave")
             .setThumbnail(member.user.avatarURL())
             .setDescription(member.user.tag + " has left the server.")
@@ -61,7 +65,7 @@ client.on('guildMemberRemove', (member) => {
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
             .setAuthor(newMember.user.tag, newMember.user.avatarURL())
             .setDescription("<@" + newMember + "> has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
@@ -78,7 +82,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
+            client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.avatarURL())
                 .setTitle("Role Removed")
                 .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.get(role).name + "` role.")
@@ -92,7 +96,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
+            client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.avatarURL())
                 .setTitle("Role Added")
                 .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.get(role).name + "` role.")
@@ -103,7 +107,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
             .setAuthor(newUser.tag, newUser.avatarURL())
             .setDescription("<@" + newUser + "> has changed their username.")
             .addField("Old Name", oldUser.username)
@@ -114,7 +118,7 @@ client.on('userUpdate', (oldUser, newUser) => {
 });
 
 client.on('guildBanAdd', (guild, user) => {
-    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.MessageEmbed()
+    client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
         .setAuthor(user.tag, user.avatarURL())
         .setTitle("Manual Ban")
         .setDescription(user.tag + " was manually banned by an admin.")
@@ -126,7 +130,7 @@ client.on('messageDelete', (message) => {
         if (message.content.startsWith("!") || message.author.bot) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
             "**Message**: `" + message.content + "`");
     }
 });
@@ -136,7 +140,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
             "**Old**: `" + oldMessage.content + "`\n" +
             "**New**: `" + newMessage.content + "`");
     }
@@ -149,31 +153,39 @@ client.on('message', (msg) => {
 });
 
 client.on('error', (error) => {
-    console.log("An error has occured. Error: " + error);
+    logger.info("An error has occured. Error: " + error);
     if (client.status === 5) {
         connect();
     } else if (client.status === 3 || client.status === 0) {
-        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
     }
 
+});
+
+client.on('warn', (error) => {
+    logger.warn("An error has occured. Error: " + error);
 });
 
 //Catching the process exit in order to cleanly exit.
 process.on('exit', () => {
    CommandManager.getConnectionManager().leave();
-   client.destroy();
+   try {
+       client.destroy();
+   } catch (ex) {
+
+   }
    StreamManager.end();
 });
 
 //Catching any uncaught exceptions, then restarting the  process.
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
-        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
-            logger.error('Caught exception: ' + err);
+        client.guilds.cache.get("105235654727704576").channels.cache.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
+            logger.error('Caught exception: ' + err + ": \n" +  err.stack);
             process.exit(1)
         })
     } else {
-        logger.error('Caught exception: ' + err);
+        logger.error('Caught exception: ' + err + ": \n" +  err.stack);
         process.exit(1)
     }
 });

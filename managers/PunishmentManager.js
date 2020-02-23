@@ -50,7 +50,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
     }
 
     //If the user already has an active punishment, warn that they cannot punish again.
-    if (client.guilds.get(botConstants.guildId).members.get(user).roles.has(botConstants.mutedRole) && type === 1) {
+    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.mutedRole) && type === 1) {
         await msg.reply("That user is already muted.");
         return;
     }
@@ -84,8 +84,8 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
     //All of the info we need has been retrieved, apply the punishment.
     await MySQLManager.punish(user, type, timestamp, expire, punisher, reason, status, id => {
-        client.guilds.get(botConstants.guildId).members.get(user).add(botConstants.mutedRole).catch((err) => {
-            client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
+        client.guilds.cache.get(botConstants.guildId).members.cache.get(user).add(botConstants.mutedRole).catch((err) => {
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
         });
 
         let timer = null;
@@ -94,14 +94,14 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
         if (type === 1) {
             if (expire !== -1) {
                 timer = setTimeout(async () => {
-                    if (client.guilds.get(botConstants.guildId).members.keyArray().includes(user)) {
-                        if (client.guilds.get(botConstants.guildId).members.get(user).roles.keyArray().includes(botConstants.mutedRole)) {
-                            client.guilds.get(botConstants.guildId).members.get(user).remove(botConstants.mutedRole).catch((err) => {
-                                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
+                        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
+                            client.guilds.cache.get(botConstants.guildId).members.cache.get(user).remove(botConstants.mutedRole).catch((err) => {
+                                client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                             });
-                            client.guilds.get(botConstants.guildId).channels.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
-                                .setAuthor(client.guilds.get(botConstants.guildId).members.get(user).user.tag, client.guilds.get(botConstants.guildId).members.get(user).user.displayAvatarURL)
-                                .setDescription(client.guilds.get(botConstants.guildId).members.get(user).user.tag + " has been unmuted.")
+                            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
+                                .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL)
+                                .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " has been unmuted.")
                                 .addField("Reason", "Expired")
                                 .setTimestamp()
                                 .setColor('#00AA00'));
@@ -141,7 +141,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
         }
 
         //Message the user to let them know they've been punished.
-        client.guilds.get(botConstants.guildId).members.get(user).createDM().then(dmchannel => {
+        client.guilds.cache.get(botConstants.guildId).members.cache.get(user).createDM().then(dmchannel => {
             dmchannel.send("You have been " + ((type === 1)?"muted":"banned") + " in The Cult of Cheese Discord for **" + ((expire === -1) ? "Permanent" : time + " " + suffix) + "**. Reason: **" + reason + "**");
         }).catch((reason) => {
             logger.debug("Create DM Promise Rejection: " + reason);
@@ -149,10 +149,10 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
 
         //Let the punisher know it succeeded
-        msg.reply("You have " + ((type === 1)?"muted":"banned") + " " + client.guilds.get(botConstants.guildId).members.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
-        client.guilds.get(botConstants.guildId).channels.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
-            .setAuthor(client.guilds.get(botConstants.guildId).members.get(user).user.tag, client.guilds.get(botConstants.guildId).members.get(user).user.displayAvatarURL)
-            .setDescription(client.guilds.get(botConstants.guildId).members.get(user).user.tag + " has been " + ((type === 1)?"muted":"banned") + ".")
+        msg.reply("You have " + ((type === 1)?"muted":"banned") + " " + client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
+            .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL)
+            .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " has been " + ((type === 1)?"muted":"banned") + ".")
             .addField("Punisher", msg.author.tag)
             .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
             .addField("Reason", reason)
@@ -161,7 +161,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
         if (type === 2) {
             //Kick them from the discord.
-            client.guilds.get(botConstants.guildId).members.get(user).kick("Banned by moderator. Reason: " + reason);
+            client.guilds.cache.get(botConstants.guildId).members.cache.get(user).kick("Banned by moderator. Reason: " + reason);
 
             //If they have an active mute, remove it from the cache - chances are it will expire by the time they rejoin anyway.
             if (cache.get(user) !== undefined) {
@@ -205,10 +205,10 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     }
 
     if (type === 1) {
-        if (client.guilds.get(botConstants.guildId).members.keyArray().includes(user)) {
-            if (client.guilds.get(botConstants.guildId).members.get(user).roles.has(botConstants.mutedRole)) {
-                client.guilds.get(botConstants.guildId).members.get(user).remove(botConstants.mutedRole).catch((err) => {
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+        if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
+            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.mutedRole)) {
+                client.guilds.cache.get(botConstants.guildId).members.cache.get(user).remove(botConstants.mutedRole).catch((err) => {
+                    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                     msg.reply("Something went wrong.");
                 });
             }
@@ -217,9 +217,9 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
 
     await msg.reply("Punishment removed.");
     await MySQLManager.removePunishment(user, type, reason, msg.author, logger);
-    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.MessageEmbed()
-        .setAuthor(client.guilds.get("105235654727704576").members.get(user).user.tag, client.guilds.get("105235654727704576").members.get(user).user.displayAvatarURL)
-        .setDescription(client.guilds.get("105235654727704576").members.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
+    client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
+        .setAuthor(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag, client.guilds.cache.get("105235654727704576").members.cache.get(user).user.displayAvatarURL)
+        .setDescription(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
         .addField("Remover", msg.author.tag)
         .addField("Reason", reason)
         .setTimestamp()
@@ -253,7 +253,7 @@ punishmentManager.history = async function (msg, logger) {
     await MySQLManager.getPunishments(user, (userPunishments) => {
         //Create a new rich embed.
         let richEmbed = new Discord.MessageEmbed();
-        richEmbed.setTitle(((client.users.get(user).tag !== undefined)?client.users.get(user).tag:user) + "'s Punishment History")
+        richEmbed.setTitle(((client.users.cache.get(user).tag !== undefined)?client.users.cache.get(user).tag:user) + "'s Punishment History")
             .setColor('#2980B9')
             .setFooter("Discord ID: " + user);
 
