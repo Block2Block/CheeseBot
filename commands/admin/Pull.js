@@ -15,7 +15,7 @@ module.exports = {
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("Pulling git changes and restarting bot.");
-        client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Pulling changes...");
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Pulling changes...");
         git().pull('origin', 'master', {}, async (err, result) => {
             if (err) logger.error(err);
             logger.error(result);
