@@ -20,9 +20,9 @@ module.exports = {
             if (err) logger.error(err);
             logger.error(result);
             if (result.summary.changes === 0 && result.summary.insertions === 0 && result.summary.deletions === 0) {
-                await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("The bot is up to date.");
+                await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("The bot is up to date.");
             } else {
-                await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("**Changes: **" + result.summary.changes + "\n" +
+                await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("**Changes: **" + result.summary.changes + "\n" +
                     "**Insertions: **" + result.summary.insertions + "\n" +
                     "**Deletions: **" + result.summary.deletions);
                 await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Restarting...");
