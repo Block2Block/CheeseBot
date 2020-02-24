@@ -284,7 +284,7 @@ punishmentManager.history = async function (msg, logger) {
 
                 //Format the field.
                 let x = "**Punisher:** " + punishment.punisher + "\n" +
-                    "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute.js") + "\n" +
+                    "**Type:** " + ((punishment.type === 2) ? "Ban" : "Mute") + "\n" +
                     "**When:** " + time + " " + suffix + " ago\n" +
                     "**Length:** " + ((punishment.expire === -1) ? "Permanent" : time2 + " " + suffix2) + "\n" +
                     "**Reason:** " + punishment.reason + "";
