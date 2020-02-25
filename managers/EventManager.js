@@ -233,7 +233,7 @@ eventmanager.join = function(member, client, CommandManager, logger) {
             logger.warn("Login Promise Rejection: " + reason);
         });
 
-        member.roles.cache.add("664631743499993098").catch((err) => {
+        member.roles.add("664631743499993098").catch((err) => {
             client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
         });
     });
