@@ -9,6 +9,7 @@ const botConstants = Bot.getBotConstants();
 
 eventmanager.ready = function(client, CommandManager, logger) {
     let MySQLManager = CommandManager.getPunishmentManager().getMySQLManager();
+    MySQLManager.connect(logger);
     let Punishments = CommandManager.getPunishmentManager();
     logger.info("Bot Client Connected.");
 

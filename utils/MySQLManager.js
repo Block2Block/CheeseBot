@@ -5,7 +5,7 @@ const mysql = require('mysql');
 const mySQLManager = {};
 
 //Creating client.
-let MySQLClient = mysql.createConnection({
+let MySQLClient = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
@@ -14,53 +14,13 @@ let MySQLClient = mysql.createConnection({
 
 
 mySQLManager.connect = function(logger) {
-    try {
-        //Connect to the database.
-        MySQLClient.connect(function (err) {
-            if (err) {
-                //IF it errors, destroy the connection then create a new one. Then attempt to connect again.
-                MySQLClient.destroy();
-                MySQLClient = mysql.createConnection({
-                    host: process.env.MYSQL_HOST,
-                    user: process.env.MYSQL_USER,
-                    password: process.env.MYSQL_PASSWORD,
-                    database: process.env.MYSQL_DATABASE
-                });
-                logger.error('Error when connecting to the database:', err);
-                setTimeout(function() {
-                    mySQLManager.connect(logger);
-                }, 2000);
-            }
-        });
+    MySQLClient.on('acquire', function (connection) {
+        logger.info('MySQL Connection Pool: Connection %d acquired', connection.threadId);
+    });
 
-        //If there is a connection error, destroy the connection and create a new one, then try and reconnect.
-        MySQLClient.on('error', function (err) {
-            logger.error('A Database error has occurred:', err);
-            if (err.prototype.name === 'PROTOCOL_CONNECTION_LOST' || err.prototype.name === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
-                MySQLClient.destroy();
-                MySQLClient = mysql.createConnection({
-                    host: process.env.MYSQL_HOST,
-                    user: process.env.MYSQL_USER,
-                    password: process.env.MYSQL_PASSWORD,
-                    database: process.env.MYSQL_DATABASE
-                });
-                mySQLManager.connect(logger);
-            }
-        });
-    } catch (err) {
-        //IF it errors, destroy the connection then create a new one. Then attempt to connect again.
-        MySQLClient.destroy();
-        MySQLClient = mysql.createConnection({
-            host: process.env.MYSQL_HOST,
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DATABASE
-        });
-        logger.error('Error when connecting to the database:', err);
-        setTimeout(function() {
-            mySQLManager.connect(logger);
-        }, 2000);
-    }
+    MySQLClient.on('release', function (connection) {
+        logger.info('MySQL Connection Pool: Connection %d released', connection.threadId);
+    });
 };
 
 mySQLManager.getPunishOnLoad = async function (callback, logger) {
