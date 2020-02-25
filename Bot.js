@@ -12,6 +12,7 @@ const Constants = require("./utils/Constants.js");
 const EventManager = require("./managers/EventManager.js");
 const botConstants = Constants.getBotConstants();
 
+//Configuring logger.
 const log4js = require('log4js');
 let date = new Date();
 log4js.configure({
