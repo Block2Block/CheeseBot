@@ -55,7 +55,7 @@ client.on('guildMemberAdd', (member) => {
 client.on('guildMemberRemove', (member) => {
         client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
             .setTitle("User Leave")
-            .setThumbnail(member.user.avatarURL())
+            .setThumbnail(member.user.displayAvatarURL())
             .setDescription(member.user.tag + " has left the server.")
             .setTimestamp()
             .setColor('#AA0000'));
@@ -67,40 +67,41 @@ client.on('guildMemberRemove', (member) => {
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
         client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
-            .setAuthor(newMember.user.tag, newMember.user.avatarURL())
+            .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
             .setDescription("<@" + newMember + "> has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
             .addField("New Name", newMember.displayName)
             .setTimestamp()
             .setColor('#2980B9'));
-    } else if (oldMember.roles.size !== newMember.roles.size) {
-        if (oldMember.roles.size > newMember.roles.size) {
+    } else if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
+        logger.info("roles changed");
+        if (oldMember.roles.cache.size > newMember.roles.cache.size) {
             let role;
-            let roles = oldMember.roles.keyArray();
+            let roles = oldMember.roles.cache.keyArray();
             for (let i = 0; i < roles.length; i++) {
-                if (!newMember.roles.keyArray().includes(roles[i])) {
+                if (!newMember.roles.cache.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
                 }
             }
             client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.avatarURL())
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Removed")
-                .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.cache.get(role).name + "` role.")
                 .setColor('#2980B9'));
         } else {
             let role;
-            let roles = newMember.roles.keyArray();
+            let roles = newMember.roles.cache.keyArray();
             for (let i = 0; i < roles.length; i++) {
-                if (!oldMember.roles.keyArray().includes(roles[i])) {
+                if (!oldMember.roles.cache.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
                 }
             }
             client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.avatarURL())
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Added")
-                .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.cache.get(role).name + "` role.")
                 .setColor('#2980B9'));
         }
     }
@@ -109,7 +110,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
         client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
-            .setAuthor(newUser.tag, newUser.avatarURL())
+            .setAuthor(newUser.tag, newUser.displayAvatarURL())
             .setDescription("<@" + newUser + "> has changed their username.")
             .addField("Old Name", oldUser.username)
             .addField("New Name", newUser.username)
@@ -120,7 +121,7 @@ client.on('userUpdate', (oldUser, newUser) => {
 
 client.on('guildBanAdd', (guild, user) => {
     client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
-        .setAuthor(user.tag, user.avatarURL())
+        .setAuthor(user.tag, user.displayAvatarURL())
         .setTitle("Manual Ban")
         .setDescription(user.tag + " was manually banned by an admin.")
         .setColor('#AA0000'));

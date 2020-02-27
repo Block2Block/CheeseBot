@@ -202,7 +202,7 @@ eventmanager.join = function(member, client, CommandManager, logger) {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
                         client.guilds.cache.get(botConstants.guildId).channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
-                            .setAuthor(member.user.tag, member.user.avatarURL())
+                            .setAuthor(member.user.tag, member.user.displayAvatarURL())
                             .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
                             .setTimestamp()
@@ -216,8 +216,8 @@ eventmanager.join = function(member, client, CommandManager, logger) {
         let channel = member.guild.channels.cache.get(botConstants.serverLoggingChannel);
         channel.send(new Discord.MessageEmbed()
             .setTitle("User Join")
-            .setThumbnail(member.user.avatarURL())
-            .setDescription(member.user + " has joined the server.")
+            .setThumbnail(member.user.displayAvatarURL())
+            .setDescription("<@" + member.user + "> has joined the server.")
             .setTimestamp()
             .setColor('#00AA00'));
 
