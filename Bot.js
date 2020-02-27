@@ -74,7 +74,6 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
             .setTimestamp()
             .setColor('#2980B9'));
     } else if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
-        logger.info("roles changed");
         if (oldMember.roles.cache.size > newMember.roles.cache.size) {
             let role;
             let roles = oldMember.roles.cache.keyArray();
