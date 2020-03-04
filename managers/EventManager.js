@@ -224,18 +224,14 @@ eventmanager.join = function(member, client, CommandManager, logger) {
         //Welcome message.
         member.createDM().then(dmchannel => {
             dmchannel.send(new Discord.MessageEmbed()
-                .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_6ac123436074fea65da6264340302245.png")
+                .setAuthor("The Cult of Cheese", "https://cdn.discordapp.com/icons/105235654727704576/a_61af5bec8e032bc50c9e32508b7cb63f.png")
                 .setTitle("Welcome!")
-                .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read <#432279936490012672> carefully, as interacting in any capacity in this Discord Server is taken as confirmation that you are going to abide by and agree with our rules. After you've done that, you can do !help in <#439114503171604480> to get started!\n" +
+                .setDescription("Welcome to the Cult of Cheese! We hope you enjoy your time here! Please read <#432279936490012672> fully before you get started. After you've done that and followed the instructions, you can do !help in <#439114503171604480> to get started!\n" +
                     "\n" +
                     "🧀 EMBRACE THE POWER OF THE CHEESE 🧀")
                 .setColor('#FFAB00'));
         }).catch((reason) => {
             logger.warn("Login Promise Rejection: " + reason);
-        });
-
-        member.roles.add("664631743499993098").catch((err) => {
-            client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
         });
     });
 };

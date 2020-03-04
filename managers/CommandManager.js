@@ -109,7 +109,7 @@ commandManager.onCommand = async function (msg, client, logger) {
                     let catPermissions = x.permission_visibility;
                     for (let y of catPermissions) {
                         let permission = permissions.get(y);
-                        if (permission.roles == null) {
+                        if (permission.roles == null && msg.member.roles.cache.keyArray().length > 0) {
                             help += helpStrings.get(x.node);
                             break;
                         }
@@ -162,9 +162,24 @@ commandManager.onCommand = async function (msg, client, logger) {
             logger.debug("Roles is not null");
             let z = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
             if (z.length < 1) {
-                await msg.reply("You do not have permission to execute this command");
-                return;
+                if (permission.roles.length === 1) {
+                    if (permission.roles[0].localeCompare("-1") === 0) {
+                        if (msg.member.roles.cache.keyArray().length !== 1) {
+                            await msg.reply("You do not have permission to execute this command");
+                            return;
+                        }
+                    } else {
+                        await msg.reply("You do not have permission to execute this command");
+                        return;
+                    }
+                } else {
+                    await msg.reply("You do not have permission to execute this command");
+                    return;
+                }
             }
+        } else if (msg.member.roles.cache.keyArray().length === 1) {
+            //User is unverified, ignore the command.
+            return;
         }
 
 
