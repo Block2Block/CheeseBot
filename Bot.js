@@ -53,7 +53,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('guildMemberRemove', (member) => {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
             .setTitle("User Leave")
             .setThumbnail(member.user.displayAvatarURL())
             .setDescription(member.user.tag + " has left the server.")
@@ -66,7 +66,7 @@ client.on('guildMemberRemove', (member) => {
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
             .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
             .setDescription("<@" + newMember + "> has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
@@ -83,7 +83,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Removed")
                 .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.cache.get(role).name + "` role.")
@@ -97,7 +97,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
                     break;
                 }
             }
-            client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
                 .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Added")
                 .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.cache.get(role).name + "` role.")
@@ -108,7 +108,7 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send(new Discord.MessageEmbed()
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
             .setAuthor(newUser.tag, newUser.displayAvatarURL())
             .setDescription("<@" + newUser + "> has changed their username.")
             .addField("Old Name", oldUser.username)
@@ -119,7 +119,7 @@ client.on('userUpdate', (oldUser, newUser) => {
 });
 
 client.on('guildBanAdd', (guild, user) => {
-    client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
+    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
         .setAuthor(user.tag, user.displayAvatarURL())
         .setTitle("Manual Ban")
         .setDescription(user.tag + " was manually banned by an admin.")
@@ -128,10 +128,20 @@ client.on('guildBanAdd', (guild, user) => {
 
 client.on('messageDelete', (message) => {
     if (message.guild != null) {
-        if (message.content.startsWith("!") || message.author.bot) {
+        if (message.author.bot) {
             return;
         }
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
+
+        if (message.attachments.size > 0) {
+            let z = "A file by <@" + message.author + "> was deleted in <#" + message.channel + ">." + ((message.content.length === 0)?"":"\n**Message**: `" + message.content + "`") + "\n**File URLs**:";
+            //This has an attachment.
+            for (let x of message.attachments.values()) {
+                z = z + "\n`" + x.proxyURL + "`"
+            }
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(z);
+            return;
+        }
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
             "**Message**: `" + message.content + "`");
     }
 });
@@ -141,7 +151,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429970564552065024").send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
             "**Old**: `" + oldMessage.content + "`\n" +
             "**New**: `" + newMessage.content + "`");
     }
@@ -154,17 +164,17 @@ client.on('message', (msg) => {
 });
 
 client.on('error', (error) => {
-    logger.info("An error has occured. Error: " + error);
+    logger.info("An error has occurred. Error: " + error);
     if (client.status === 5) {
         connect();
     } else if (client.status === 3 || client.status === 0) {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
     }
 
 });
 
 client.on('warn', (error) => {
-    logger.warn("An error has occured. Error: " + error);
+    logger.warn("An error has occurred. Error: " + error);
 });
 
 //Catching the process exit in order to cleanly exit.
@@ -178,15 +188,15 @@ process.on('exit', () => {
    StreamManager.end();
 });
 
-//Catching any uncaught exceptions, then restarting the  process.
+//Catching any uncaught exceptions, then restart the process.
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
-            logger.error('Caught exception: ' + err + ": \n" +  err.stack);
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured and the bot is shutting down. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
+            logger.error('Caught an uncaught exception: ' + err + ": \n" +  err.stack);
             process.exit(1)
         })
     } else {
-        logger.error('Caught exception: ' + err + ": \n" +  err.stack);
+        logger.error('Caught and uncaught exception: ' + err + ": \n" +  err.stack);
         process.exit(1)
     }
 });
