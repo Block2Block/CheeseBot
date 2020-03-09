@@ -14,8 +14,9 @@ module.exports = {
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("You have agreed to the rules. Welcome to the Cult of Cheese! We hope you have fun, now get chatting!");
+        await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("<@" + msg.member.id + "> has agreed to the rules.");
         msg.member.roles.add(botConstants.memberRole).catch((err) => {
-            client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
         });
     }
 };

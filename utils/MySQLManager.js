@@ -21,6 +21,12 @@ mySQLManager.connect = function(logger) {
     MySQLClient.on('release', function (connection) {
         logger.info('MySQL Connection Pool: Connection %d released', connection.threadId);
     });
+
+    MySQLClient.query("CREATE TABLE IF NOT EXISTS `punishments` ( `id` INT NOT NULL AUTO_INCREMENT , `discord_id` TEXT NOT NULL , `punisher` TEXT NOT NULL , `type` INT NOT NULL , `reason` TEXT NOT NULL , `timestamp` TEXT NOT NULL , `expire` TEXT NOT NULL , `status` INT NOT NULL , `removal_reason` TEXT NULL DEFAULT NULL , `remover` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;", function (err, result) {
+        if (err) {
+            logger.error(err);
+        }
+    })
 };
 
 mySQLManager.getPunishOnLoad = async function (callback, logger) {
