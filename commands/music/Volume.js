@@ -7,6 +7,7 @@ module.exports = {
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
     joinable_role: null,
+    allow_in_dm: true,
     run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         const Bot = require("../../utils/Constants.js");
 
@@ -15,8 +16,8 @@ module.exports = {
 
 
         if (client.voice.connections.keyArray().includes(botConstants.guildId)) {
-            if (msg.member.voice.channel) {
-                if (client.voice.connections.get(botConstants.guildId).channel.id !== msg.member.voice.channel.id) {
+            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
+                if (client.voice.connections.get(botConstants.guildId).channel.id !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");
                     return;
                 }

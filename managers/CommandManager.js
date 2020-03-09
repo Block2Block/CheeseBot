@@ -74,26 +74,75 @@ commandManager.load = function (logger) {
 
 
 commandManager.onCommand = async function (msg, client, logger) {
-    if (msg.guild == null) {
-        if (!client.guilds.get(botConstants.guildId).members.keyArray().includes(msg.author.id)) {
-            await msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
+    //Extracts the arguments of the command.
+    let args = msg.content.split(" ");
+
+    //Extracting the command from the arguments.
+    let command = args.shift().replace("!", "");
+    command = command.toLowerCase();
+
+    //If it is an alias, get the command it is an alias for. If it is the help command, just output the help. If it does not exist, return;
+    if (aliases.has(command)) {
+        command = aliases.get(command);
+    } else if (command === "help") {
+        if (args.length === 1) {
+            //This is the help info command, give command info.
+            command = args.shift().replace("!", "");
+            let commandInfo;
+            if (aliases.has(command)) {
+                commandInfo = commands.get(aliases.get(command));
+            } else if (commands.has(command)) {
+               commandInfo = commands.get(command);
+            } else {
+                await msg.reply("That command does not exist, please try another command.");
+                return;
+            }
+
+            let permission = permissions.get(commandInfo.permission);
+            let allowedChannels = commandInfo.allowed_channels;
+
+            if (permission.roles != null) {
+                logger.debug("Roles is not null");
+                let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
+                if (z.length < 1) {
+                    if (permission.roles.length === 1) {
+                        if (permission.roles[0].localeCompare("-1") === 0) {
+                            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length !== 1) {
+                                await msg.reply("You do not have permission to view this command");
+                                return;
+                            }
+                        } else {
+                            await msg.reply("You do not have permission to view this command");
+                            return;
+                        }
+                    } else {
+                        await msg.reply("You do not have permission to view this command");
+                        return;
+                    }
+                }
+            } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length === 1) {
+                //User is unverified, ignore the command.
+                return;
+            }
+
+            //List of allowed channels
+            let z = "";
+            for (let y of allowedChannels) {
+                z += "<#" + y + ">, ";
+            }
+            z = z.substr(0, z.length - 2);
+
+            await msg.reply("Command information for " + command + ":\n" +
+                "**Name:** `" + commandInfo.cmd + "`\n" +
+                "**Aliases:** `" + commandInfo.aliases.join(", ") + "`\n" +
+                "**Description:** `" + commandInfo.desc + "`\n" +
+                "**Allowed channels:** " + z + "\n" +
+                "**Allowed in DM:** `" + ((commandInfo.allow_in_dm)?"Yes":"No") + "`\n" +
+                "**Is joinable role:** `" + ((commandInfo.joinable_role == null)?"No":"Yes") + "`");
+
             return;
         } else {
-            await msg.channel.send("You cannot send messages via PM to this bot. Please use #bot-commands.")
-        }
-    } else {
-        //Extracts the arguments of the command.
-        let args = msg.content.split(" ");
-
-        //Extracting the command from the arguments.
-        let command = args.shift().replace("!", "");
-        command = command.toLowerCase();
-
-        //If it is an alias, get the command it is an alias for. If it is the help command, just output the help. If it does not exist, return;
-        if (aliases.has(command)) {
-            command = aliases.get(command);
-        } else if (command === "help") {
-            msg.member.createDM().then(dmchannel => {
+            msg.author.createDM().then(dmchannel => {
                 //Build string of commands.
                 let help = "Bot Commands are only available to use in #bot-commands, with music commands only being usable in #music-commands.\n\n" +
                     "Available commands:";
@@ -109,11 +158,11 @@ commandManager.onCommand = async function (msg, client, logger) {
                     let catPermissions = x.permission_visibility;
                     for (let y of catPermissions) {
                         let permission = permissions.get(y);
-                        if (permission.roles == null && msg.member.roles.cache.keyArray().length > 0) {
+                        if (permission.roles == null && client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length > 0) {
                             help += helpStrings.get(x.node);
                             break;
                         }
-                        let z = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
+                        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
                         if (z.length >= 1) {
                             help += helpStrings.get(x.node);
                             break;
@@ -140,35 +189,51 @@ commandManager.onCommand = async function (msg, client, logger) {
                 logger.info("Promise Rejection: " + err.stack + " line " + err.lineNumber);
                 msg.reply("You must enable PM's in order to use this command.")
             });
-            return;
-        } else if (!commands.has(command)) {
-            await msg.reply("That command is not recognised. Please use !help for more info.");
-            return;
         }
+        return;
+    } else if (!commands.has(command)) {
+        await msg.reply("That command is not recognised. Please use !help for more info.");
+        return;
+    }
 
-        let commandInfo = commands.get(command);
-        let permission = permissions.get(commandInfo.permission);
-        let allowedChannels = commandInfo.allowed_channels;
+    let commandInfo = commands.get(command);
+    let permission = permissions.get(commandInfo.permission);
+    let allowedChannels = commandInfo.allowed_channels;
 
-        if (allowedChannels != null) {
+    if (allowedChannels != null) {
+        if (msg.guild == null && !commandInfo.allow_in_dm) {
+            //Not allowed in a DM, but was received in a DM. Ignore.
+            msg.channel.send("This command cannot be executed in a DM. Please use the correct channel.");
+            return;
+        } else if (msg.guild != null) {
             if (!allowedChannels.includes(msg.channel.id)) {
                 //If not in an allowed channel, ignore the command;
                 return;
             }
         }
+    }
+
+    if (msg.guild == null) {
+        if (!client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(msg.author.id)) {
+            msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
+            return;
+        } else {
+            if (!commandInfo.allow_in_dm) {
+                msg.channel.send("This command cannot be executed in a DM. Please use the correct channel.");
+            }
+        }
+    } else {
+
+    }
 
 
-        if (permission.roles != null) {
-            logger.debug("Roles is not null");
-            let z = permission.roles.filter(value => msg.member.roles.cache.keyArray().includes(value.toString()));
-            if (z.length < 1) {
-                if (permission.roles.length === 1) {
-                    if (permission.roles[0].localeCompare("-1") === 0) {
-                        if (msg.member.roles.cache.keyArray().length !== 1) {
-                            await msg.reply("You do not have permission to execute this command");
-                            return;
-                        }
-                    } else {
+    if (permission.roles != null) {
+        logger.debug("Roles is not null");
+        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
+        if (z.length < 1) {
+            if (permission.roles.length === 1) {
+                if (permission.roles[0].localeCompare("-1") === 0) {
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length !== 1) {
                         await msg.reply("You do not have permission to execute this command");
                         return;
                     }
@@ -176,44 +241,47 @@ commandManager.onCommand = async function (msg, client, logger) {
                     await msg.reply("You do not have permission to execute this command");
                     return;
                 }
-            }
-        } else if (msg.member.roles.cache.keyArray().length === 1) {
-            //User is unverified, ignore the command.
-            return;
-        }
-
-
-        if (commandInfo.joinable_role == null) {
-            //Run the command,
-            commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
-        } else {
-            //This is a joinable role command. Execute role command.
-            if (msg.member.roles.cache.keyArray().includes(commandInfo.joinable_role)) {
-                //leave the role
-                await msg.member.roles.remove(commandInfo.joinable_role).catch((err) => {
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
-                });
-                await msg.reply("You have been removed from the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
-                let x = msg.member.roles.cache.keyArray().filter(value => ranks.includes(value));
-                if (x.size < 1) {
-                    msg.member.roles.remove(botConstants.gameRole).catch((err) => {
-                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
-                    });
-                }
             } else {
-                //join the role
-                msg.member.roles.add(commandInfo.joinable_role).catch((err) => {
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
-                });
-                if (!msg.member.roles.cache.has(botConstants.gameRole)) {
-                    msg.member.roles.add(botConstants.gameRole).catch((err) => {
-                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
-                    });
-                }
-                await msg.reply("You have been added to the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
+                await msg.reply("You do not have permission to execute this command");
+                return;
             }
         }
+    } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length === 1) {
+        //User is unverified, ignore the command.
+        return;
+    }
 
+
+    if (commandInfo.joinable_role == null) {
+        //Run the command,
+        logger.info(msg.author.tag + " has executed command " + commandInfo + " " + args.join(" "));
+        commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
+    } else {
+        //This is a joinable role command. Execute role command.
+        if (msg.member.roles.cache.keyArray().includes(commandInfo.joinable_role)) {
+            //leave the role
+            await msg.member.roles.remove(commandInfo.joinable_role).catch((err) => {
+                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+            });
+            await msg.reply("You have been removed from the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
+            let x = msg.member.roles.cache.keyArray().filter(value => ranks.includes(value));
+            if (x.size < 1) {
+                msg.member.roles.remove(botConstants.gameRole).catch((err) => {
+                    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+                });
+            }
+        } else {
+            //join the role
+            msg.member.roles.add(commandInfo.joinable_role).catch((err) => {
+                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
+            });
+            if (!msg.member.roles.cache.has(botConstants.gameRole)) {
+                msg.member.roles.add(botConstants.gameRole).catch((err) => {
+                    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
+                });
+            }
+            await msg.reply("You have been added to the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
+        }
     }
 
 

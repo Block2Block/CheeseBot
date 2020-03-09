@@ -7,6 +7,7 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
+    allow_in_dm: true,
     run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         const Bot = require("../../utils/Constants.js");
         const git = require("simple-git");

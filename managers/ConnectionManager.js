@@ -60,7 +60,7 @@ connectionManager.playCommand = async function (URL, msg, logger) {
         YTPL(URL, {limit: 0}, async function (err, playlist) {
             //If the bot is not already in the channel, force it to join.
             if (connection == null || !connection) {
-                await connectionManager.joinChannel(msg.member.voice.channel, msg, client, (success) => {
+                await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
 
                 });
             }
@@ -173,7 +173,7 @@ async function play(song, client, logger) {
     if (queue.length > 1) {
         try {
             if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
-                logger.info("Downloading the next song ," + queue[1].title + " (ID: " + queue[1].id + "), for the first time.");
+                logger.info("Downloading the next song, " + queue[1].title + " (ID: " + queue[1].id + "), for the first time.");
                 let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
                 dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
                 dl.on('end', () => {
@@ -231,10 +231,10 @@ connectionManager.skip = function (msg) {
     let client = msg.client;
 
     //Making sure the user is in the same voice channel as the bot.
-    if (!msg.member.voice.channel) {
+    if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
         return msg.reply("You must be in the same channel as the bot in order to use music commands.")
     } else if (client.voice.connections.size > 1) {
-        if (msg.member.voice.channel.id !== client.voice.connections.first().id) {
+        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id !== client.voice.connections.first().id) {
             return msg.reply("You must be in the same channel as the bot in order to use music commands.");
         }
     }
@@ -325,6 +325,32 @@ connectionManager.shuffle = function (msg) {
     let currentSong = queue.shift();
     queue = shuffle(queue);
     queue.unshift(currentSong);
+
+    //If the next song exists, and is not already in cache, download it in preparation for playing next.
+    if (queue.length > 1) {
+        try {
+            if (!FS.existsSync("musiccache/" + queue[1].id + ".m4a")) {
+                logger.info("Downloading the next song, " + queue[1].title + " (ID: " + queue[1].id + "), for the first time.");
+                let dl = YTDL(queue[1].url, {quality: "highestaudio", filter: "audioonly"});
+                dl.pipe(FS.createWriteStream("musiccache/" + queue[1].id + ".m4a"));
+                dl.on('end', () => {
+                    logger.info("The next song has been downloaded and is ready to play.");
+                });
+                dl.on('error', (err) => {
+                    logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                    let current = queue.shift();
+                    queue.shift();
+                    queue.unshift(current);
+                })
+            }
+        } catch (err) {
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            let current = queue.shift();
+            queue.shift();
+            queue.unshift(current);
+            return;
+        }
+    }
 };
 
 connectionManager.nextSong = function (msg) {

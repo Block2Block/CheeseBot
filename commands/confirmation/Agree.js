@@ -7,6 +7,7 @@ module.exports = {
     permission: "confirmation",
     allowed_channels: "684894179112779828",
     joinable_role: null,
+    allow_in_dm: false,
     run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
         const Bot = require("../../utils/Constants.js");
 
