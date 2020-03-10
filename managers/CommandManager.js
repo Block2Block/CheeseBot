@@ -127,10 +127,14 @@ commandManager.onCommand = async function (msg, client, logger) {
 
             //List of allowed channels
             let z = "";
-            for (let y of allowedChannels) {
-                z += "<#" + y + ">, ";
+            if (allowedChannels != null || !allowedChannels) {
+                for (let y of allowedChannels) {
+                    z += "<#" + y + ">, ";
+                }
+                z = z.substr(0, z.length - 2);
+            } else {
+                z = "All Channels";
             }
-            z = z.substr(0, z.length - 2);
 
             await msg.reply("Command information for " + command + ":\n" +
                 "**Name:** `!" + commandInfo.cmd + "`\n" +
