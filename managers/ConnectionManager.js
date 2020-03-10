@@ -98,7 +98,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
     } else if (await YTDL.validateURL(URL)) {
         //If the bot is not already in the channel, force it to join.
         if (connection == null || !connection) {
-            await connectionManager.joinChannel(msg.member.voice.channel, msg, client, (success) => {
+            await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
 
             });
         }
@@ -123,7 +123,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         }
     } else {
         //It is not a valid YouTube URL, search YouTube for it instead.
-        let search = msg.content.replace("!play ", "");
+        let search = msg.content.replace("!play ", "").replace("!shuffleplay ", "");
         await msg.reply("Searching for `" + search + "`...");
         YTSR(search, {limit: 1}, (err, searchResults) => {
             if (err) {
