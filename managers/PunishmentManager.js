@@ -212,7 +212,7 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     if (type === 1) {
         if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
             if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.mutedRole)) {
-                client.guilds.cache.get(botConstants.guildId).members.cache.get(user).remove(botConstants.mutedRole).catch((err) => {
+                client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.mutedRole).catch((err) => {
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                     msg.reply("Something went wrong.");
                 });
@@ -223,7 +223,7 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     await msg.reply("Punishment removed.");
     await MySQLManager.removePunishment(user, type, reason, msg.author, logger);
     client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
-        .setAuthor(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag, client.guilds.cache.get("105235654727704576").members.cache.get(user).user.displayAvatarURL)
+        .setAuthor(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag, client.guilds.cache.get("105235654727704576").members.cache.get(user).user.displayAvatarURL())
         .setDescription(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
         .addField("Remover", msg.author.tag)
         .addField("Reason", reason)
