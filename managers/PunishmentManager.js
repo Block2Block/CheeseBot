@@ -84,7 +84,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
     //All of the info we need has been retrieved, apply the punishment.
     await MySQLManager.punish(user, type, timestamp, expire, punisher, reason, status, id => {
-        client.guilds.cache.get(botConstants.guildId).members.cache.get(user).add(botConstants.mutedRole).catch((err) => {
+        client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.mutedRole).catch((err) => {
             client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
         });
 
@@ -100,7 +100,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
                                 client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                             });
                             client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
-                                .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL)
+                                .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL())
                                 .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " has been unmuted.")
                                 .addField("Reason", "Expired")
                                 .setTimestamp()
