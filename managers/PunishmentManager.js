@@ -49,6 +49,11 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
     }
 
+    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user) == null || !client.guilds.cache.get(botConstants.guildId).members.cache.get(user)) {
+        await msg.reply("That user is not a part of the Discord.");
+        return;
+    }
+
     //If the user already has an active punishment, warn that they cannot punish again.
     if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.mutedRole) && type === 1) {
         await msg.reply("That user is already muted.");
@@ -178,12 +183,12 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     let punish_id = -1;
 
     //Getting the user to unpunish.
-    if (re.test(args[1])) {
-        user = args[1].replace("<@!", "").replace(">", "");
+    if (re.test(args[0])) {
+        user = args[0].replace("<@!", "").replace(">", "");
     } else {
         re = /[0-9]{17,18}/;
-        if (re.test(args[1])) {
-            user = args[1];
+        if (re.test(args[0])) {
+            user = args[0];
         } else {
             await msg.reply("You must mention a user/id in order to unpunish.");
             return;
@@ -193,7 +198,7 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
 
     //Getting the reason.
     let reason = "";
-    for (let i = 2; i < args.length; i++) {
+    for (let i = 1; i < args.length; i++) {
         reason += (args[i] + " ");
     }
     reason = reason.trim();
