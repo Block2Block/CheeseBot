@@ -2,7 +2,7 @@
 
 :+1::tada: Thank you for taking the time to contribute! :tada::+1:
 
-The following is a set of guidelines for contributing to Atom and its packages, which are hosted in the [Atom Organization](https://github.com/atom) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to CheeseBot. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 
 ## Code of Conduct
@@ -17,7 +17,7 @@ Please join the Discord. Please do not file an issue for a question.
 
 The bot is purpose built for the Cult of Cheese Discord. The bot was not designed for use by other Discord, although I have tried my best to make it as adaptable as possible. If there are any glaring issues, please create a GitHub issue and I will do my best to fix it.
 
-The bot uses the Discord.JS library for its funcionality and is written natively in Node.js. The bot uses the youtube-dl executable and a JS wrapper for it, as well as FFMPEG. Please ensure you have these installed before writing any bug reports.
+The bot uses the Discord.JS library for its functionality and is written natively in Node.js. The bot uses the youtube-dl executable and a JS wrapper for it, as well as FFMPEG. Please ensure you have these installed before writing any bug reports.
 
 ## How Can I Contribute?
 
@@ -43,11 +43,11 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Describe the exact steps which reproduce the problem** in as many details as possible. For example, when using a command, what channel was it in? What was the bot doing at the time?
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
-* **If you're reporting that Atom crashed**, include a crash report with a stack trace from the operating system. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
+* **If you're reporting that the bot crashed**, include a crash report with a stack trace from the operating system. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
 
 Provide more context by answering these questions:
 
-* **Did the problem start happening recently** (e.g. after updating to a newew version of the bot) or was this always a problem?
+* **Did the problem start happening recently** (e.g. after updating to a new version of the bot) or was this always a problem?
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 
 Include details about your configuration and environment:
@@ -60,7 +60,7 @@ Include details about your configuration and environment:
 
 This section guides you through submitting an enhancement suggestion for the bot, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
 
-Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in the template, including the steps that you imagine you would take if the feature you're requesting existed.
+Before creating enhancement suggestions, please check to see if it has already been suggested as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in the template, including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 

@@ -30,6 +30,9 @@ The bot is currently setup for use in our Discord, but adapting it for use in ot
  14) Use the `cd` command to navigate to the directory of the bot files.
  15) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
  16) Once all of the dependencies are installed, do `node Bot.js`. This will start the bot.
+ 
+## Contributing
+If you want to contribute to the bot, whether that is in the form of a pull request, bug report or feature suggestion, you are more than welcome. Please read [this guide](CONTRIBUTING.md) on how to contribute effectively. All contributions must follow the [code  of conduct](CODE_OF_CONDUCT.md).
 
 ## FAQ
 >**Q:** How do I get the bot to run forever, after a crash or force restart?
