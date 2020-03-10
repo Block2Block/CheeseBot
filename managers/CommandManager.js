@@ -133,8 +133,9 @@ commandManager.onCommand = async function (msg, client, logger) {
             z = z.substr(0, z.length - 2);
 
             await msg.reply("Command information for " + command + ":\n" +
-                "**Name:** `" + commandInfo.cmd + "`\n" +
-                "**Aliases:** `" + commandInfo.aliases.join(", ") + "`\n" +
+                "**Name:** `!" + commandInfo.cmd + "`\n" +
+                "**Arguments:** `!" + commandInfo.arguments + "`\n" +
+                "**Aliases:** `" + ((commandInfo.aliases.length > 0)?"!":"") + commandInfo.aliases.join(", !") + "`\n" +
                 "**Description:** `" + commandInfo.desc + "`\n" +
                 "**Allowed channels:** " + z + "\n" +
                 "**Allowed in DM:** `" + ((commandInfo.allow_in_dm)?"Yes":"No") + "`\n" +

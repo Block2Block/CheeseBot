@@ -1,8 +1,8 @@
 module.exports = {
-    cmd: "play",
-    arguments: "play [YouTube URL/Search Query]",
-    aliases: ["playsong"],
-    desc: "Play a song on the bot.",
+    cmd: "shuffleplay",
+    arguments: "shuffleplay [YouTube Playlist URL/Search Query]",
+    aliases: ["playshuffle", "shufflesongs"],
+    desc: "Play a shuffled playlist on the bot. Only works with playlists when there is nothing currently playing.",
     category: "music",
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
@@ -23,9 +23,9 @@ module.exports = {
             }
 
             if (args.length >= 1) {
-                await ConnectionManager.playCommand(args[0], msg, logger, false);
+                await ConnectionManager.playCommand(args[0], msg, logger, true);
             } else {
-                await msg.reply("Invalid Arguments. Correct Arguments: **!play [YouTube URL/YouTube Search Query]**");
+                await msg.reply("Invalid Arguments. Correct Arguments: **!shuffleplay [YouTube Playlist URL/YouTube Search Query]**");
             }
 
         } else {

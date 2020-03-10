@@ -53,7 +53,7 @@ connectionManager.leave = function () {
     }
 };
 
-connectionManager.playCommand = async function (URL, msg, logger) {
+connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
     let client = msg.client;
     //If it is detected as a value YouTube Playlist URL, create an array with the URLS of each song onto it, then add that to the queue.
     if (await YTPL.validateURL(URL)) {
@@ -84,6 +84,9 @@ connectionManager.playCommand = async function (URL, msg, logger) {
 
             //If lengths are the same, then the queue was empty before we started, so start playing the songs.
             if (queue.length === playlist.items.length) {
+                if (isShuffle) {
+                    queue = shuffle(queue);
+                }
                 await play(queue[0], client, logger);
                 await msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
             } else {
