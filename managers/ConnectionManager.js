@@ -85,6 +85,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
             //If lengths are the same, then the queue was empty before we started, so start playing the songs.
             if (queue.length === playlist.items.length) {
                 if (isShuffle) {
+                    logger.info("The queue was shuffled");
                     queue = shuffle(queue);
                 }
                 await play(queue[0], client, logger);
@@ -132,7 +133,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
             }
 
             //Execute this function again with the URL of the first item found with the search term.
-            connectionManager.playCommand(searchResults.items[0].link, msg, logger);
+            connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
             msg.reply("Result found, playing " + searchResults.items[0].title + ".");
         });
     }
