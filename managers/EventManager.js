@@ -86,7 +86,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                                     logger.warn("Login Promise Rejection: " + reason);
                                 });
 
-                                client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).add(botConstants.mutedRole).catch((err) => {
+                                client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.add(botConstants.mutedRole).catch((err) => {
                                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                                 });
                             }
@@ -94,7 +94,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                         punishment.timer = setTimeout(async () => {
                             if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(punishment.user)) {
                                 if (client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
-                                    client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).remove(botConstants.mutedRole).catch((err) => {
+                                    client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.remove(botConstants.mutedRole).catch((err) => {
                                         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                                     });
                                 }
@@ -108,7 +108,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                     //Remove punishment, it has expired.
                     Punishments.expire(punishment.user, punishment.id);
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
-                        .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.displayAvatarURL)
+                        .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.displayAvatarURL())
                         .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.tag + " has been unpunished.")
                         .addField("Reason", "Expired")
                         .setTimestamp()
