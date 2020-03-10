@@ -85,6 +85,9 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
         case "3":
             expire = -1;
             break;
+        default:
+            await msg.reply("Invalid length.");
+            return;
     }
 
     //All of the info we need has been retrieved, apply the punishment.
