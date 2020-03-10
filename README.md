@@ -17,16 +17,19 @@ The bot is currently setup for use in our Discord, but adapting it for use in ot
      * `MYSQL_USER`: The username the bot should use to login with.
      * `MYSQL_PASSWORD`: The password the bot should use to login with.
      * `MYSQL_DATABASE`: The name of the database the bot should use.
+     * `TWITCH_ID`: This is the client ID of the Twitch Application, found in your Developer dashboard.
+     * `TWITCH_SECRET`: The client secret needed to use the Twitch API.
  6) Go into the `utils` folder and open the `Constants.js` file.
  7) Modify the values with the specified ids (e.g. for guildId, copy your guild ID). If you do not know how to do this, please refer to [this](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-) article.
  8) If you have game roles, modify the values in all of the commands in `/commands/game/`, or delete and add commands as wanted.
  9) Modify the permission roles in all of the files in `/permissions/`. Copy the ID's into the `roles` section
  10) Make any modifications you wish to make.
- 11) Ensure you have Node.js installed. Find a download link [here](https://nodejs.org/en/). Also ensure you have FFMPEG installed (if you wish for music bot functionality). It can be downloaded [here](https://www.ffmpeg.org/download.html)
- 12) Open a Node.js console window.
- 13) Use the `cd` command to navigate to the directory of the bot files.
- 14) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
- 15) Once all of the dependencies are installed, do `node Bot.js`. This will start the bot.
+ 11) Forward port **8090** TCP/UDP for Twitch API Callbacks to be received from.
+ 12) Ensure you have Node.js installed. Find a download link [here](https://nodejs.org/en/). Also ensure you have FFMPEG installed (if you wish for music bot functionality). It can be downloaded [here](https://www.ffmpeg.org/download.html)
+ 13) Open a Node.js console window.
+ 14) Use the `cd` command to navigate to the directory of the bot files.
+ 15) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
+ 16) Once all of the dependencies are installed, do `node Bot.js`. This will start the bot.
 
 ## FAQ
 >**Q:** How do I get the bot to run forever, after a crash or force restart?
@@ -72,6 +75,10 @@ Eventually the bot will have downloaded a large enough cache to the point where 
 >**Q:** The bot is not able to download the songs and is throwing errors. Help!
 
 **A:** Unfortunately, due the the nature of YouTube updates, this often breaks youtube-dl, the library that is used to download the songs. In the case that this should happen, I should normally be able to update the bot relatively quickly. If this takes too long, simply do `npm install ytdl-core@latest`, which should install the latest version of the JavaScript wrapper for youtube-dl.
+
+>**Q:** I do not wish for Twitch integration, how do I remove it?
+
+**A:** This is relatively simple. All you have to do is remove lines 17 -> 41 of the `managers/StreamManager.js` file so that the `load` function is empty. This will stop the Stream manager from loading anything for the Twitch API.
 
 >**Q:** Help! The bot stopped working after I updated it from GitHub!
 
