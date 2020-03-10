@@ -127,7 +127,7 @@ commandManager.onCommand = async function (msg, client, logger) {
 
             //List of allowed channels
             let z = "";
-            if (allowedChannels != null || !allowedChannels) {
+            if (allowedChannels != null || allowedChannels) {
                 for (let y of allowedChannels) {
                     z += "<#" + y + ">, ";
                 }
