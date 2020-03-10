@@ -79,7 +79,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                         return;
                     } else if (punishment.type === 1) {
                         if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(punishment.user)) {
-                            if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.keyArray().includes(botConstants.mutedRole)) {
+                            if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
                                 client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).createDM().then(dmchannel => {
                                     dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **" + time + " " + suffix + "**. Reason: **" + punishment.reason + "**");
                                 }).catch((reason) => {
@@ -93,7 +93,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                         }
                         punishment.timer = setTimeout(async () => {
                             if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(punishment.user)) {
-                                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.keyArray().includes(botConstants.mutedRole)) {
+                                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
                                     client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).remove(botConstants.mutedRole).catch((err) => {
                                         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                                     });
