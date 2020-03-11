@@ -159,7 +159,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
         //Let the punisher know it succeeded
         msg.reply("You have " + ((type === 1)?"muted":"banned") + " " + client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " for " + ((expire === -1) ? "Permanent" : time + " " + suffix) + ".");
         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
-            .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL)
+            .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL())
             .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " has been " + ((type === 1)?"muted":"banned") + ".")
             .addField("Punisher", msg.author.tag)
             .addField("Length", ((expire === -1) ? "Permanent" : time + " " + suffix))
