@@ -124,7 +124,9 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         }
     } else {
         //It is not a valid YouTube URL, search YouTube for it instead.
-        let search = msg.content.replace("!play ", "").replace("!shuffleplay ", "");
+        let search = (msg.content.split(" "));
+        search.shift();
+        search = search.join(" ");
         await msg.reply("Searching for `" + search + "`...");
         YTSR(search, {limit: 1}, (err, searchResults) => {
             if (err) {
