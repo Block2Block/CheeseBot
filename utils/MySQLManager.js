@@ -1,18 +1,11 @@
 //Loading external libraries.
 const mysql = require('mysql');
 
-//Loading internal libraries.
-const bot = require('../Bot.js');
-
-//Loading bot info.
-const client = bot.getClient();
-const botConstants = bot.getBotConstants();
-
 //Initialising module export.
 const mySQLManager = {};
 
 //Creating client.
-let MySQLClient = mysql.createConnection({
+let MySQLClient = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
@@ -20,53 +13,26 @@ let MySQLClient = mysql.createConnection({
 });
 
 
-function connect() {
-    //Connect to the database.
-    MySQLClient.connect(function (err) {
+mySQLManager.connect = function(logger) {
+    MySQLClient.on('acquire', function (connection) {
+        logger.info('MySQL Connection Pool: Connection %d acquired', connection.threadId);
+    });
+
+    MySQLClient.on('release', function (connection) {
+        logger.info('MySQL Connection Pool: Connection %d released', connection.threadId);
+    });
+
+    MySQLClient.query("CREATE TABLE IF NOT EXISTS `punishments` ( `id` INT NOT NULL AUTO_INCREMENT , `discord_id` TEXT NOT NULL , `punisher` TEXT NOT NULL , `type` INT NOT NULL , `reason` TEXT NOT NULL , `timestamp` TEXT NOT NULL , `expire` TEXT NOT NULL , `status` INT NOT NULL , `removal_reason` TEXT NULL DEFAULT NULL , `remover` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;", function (err, result) {
         if (err) {
-            //IF it errors, destroy the connection then create a new one. Then attempt to connect again.
-            MySQLClient.destroy();
-            MySQLClient = mysql.createConnection({
-                host: process.env.MYSQL_HOST,
-                user: process.env.MYSQL_USER,
-                password: process.env.MYSQL_PASSWORD,
-                database: process.env.MYSQL_DATABASE
-            });
-            console.log('error when connecting to db:', err);
-            setTimeout(connect, 2000);
+            logger.error(err);
         }
-    });
+    })
+};
 
-    //If there is a connection error, destroy the connection and create a new one, then try and reconnect.
-    MySQLClient.on('error', function (err) {
-        console.log('db error', err);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
-            MySQLClient.destroy();
-            MySQLClient = mysql.createConnection({
-                host: process.env.MYSQL_HOST,
-                user: process.env.MYSQL_USER,
-                password: process.env.MYSQL_PASSWORD,
-                database: process.env.MYSQL_DATABASE
-            });
-            connect();
-        } else {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
-        }
-    });
-}
-
-connect();
-
-mySQLManager.getPunishOnLoad = async function (callback) {
+mySQLManager.getPunishOnLoad = async function (callback, logger) {
     MySQLClient.query("SELECT *  FROM punishments WHERE status = 1", function (err, result) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            logger.error(err);
         }
         let punishments = [];
         for (let x of result) {
@@ -88,13 +54,10 @@ mySQLManager.getPunishOnLoad = async function (callback) {
     })
 };
 
-mySQLManager.getPunishments = async function (user, callback) {
+mySQLManager.getPunishments = async function (user, callback, logger) {
     MySQLClient.query("SELECT * FROM punishments WHERE discord_id = '" + user + "'", function (err, result) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            logger.error(err)
         }
         let punishments = [];
         //For each record, create a punishment object.
@@ -119,44 +82,32 @@ mySQLManager.getPunishments = async function (user, callback) {
     });
 };
 
-mySQLManager.punish = async function (user, type, timestamp, expire, punisher, reason, status, callback) {
+mySQLManager.punish = async function (user, type, timestamp, expire, punisher, reason, status, callback, logger) {
     MySQLClient.query("INSERT INTO `punishments`(discord_id,punisher,type,reason,timestamp,expire,status) VALUES ('" + user + "','" + punisher + "'," + type + ",'" + reason + "','" + timestamp + "','" + expire + "',1)", function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            logger.error(err)
         }
         MySQLClient.query("SELECT id FROM `punishments` WHERE (timestamp = '" + timestamp + "') AND (discord_id = '" + user + "')", function (err, result) {
             if (err) {
-                //send a message into the logging channel.
-                if (client.status === 3 || client.status === 0) {
-                    client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-                }
+                logger.error(err)
             }
             callback(result[0].id);
         })
     })
 };
 
-mySQLManager.expire = async function (punishment_id) {
+mySQLManager.expire = async function (punishment_id, logger) {
     MySQLClient.query("UPDATE punishments SET status = 2, removal_reason = 'Expired' WHERE id = " + punishment_id, function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            logger.error(err)
         }
     });
 };
 
-mySQLManager.removePunishment = async function (user, type, reason, remover) {
+mySQLManager.removePunishment = async function (user, type, reason, remover, logger) {
     MySQLClient.query("UPDATE punishments SET status = 3, removal_reason = '" + reason + "', remover = '" + remover.tag + "' WHERE discord_id = " + user + " AND type = " + type, function (err) {
         if (err) {
-            //send a message into the logging channel.
-            if (client.status === 3 || client.status === 0) {
-                client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.stack + "```")
-            }
+            logger.error(err)
         }
     });
     return true;

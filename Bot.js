@@ -3,100 +3,104 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 //Loading in external libraries.
-const discord = require("discord.js");
+const Discord = require("discord.js");
 
 //Loading in constants.
 const token = process.env.BOT_TOKEN;
-const client = new discord.Client();
-const botConstants = {
-    guildId: "105235654727704576",
-    botLoggingChannel: "429972539905671168",
-    moderationLoggingChannel: "434005566801707009",
-    serverLoggingChannel: "429970564552065024",
-    mutedRole: "429970242916319244",
-    memberRole: "664631743499993098",
-    gameRole: "664626926127677440",
-    nowPlayingChannel: "643571367715012638",
-    commandPrefix: "!"
-};
+const client = new Discord.Client();
+const Constants = require("./utils/Constants.js");
+const EventManager = require("./managers/EventManager.js");
+const botConstants = Constants.getBotConstants();
 
+//Configuring logger.
+const log4js = require('log4js');
+let date = new Date();
+log4js.configure({
+    appenders: { CheeseBotFile: { type: 'file', filename: 'logs/' + date.toDateString() + '-' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds() + '.log' }, CheeseBotConsole: {type: 'console'}},
+    categories: { default: { appenders: ['CheeseBotFile','CheeseBotConsole'], level: 'info' } }
+});
+const logger = log4js.getLogger("CheeseBot");
 
-//Loading module export array.
-const bot = {};
 
 //Loading in internal libraries.
-const Punishments = require("./managers/PunishmentManager.js");
 const CommandManager = require("./managers/CommandManager.js");
-const ConnectionManager = require("./managers/ConnectionManager.js");
-const EventManager = require("./managers/EventManager.js");
+CommandManager.load(logger);
+const StreamManager = require("./managers/StreamManager.js");
+logger.info("All libraries loaded.");
 
 //Connect function, so it can be called later in-case of bot downtime.
 function connect() {
     client.login(token).catch((err) => {
         if (err) {
-            console.log('error when connecting to db:', err);
+            logger.error('error when connecting to bot testing:', err);
             setTimeout(connect, 2000);
+        } else {
+            logger.info("Something went majorly wrong...");
         }
     });
 }
 
 connect();
-
-client.on('ready', () => {EventManager.ready()});
+logger.info("Connecting...");
+client.on('ready', () => {
+    logger.info("Bot is ready!");
+    EventManager.ready(client, CommandManager, logger);
+    StreamManager.load(client, logger);
+});
 
 client.on('guildMemberAdd', (member) => {
-    EventManager.join(member);
+    EventManager.join(member, client, CommandManager, logger);
 });
 
 client.on('guildMemberRemove', (member) => {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
             .setTitle("User Leave")
-            .setThumbnail(member.user.displayAvatarURL)
-            .setDescription(member.user + " has left the server.")
+            .setThumbnail(member.user.displayAvatarURL())
+            .setDescription(member.user.tag + " has left the server.")
             .setTimestamp()
             .setColor('#AA0000'));
 
-        Punishments.removePunishment(member);
+
     }
 );
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
-            .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
-            .setDescription(newMember + " has changed their nickname.")
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+            .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
+            .setDescription("<@" + newMember + "> has changed their nickname.")
             .addField("Old Name", oldMember.displayName)
             .addField("New Name", newMember.displayName)
             .setTimestamp()
             .setColor('#2980B9'));
-    } else if (oldMember.roles.size !== newMember.roles.size) {
-        if (oldMember.roles.size > newMember.roles.size) {
+    } else if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
+        if (oldMember.roles.cache.size > newMember.roles.cache.size) {
             let role;
-            let roles = oldMember.roles.keyArray();
+            let roles = oldMember.roles.cache.keyArray();
             for (let i = 0; i < roles.length; i++) {
-                if (!newMember.roles.keyArray().includes(roles[i])) {
+                if (!newMember.roles.cache.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Removed")
-                .setDescription(newMember.user + " was removed from the `" + oldMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was removed from the `" + oldMember.roles.cache.get(role).name + "` role.")
                 .setColor('#2980B9'));
         } else {
             let role;
-            let roles = newMember.roles.keyArray();
+            let roles = newMember.roles.cache.keyArray();
             for (let i = 0; i < roles.length; i++) {
-                if (!oldMember.roles.keyArray().includes(roles[i])) {
+                if (!oldMember.roles.cache.keyArray().includes(roles[i])) {
                     role = roles[i];
                     break;
                 }
             }
-            client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
-                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL)
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+                .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
                 .setTitle("Role Added")
-                .setDescription(newMember.user + " was given the `" + newMember.roles.get(role).name + "` role.")
+                .setDescription("<@" + newMember.user + "> was given the `" + newMember.roles.cache.get(role).name + "` role.")
                 .setColor('#2980B9'));
         }
     }
@@ -104,9 +108,9 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
 
 client.on('userUpdate', (oldUser, newUser) => {
     if (oldUser.username !== newUser.username) {
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(new Discord.RichEmbed()
-            .setAuthor(newUser.tag, newUser.displayAvatarURL)
-            .setDescription(newUser + " has changed their username.")
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+            .setAuthor(newUser.tag, newUser.displayAvatarURL())
+            .setDescription("<@" + newUser + "> has changed their username.")
             .addField("Old Name", oldUser.username)
             .addField("New Name", newUser.username)
             .setTimestamp()
@@ -115,19 +119,29 @@ client.on('userUpdate', (oldUser, newUser) => {
 });
 
 client.on('guildBanAdd', (guild, user) => {
-    client.guilds.get("105235654727704576").channels.get("434005566801707009").send(new Discord.RichEmbed()
-        .setAuthor(user.tag, user.displayAvatarURL)
+    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+        .setAuthor(user.tag, user.displayAvatarURL())
         .setTitle("Manual Ban")
-        .setDescription(user + " was manually banned by an admin.")
+        .setDescription(user.tag + " was manually banned by an admin.")
         .setColor('#AA0000'));
 });
 
 client.on('messageDelete', (message) => {
     if (message.guild != null) {
-        if (message.content.startsWith("!") || message.author.bot) {
+        if (message.author.bot) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send("A message by " + message.author + " was deleted in " + message.channel + ".\n" +
+
+        if (message.attachments.size > 0) {
+            let z = "A file by <@" + message.author + "> was deleted in <#" + message.channel + ">." + ((message.content.length === 0)?"":"\n**Message**: `" + message.content + "`") + "\n**File URLs**:";
+            //This has an attachment.
+            for (let x of message.attachments.values()) {
+                z = z + "\n`" + x.proxyURL + "`"
+            }
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(z);
+            return;
+        }
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
             "**Message**: `" + message.content + "`");
     }
 });
@@ -137,7 +151,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.get("105235654727704576").channels.get("429970564552065024").send(newMessage.author + " edited a message in " + newMessage.channel + ".\n" +
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
             "**Old**: `" + oldMessage.content + "`\n" +
             "**New**: `" + newMessage.content + "`");
     }
@@ -145,45 +159,44 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
 client.on('message', (msg) => {
     if (msg.content.startsWith(botConstants.commandPrefix)) {
-        CommandManager.onCommand(msg);
+        CommandManager.onCommand(msg, client, logger);
     }
 });
 
 client.on('error', (error) => {
-    console.log("An error has occured. Error: " + error);
+    logger.info("An error has occurred. Error: " + error);
     if (client.status === 5) {
-        handleDisconnect();
+        connect();
     } else if (client.status === 3 || client.status === 0) {
-        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
     }
 
 });
 
-bot.getClient = function() {
-    return client;
-};
-
-bot.getBotConstants = function() {
-    return botConstants;
-};
+client.on('warn', (error) => {
+    logger.warn("An error has occurred. Error: " + error);
+});
 
 //Catching the process exit in order to cleanly exit.
 process.on('exit', () => {
-   ConnectionManager.leave();
-   client.destroy();
+   CommandManager.getConnectionManager().leave();
+   try {
+       client.destroy();
+   } catch (ex) {
+
+   }
+   StreamManager.end();
 });
 
-//Catching any uncaught exceptions, then restarting the  process.
+//Catching any uncaught exceptions, then restart the process.
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
-        client.guilds.get("105235654727704576").channels.get("429972539905671168").send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
-            console.log('Caught exception: ' + err);
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured and the bot is shutting down. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
+            logger.error('Caught an uncaught exception: ' + err + ": \n" +  err.stack);
             process.exit(1)
         })
     } else {
-        console.log('Caught exception: ' + err);
+        logger.error('Caught and uncaught exception: ' + err + ": \n" +  err.stack);
         process.exit(1)
     }
 });
-
-module.exports = bot;

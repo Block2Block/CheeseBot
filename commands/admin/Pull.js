@@ -7,25 +7,26 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args) {
-        const Bot = require("../../Bot.js");
+    allow_in_dm: true,
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+        const Bot = require("../../utils/Constants.js");
         const git = require("simple-git");
 
-        const client = Bot.getClient();
+        const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("Pulling git changes and restarting bot.");
-        client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Pulling changes...");
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Pulling changes...");
         git().pull('origin', 'master', {}, async (err, result) => {
-            if (err) console.log(err);
-            console.log(result);
+            if (err) logger.error(err);
+            logger.info(result);
             if (result.summary.changes === 0 && result.summary.insertions === 0 && result.summary.deletions === 0) {
-                await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("The bot is up to date.");
+                await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("The bot is up to date.");
             } else {
-                await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("**Changes: **" + result.summary.changes + "\n" +
+                await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("**Changes: **" + result.summary.changes + "\n" +
                     "**Insertions: **" + result.summary.insertions + "\n" +
                     "**Deletions: **" + result.summary.deletions);
-                await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Restarting...");
+                await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Restarting...");
                 process.exit(0);
             }
         });

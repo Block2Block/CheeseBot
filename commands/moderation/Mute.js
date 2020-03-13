@@ -7,8 +7,8 @@ module.exports = {
     permission: "moderation",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args) {
-        const PunishmentManager = require("../../managers/PunishmentManager.js");
-        await PunishmentManager.punish(msg, args, 1);
+    allow_in_dm: false,
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+        await PunishmentManager.punish(msg, args, 1, msg.client, logger);
     }
 };

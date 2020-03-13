@@ -7,14 +7,15 @@ module.exports = {
     permission: "admin",
     allowed_channels: null,
     joinable_role: null,
-    run: async function(msg, args) {
-        const Bot = require("../../Bot.js");
+    allow_in_dm: true,
+    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+        const Bot = require("../../utils/Constants.js");
 
-        const client = Bot.getClient();
+        const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
         await msg.reply("Restarting bot...");
-        await client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("Restarting bot...");
+        await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Restarting bot...");
         process.exit(0);
     }
 };

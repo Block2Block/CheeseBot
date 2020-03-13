@@ -1,8 +1,8 @@
 module.exports = {
-    cmd: "shuffle",
-    arguments: "shuffle",
-    aliases: ["shufflequeue","shuffleplaylist"],
-    desc: "Shuffles the songs currently in the queue.",
+    cmd: "shuffleplay",
+    arguments: "shuffleplay [YouTube Playlist URL/Search Query]",
+    aliases: ["playshuffle", "shufflesongs"],
+    desc: "Play a shuffled playlist on the bot. Only works with playlists when there is nothing currently playing.",
     category: "music",
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
@@ -16,14 +16,18 @@ module.exports = {
 
         if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
             if (client.voice.connections.keyArray().includes(botConstants.guildId)) {
-                if (client.voice.connections.get(botConstants.guildId).channel.id === client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
-                    await ConnectionManager.shuffle(msg);
-                } else {
+                if (client.voice.connections.get(botConstants.guildId).channel.id !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");
+                    return;
                 }
-            } else {
-                await msg.reply("The bot must be in a channel in order to use that command.");
             }
+
+            if (args.length >= 1) {
+                await ConnectionManager.playCommand(args[0], msg, logger, true);
+            } else {
+                await msg.reply("Invalid Arguments. Correct Arguments: **!shuffleplay [YouTube Playlist URL/YouTube Search Query]**");
+            }
+
         } else {
             await msg.reply("You must be in a voice channel in order to do that.");
         }
