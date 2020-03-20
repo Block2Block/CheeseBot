@@ -113,5 +113,9 @@ mySQLManager.removePunishment = async function (user, type, reason, remover, log
     return true;
 };
 
+mySQLManager.addXP = async function (user, amount, action) {
+
+};
+
 
 module.exports = mySQLManager;
