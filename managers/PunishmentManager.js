@@ -261,7 +261,7 @@ punishmentManager.history = async function (msg, logger) {
     await MySQLManager.getPunishments(user, (userPunishments) => {
         //Create a new rich embed.
         let richEmbed = new Discord.MessageEmbed();
-        richEmbed.setTitle(((client.users.cache.get(user).tag !== undefined)?client.users.cache.get(user).tag:user) + "'s Punishment History")
+        richEmbed.setTitle(((client.users.cache.get(user) !== undefined)?client.users.cache.get(user).tag:user) + "'s Punishment History")
             .setColor('#2980B9')
             .setFooter("Discord ID: " + user);
 
