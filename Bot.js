@@ -66,6 +66,9 @@ client.on('guildMemberRemove', (member) => {
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
     if (oldMember.displayName !== newMember.displayName) {
+        if (oldMember.user.bot) {
+            return;
+        }
         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
             .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL())
             .setDescription("<@" + newMember + "> has changed their nickname.")

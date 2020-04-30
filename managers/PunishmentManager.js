@@ -16,7 +16,7 @@ let cache = new Map();
 /*
     Explanation:
 
-    Type 1 = Mute.js.
+    Type 1 = Mute.
     Type 2 = Ban.
 
     Status 1 = Active.
@@ -92,14 +92,14 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
 
     //All of the info we need has been retrieved, apply the punishment.
     await MySQLManager.punish(user, type, timestamp, expire, punisher, reason, status, id => {
-        client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.mutedRole).catch((err) => {
-            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
-        });
 
         let timer = null;
 
         //Create a timeout object to remove the punishment when it ends.
         if (type === 1) {
+            client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.mutedRole).catch((err) => {
+                client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
+            });
             if (expire !== -1) {
                 timer = setTimeout(async () => {
                     if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {

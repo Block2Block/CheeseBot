@@ -15,6 +15,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
 
     client.user.setStatus("online");
     client.user.setActivity("on The Cult of Cheese", {type: "PLAYING"});
+    client.guilds.cache.get(botConstants.guildId).members.cache.get(client.user.id).setNickname("CheeseBot");
 
     //Get all of the *active* punishments from the database.
     MySQLManager.getPunishOnLoad((punishments) => {

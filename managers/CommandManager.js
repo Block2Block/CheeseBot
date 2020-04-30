@@ -259,7 +259,7 @@ commandManager.onCommand = async function (msg, client, logger) {
 
     if (commandInfo.joinable_role == null) {
         //Run the command,
-        logger.info(msg.author.tag + " has executed command !" + commandInfo.name + " " + args.join(" "));
+        logger.info(msg.author.tag + " has executed command !" + commandInfo.cmd + " " + args.join(" "));
         commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
     } else {
         //This is a joinable role command. Execute role command.
