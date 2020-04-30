@@ -28,6 +28,14 @@ let queue = [];
 connectionManager.joinChannel = async function (channel, msg, client, callback) {
     await channel.join().then(voiceConnection => {
             connection = voiceConnection;
+            connection.on('disconnect', () => {
+                connection = null;
+                queue = [];
+                if (dispatcher != null) {
+                    dispatcher.end();
+                }
+                client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
+            })
             callback(true);
         }
     ).catch((error) => {
@@ -45,11 +53,6 @@ connectionManager.inChannel = function () {
 connectionManager.leave = function () {
     if (connection != null) {
         connection.disconnect();
-    }
-    connection = null;
-    queue = [];
-    if (dispatcher != null) {
-        dispatcher.end();
     }
 };
 
@@ -100,7 +103,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         //If the bot is not already in the channel, force it to join.
         if (connection == null || !connection) {
             await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
-
+                
             });
         }
 
@@ -127,6 +130,10 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         let search = (msg.content.split(" "));
         search.shift();
         search = search.join(" ");
+        if (validURL(search)) {
+            msg.reply("That is not a valid YouTube URL or search query.");
+            return;
+        }
         await msg.reply("Searching for `" + search + "`...");
         YTSR(search, {limit: 1}, (err, searchResults) => {
             if (err) {
@@ -145,24 +152,37 @@ async function play(song, client, logger) {
 
     //If there are no more songs in the playlist or the connection has ended, state playback has ended.
     if (!song || connection == null) {
-        client.guilds.cache.get("105235654727704576").channels.cache.get("643571367715012638").send("Playback ended.");
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
         return;
+    }
+
+    //If the music cache doesn't exist, create the folder so it doesnt break.
+    if (!FS.existsSync("musiccache")) {
+        FS.mkdir("musiccache", (err) => {
+            if (err) {
+                logger.error("There has been an error creating the music cache folder. Please create it yourself.");
+            } else {
+                logger.info("Successfully created music cache folder.");
+            }
+        })
     }
 
     //If the current song doesn't already exist in the cache, download it.
     if (!FS.existsSync("musiccache/" + song.id + ".m4a")) {
         logger.info("Downloading song " + song.title + " (ID: " + song.id + ") for the first time.");
         try {
+            await client.guilds.cache.get(botConstants.guildId).members.cache.get(client.user.id).setNickname("[DOWNLOADING] CheeseBot");
             let dl = YTDL(song.url, {quality: "highestaudio", filter: "audioonly"});
             dl.pipe(FS.createWriteStream("musiccache/" + song.id + ".m4a"));
             dl.on('end', () => {
                 logger.info("Done.");
+                client.guilds.cache.get(botConstants.guildId).members.cache.get(client.user.id).setNickname("CheeseBot");
                 play(song, client, logger);
             });
             dl.on('error', (err) => {
                 logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                client.guilds.cache.get(botConstants.guildId).members.cache.get(client.user.id).setNickname("CheeseBot");
                 queue.shift();
                 play(queue[0], client, logger);
             })
@@ -205,7 +225,6 @@ async function play(song, client, logger) {
     dispatcher = connection.play("./musiccache/" + song.id + ".m4a")
         .on('start', () => {
             logger.info("Playing " + song.title + " now.");
-            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.nowPlayingChannel).send(new Discord.MessageEmbed().setTitle("Now Playing").setThumbnail("https://i.ytimg.com/vi/" + song.id + "/hqdefault.jpg").setDescription(song.title).setColor('#00AA00'));
             client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
         })
         .on('finish', () => {
@@ -395,6 +414,16 @@ function shuffle(a) {
         a[j] = x;
     }
     return a;
+}
+
+function validURL(str) {
+    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(str);
 }
 
 

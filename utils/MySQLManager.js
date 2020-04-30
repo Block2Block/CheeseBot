@@ -39,13 +39,13 @@ mySQLManager.getPunishOnLoad = async function (callback, logger) {
             let punishment = {
                 id: x.id,
                 user: x.discord_id,
-                type: x.type,
-                timestamp: x.timestamp,
-                expire: x.expire,
+                type: parseInt(x.type),
+                timestamp: parseInt(x.timestamp),
+                expire: parseInt(x.expire),
                 punisher: x.punisher,
                 reason: x.reason,
                 timer: null,
-                status: x.status,
+                status: parseInt(x.status),
                 removal_reason: x.removal_reason,
             };
             punishments.push(punishment);
@@ -65,13 +65,13 @@ mySQLManager.getPunishments = async function (user, callback, logger) {
             let punishment = {
                 id: x.id,
                 user: x.discord_id,
-                type: x.type,
-                timestamp: x.timestamp,
-                expire: x.expire,
+                type: parseInt(x.type),
+                timestamp: parseInt(x.timestamp),
+                expire: parseInt(x.expire),
                 punisher: x.punisher,
                 reason: x.reason,
                 timer: null,
-                status: x.status,
+                status: parseInt(x.status),
                 removal_reason: x.removal_reason,
                 remover: x.remover
             };
