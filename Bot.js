@@ -141,11 +141,17 @@ client.on('messageDelete', (message) => {
             for (let x of message.attachments.values()) {
                 z = z + "\n`" + x.proxyURL + "`"
             }
-            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(z);
+            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+                .setTitle("Message Deleted")
+                .setDescription(z)
+                .setColor('#AA0000'));
             return;
         }
-        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
-            "**Message**: `" + message.content + "`");
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+            .setTitle("Message Deleted")
+            .setDescription("A message by <@" + message.author + "> was deleted in <#" + message.channel + ">.\n" +
+                "**Message**: `" + message.content + "`")
+            .setColor('#AA0000'));
     }
 });
 
@@ -154,9 +160,12 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
         if (oldMessage.author.bot || oldMessage.content === newMessage.content) {
             return;
         }
-        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
-            "**Old**: `" + oldMessage.content + "`\n" +
-            "**New**: `" + newMessage.content + "`");
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.serverLoggingChannel).send(new Discord.MessageEmbed()
+            .setTitle("Message Edited")
+            .setDescription("<@" + newMessage.author + "> edited a message in <#" + newMessage.channel + ">.\n" +
+                "**Old**: `" + oldMessage.content + "`\n" +
+                "**New**: `" + newMessage.content + "`")
+            .setColor('#2980B9'));
     }
 });
 
@@ -199,7 +208,7 @@ process.on('uncaughtException', function(err) {
             process.exit(1)
         })
     } else {
-        logger.error('Caught and uncaught exception: ' + err + ": \n" +  err.stack);
-        process.exit(1)
+        logger.error('Caught an uncaught exception: ' + err + ": \n" +  err.stack);
+        process.exit(1);
     }
 });

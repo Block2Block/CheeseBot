@@ -36,17 +36,22 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
     let status = 1;
 
     //Working out who to punish.
-    if (re.test(args[0])) {
-        user = args[0].replace("<@!", "").replace(">", "");
+    if (re.test(args[1])) {
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
-        re = /[0-9]{17,18}/;
-        if (re.test(args[0])) {
-            user = args[0];
+        //Mobile is weird so needs this extra thing
+        re = /<@[0-9]{17,18}>/;
+        if (re.test(args[1])) {
+            user = args[1].replace("<@", "").replace(">", "");
         } else {
-            await msg.reply("You must mention a user/id in order to punish.");
-            return;
+            re = /[0-9]{17,18}/;
+            if (re.test(args[1])) {
+                user = args[1];
+            } else {
+                await msg.reply("You must mention a user/id in order to view a users history.");
+                return;
+            }
         }
-
     }
 
     if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user) == null || !client.guilds.cache.get(botConstants.guildId).members.cache.get(user)) {
@@ -104,7 +109,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
                 timer = setTimeout(async () => {
                     if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
                         if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
-                            client.guilds.cache.get(botConstants.guildId).members.cache.get(user).remove(botConstants.mutedRole).catch((err) => {
+                            client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.mutedRole).catch((err) => {
                                 client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                             });
                             client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
@@ -113,6 +118,7 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
                                 .addField("Reason", "Expired")
                                 .setTimestamp()
                                 .setColor('#00AA00'));
+                            await MySQLManager.expire(punishment.id, logger);
                         }
                     }
 
@@ -186,17 +192,22 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     let punish_id = -1;
 
     //Getting the user to unpunish.
-    if (re.test(args[0])) {
-        user = args[0].replace("<@!", "").replace(">", "");
+    if (re.test(args[1])) {
+        user = args[1].replace("<@!", "").replace(">", "");
     } else {
-        re = /[0-9]{17,18}/;
-        if (re.test(args[0])) {
-            user = args[0];
+        //Mobile is weird so needs this extra thing
+        re = /<@[0-9]{17,18}>/;
+        if (re.test(args[1])) {
+            user = args[1].replace("<@", "").replace(">", "");
         } else {
-            await msg.reply("You must mention a user/id in order to unpunish.");
-            return;
+            re = /[0-9]{17,18}/;
+            if (re.test(args[1])) {
+                user = args[1];
+            } else {
+                await msg.reply("You must mention a user/id in order to view a users history.");
+                return;
+            }
         }
-
     }
 
     //Getting the reason.
@@ -225,9 +236,9 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
 
     await msg.reply("Punishment removed.");
     await MySQLManager.removePunishment(user, type, reason, msg.author, logger);
-    client.guilds.cache.get("105235654727704576").channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
-        .setAuthor(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag, client.guilds.cache.get("105235654727704576").members.cache.get(user).user.displayAvatarURL())
-        .setDescription(client.guilds.cache.get("105235654727704576").members.cache.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
+    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
+        .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.displayAvatarURL())
+        .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(user).user.tag + " has been un" + ((type === 1)?"muted":"banned") + ".")
         .addField("Remover", msg.author.tag)
         .addField("Reason", reason)
         .setTimestamp()
@@ -246,14 +257,19 @@ punishmentManager.history = async function (msg, logger) {
     if (re.test(args[1])) {
         user = args[1].replace("<@!", "").replace(">", "");
     } else {
-        re = /[0-9]{17,18}/;
+        //Mobile is weird so needs this extra thing
+        re = /<@[0-9]{17,18}>/;
         if (re.test(args[1])) {
-            user = args[1];
+            user = args[1].replace("<@", "").replace(">", "");
         } else {
-            await msg.reply("You must mention a user/id in order to unmute.");
-            return;
+            re = /[0-9]{17,18}/;
+            if (re.test(args[1])) {
+                user = args[1];
+            } else {
+                await msg.reply("You must mention a user/id in order to view a users history.");
+                return;
+            }
         }
-
     }
 
     //Get the punishments from the database.

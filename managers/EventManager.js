@@ -38,14 +38,14 @@ eventmanager.ready = function(client, CommandManager, logger) {
                     }
                 } else if (punishment.type === 1) {
                     if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(punishment.user)) {
-                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.keyArray().includes(botConstants.mutedRole)) {
+                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.cache.keyArray().includes(botConstants.mutedRole)) {
                             client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).createDM().then(dmchannel => {
                                 dmchannel.send("You are muted in The Cult of Cheese Discord. Expires: **Permanent**. Reason: **" + punishment.reason + "**");
                             }).catch((reason) => {
                                 logger.warn("Login Promise Rejection: " + reason);
                             });
 
-                            client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).addRole(botConstants.mutedRole).catch((err) => {
+                            client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.add(botConstants.mutedRole).catch((err) => {
                                 client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                             });
                         }
@@ -113,7 +113,7 @@ eventmanager.ready = function(client, CommandManager, logger) {
                             client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                         });
                     }
-                    client.guilds.cache.get(botConstants.guildId).channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
+                    client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send(new Discord.MessageEmbed()
                         .setAuthor(client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.tag, client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.displayAvatarURL())
                         .setDescription(client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).user.tag + " has been unpunished.")
                         .addField("Reason", "Expired")
@@ -153,7 +153,7 @@ eventmanager.join = function(member, client, CommandManager, logger) {
                         });
 
                         member.roles.add(botConstants.mutedRole).catch((err) => {
-                            client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                         });
                         Punishments.addToCache(punishment);
                     }
@@ -191,13 +191,13 @@ eventmanager.join = function(member, client, CommandManager, logger) {
                             });
 
                             member.roles.add(botConstants.mutedRole).catch((err) => {
-                                client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to add a role. Error: " + err);
+                                client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
                             });
                             punishment.timer = setTimeout(async () => {
                                 if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
                                     if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.keyArray().includes(botConstants.mutedRole)) {
                                         client.guilds.cache.get(botConstants.guildId).members.cache.get(user).remove(botConstants.mutedRole).catch((err) => {
-                                            client.guilds.cache.get(botConstants.guildId).channels.cache.get("429970564552065024").send("An error occurred when trying to remove a role. Error: " + err);
+                                            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
                                         });
                                     }
                                 }
@@ -207,7 +207,7 @@ eventmanager.join = function(member, client, CommandManager, logger) {
                     } else {
                         //Remove punishment, it has expired.
                         Punishments.expire(punishment.user, punishment.id);
-                        client.guilds.cache.get(botConstants.guildId).channels.cache.get("434005566801707009").send(new Discord.MessageEmbed()
+                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.moderationLoggingChannel).send(new Discord.MessageEmbed()
                             .setAuthor(member.user.tag, member.user.displayAvatarURL())
                             .setDescription(member.user.tag + " has been unpunished.")
                             .addField("Reason", "Expired")
