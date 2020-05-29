@@ -36,17 +36,17 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
     let status = 1;
 
     //Working out who to punish.
-    if (re.test(args[1])) {
-        user = args[1].replace("<@!", "").replace(">", "");
+    if (re.test(args[0])) {
+        user = args[0].replace("<@!", "").replace(">", "");
     } else {
         //Mobile is weird so needs this extra thing
         re = /<@[0-9]{17,18}>/;
-        if (re.test(args[1])) {
-            user = args[1].replace("<@", "").replace(">", "");
+        if (re.test(args[0])) {
+            user = args[0].replace("<@", "").replace(">", "");
         } else {
             re = /[0-9]{17,18}/;
-            if (re.test(args[1])) {
-                user = args[1];
+            if (re.test(args[0])) {
+                user = args[0];
             } else {
                 await msg.reply("You must mention a user/id in order to view a users history.");
                 return;
@@ -192,17 +192,17 @@ punishmentManager.unpunish = async function(msg, args, type, client, logger) {
     let punish_id = -1;
 
     //Getting the user to unpunish.
-    if (re.test(args[1])) {
-        user = args[1].replace("<@!", "").replace(">", "");
+    if (re.test(args[0])) {
+        user = args[0].replace("<@!", "").replace(">", "");
     } else {
         //Mobile is weird so needs this extra thing
         re = /<@[0-9]{17,18}>/;
-        if (re.test(args[1])) {
-            user = args[1].replace("<@", "").replace(">", "");
+        if (re.test(args[0])) {
+            user = args[0].replace("<@", "").replace(">", "");
         } else {
             re = /[0-9]{17,18}/;
-            if (re.test(args[1])) {
-                user = args[1];
+            if (re.test(args[0])) {
+                user = args[0];
             } else {
                 await msg.reply("You must mention a user/id in order to view a users history.");
                 return;
