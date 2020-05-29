@@ -118,11 +118,11 @@ punishmentManager.punish = async function (msg, args, type, client, logger) {
                                 .addField("Reason", "Expired")
                                 .setTimestamp()
                                 .setColor('#00AA00'));
-                            await MySQLManager.expire(punishment.id, logger);
+
                         }
                     }
 
-                    await MySQLManager.expire(user, id);
+                    await MySQLManager.expire(punishment.id, logger);
 
                 }, expire - timestamp);
             }
