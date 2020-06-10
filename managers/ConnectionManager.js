@@ -181,13 +181,13 @@ async function play(song, client, logger) {
                 play(song, client, logger);
             });
             dl.on('error', (err) => {
-                logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
                 client.guilds.cache.get(botConstants.guildId).members.cache.get(client.user.id).setNickname("CheeseBot");
                 queue.shift();
                 play(queue[0], client, logger);
             })
         } catch (err) {
-            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
             queue.shift();
             play(queue[0], client, logger);
             return;
@@ -206,14 +206,14 @@ async function play(song, client, logger) {
                     logger.info("The next song has been downloaded and is ready to play.");
                 });
                 dl.on('error', (err) => {
-                    logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                    logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
                 })
             }
         } catch (err) {
-            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);
@@ -362,14 +362,14 @@ connectionManager.shuffle = function (msg) {
                     logger.info("The next song has been downloaded and is ready to play.");
                 });
                 dl.on('error', (err) => {
-                    logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+                    logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
                     let current = queue.shift();
                     queue.shift();
                     queue.unshift(current);
                 })
             }
         } catch (err) {
-            logger.error("An error occurred while trying to download a song. Skipping song. Error: " + err);
+            logger.error("An error occurred while trying to download a song. Skipping song. Error: ", err);
             let current = queue.shift();
             queue.shift();
             queue.unshift(current);
