@@ -20,7 +20,7 @@
     "simple-git": "^1.132.0",
     "twitch": "^3.7.1",
     "twitch-webhooks": "^3.7.3",
-    "ytdl-core": "^1.0.9",
+    "ytdl-core": "^2.1.7",
     "ytpl": "github:TimeForANinja/node-ytpl#master",
     "ytsr": "^0.1.13"
   }
