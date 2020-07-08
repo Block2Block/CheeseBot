@@ -385,6 +385,8 @@ connectionManager.nextSong = function (msg) {
         } else {
             if (repeat) {
                 msg.reply("The next song is: " + queue[0].title)
+            } else {
+                msg.reply("The queue is empty.");
             }
         }
     } else {
@@ -394,12 +396,26 @@ connectionManager.nextSong = function (msg) {
 
 connectionManager.queueInfo = function (msg) {
     if (queue) {
-        let i = ((queue.length < 11)?queue.length - 1:10);
-        let reply = "There are currently " + queue.length + " songs in the queue. The next " + i + " songs are:\n";
-        for (let counter = 1;counter <= i;counter++) {
-            reply += (counter) +  ") `" + queue[counter].title + ((counter !== i)?"`\n":"`")
+        if (queue.length > 1) {
+            let i = ((queue.length < 11)?queue.length - 1:10);
+            let reply = "There are currently " + queue.length + " songs in the queue. The next " + i + " songs are:\n";
+            for (let counter = 1;counter <= i;counter++) {
+                reply += (counter) +  ") `" + queue[counter].title + ((counter !== i)?"`\n":"`")
+            }
+            msg.reply(reply);
+        } else {
+            if (queue.length === 1) {
+                if (repeat) {
+                    let reply = "There is currently 1 song in the queue. The next song is:\n" +
+                        "1) `" + queue[0].title + "`";
+                    msg.reply(reply);
+                } else {
+                    msg.reply("The queue is empty.");
+                }
+            } else {
+                msg.reply("The queue is empty.");
+            }
         }
-        msg.reply(reply);
     } else {
         msg.reply("The queue is empty.");
     }

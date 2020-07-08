@@ -28,6 +28,13 @@ module.exports = {
 
         }
         if (args.length === 1) {
+
+            let re = /^[0-9]+$/;
+            if (!re.test(args[0])) {
+                await msg.reply("Invalid Arguments. Correct Arguments **!volume [1-10]**");
+                return;
+            }
+
             let volume;
             try {
                 volume = parseInt(args[0]);
