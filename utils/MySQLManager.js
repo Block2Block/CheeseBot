@@ -94,7 +94,10 @@ mySQLManager.getPunishments = async function (user, callback, logger) {
 };
 
 mySQLManager.punish = async function (user, type, timestamp, expire, punisher, reason, status, callback, logger) {
-    MySQLClient.query("INSERT INTO `punishments`(discord_id,punisher,type,reason,timestamp,expire,status) VALUES ('" + user + "','" + punisher + "'," + type + ",'" + reason + "','" + timestamp + "','" + expire + "',1)", function (err) {
+    let sql = "INSERT INTO `punishments`(discord_id,punisher,type,reason,timestamp,expire,status) VALUES (?,?,?,?,?,?,1)"
+    let inserts = [user, punisher, type, reason, timestamp, expire]
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
@@ -116,7 +119,10 @@ mySQLManager.expire = async function (punishment_id, logger) {
 };
 
 mySQLManager.removePunishment = async function (user, type, reason, remover, logger) {
-    MySQLClient.query("UPDATE punishments SET status = 3, removal_reason = '" + reason + "', remover = '" + remover.tag + "' WHERE discord_id = " + user + " AND type = " + type, function (err) {
+    let sql = "UPDATE punishments SET status = 3, removal_reason = ?,remover=? WHERE discord_id = ? AND type = ?";
+    let inserts = [reason, remover.tag, user, type]
+    sql = mysql.format(sql, inserts);
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
@@ -160,7 +166,10 @@ mySQLManager.getRoles = async function (logger, callback) {
 }
 
 mySQLManager.addMessage = async function (message_id, channel_id, type, logger) {
-    MySQLClient.query("INSERT INTO messages(message_id, channel_id, type) VALUES('" + message_id + "','" + channel_id + "','" + type + "')", function (err) {
+    let sql = "INSERT INTO messages(message_id, channel_id, type) VALUES(?,?,?)";
+    let inserts = [message_id, channel_id, type];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
@@ -168,7 +177,10 @@ mySQLManager.addMessage = async function (message_id, channel_id, type, logger) 
 }
 
 mySQLManager.updateMessage = async function (message_id, channel_id, type, logger) {
-    MySQLClient.query("UPDATE messages SET message_id = '" + message_id + "', channel_id = '" + channel_id + "' WHERE type = '" + type + "'", function (err) {
+    let sql = "UPDATE messages SET message_id = ?, channel_id = ? WHERE type = ?";
+    let inserts = [message_id, channel_id, type];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
@@ -176,7 +188,10 @@ mySQLManager.updateMessage = async function (message_id, channel_id, type, logge
 }
 
 mySQLManager.addRole = async function (role_id, emoji, description, type, logger) {
-    MySQLClient.query("INSERT INTO roles(role_id, reaction_emoji, description, type) VALUES('" + role_id + "','" + emoji + "','" + description + "','" + type + "')", function (err) {
+    let sql = "INSERT INTO roles(role_id, reaction_emoji, description, type) VALUES(?,?,?,?)"
+    let inserts = [role_id, emoji, description, type];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
@@ -184,7 +199,10 @@ mySQLManager.addRole = async function (role_id, emoji, description, type, logger
 }
 
 mySQLManager.updateRoleDescription = async function (role_id, description, logger) {
-    MySQLClient.query("UPDATE roles SET description = '" + description + "' WHERE role_id = '" + role_id + "'", function (err) {
+    let sql = "UPDATE roles SET description = ? WHERE role_id = ?";
+    let inserts = [description, role_id];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
         if (err) {
             logger.error(err)
         }
