@@ -290,7 +290,7 @@ roleManager.postMessage = async function (msg, args, MySQLManager, logger) {
             MySQLManager.addMessage(message.id, message.channel.id, type, logger);
             for (let z of roles.values()) {
                 if (z.type === type) {
-                    message.react(client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji));
+                    message.react(z.reaction_emoji);
                 }
             }
         })
