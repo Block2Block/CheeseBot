@@ -48,7 +48,7 @@ roleManager.addRole = async function (msg, args, MySQLManager, logger) {
                     return;
                 }
             } else {
-                msg.reply("That is not a valid emoji. It must be a non-animated custom emoji from this Discord or a built-in emoji.1");
+                msg.reply("That is not a valid emoji. It must be a non-animated custom emoji from this Discord or a built-in emoji.");
                 return;
             }
         }
@@ -96,7 +96,7 @@ roleManager.addRole = async function (msg, args, MySQLManager, logger) {
                     embed.setDescription("Want to " + ((type === "NOTIF")?"get notified when we go live, or want to know when we do bot updates?":"play some games with some pretty cool people?") + " React to this message to add yourself to some of our roles and take part in all the fun!");
                     for (let z of roles.values()) {
                         if (z.type === type) {
-                            embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description)
+                            embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description);
                         }
                     }
                     message.edit(embed);
@@ -140,7 +140,7 @@ roleManager.removeRole = async function (msg, args, MySQLManager, logger) {
                             embed.setDescription("Want to " + ((y.type === "NOTIF")?"get notified when we go live, or want to know when we do bot updates?":"play some games with some pretty cool people?") + " React to this message to add yourself to some of our roles and take part in all the fun!");
                             for (let z of roles.values()) {
                                 if (z.type === y.type) {
-                                    embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description)
+                                    embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description);
                                 }
                             }
                             message.edit(embed);
@@ -193,7 +193,7 @@ roleManager.editDescription = async function (msg, args, MySQLManager, logger) {
                             embed.setDescription("Want to " + ((x.type === "NOTIF")?"get notified when we go live, or want to know when we do bot updates?":"play some games with some pretty cool people?") + " React to this message to add yourself to some of our roles and take part in all the fun!");
                             for (let z of roles.values()) {
                                 if (z.type === x.type) {
-                                    embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description)
+                                    embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description);
                                 }
                             }
                             message.edit(embed);
@@ -248,7 +248,7 @@ roleManager.postMessage = async function (msg, args, MySQLManager, logger) {
                     embed.setDescription("Want to " + ((x.type === "NOTIF") ? "get notified when we go live, or want to know when we do bot updates?" : "play some games with some pretty cool people?") + " React to this message to add yourself to some of our roles and take part in all the fun!");
                     for (let z of roles.values()) {
                         if (z.type === x.type) {
-                            embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description)
+                            embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description);
                         }
                     }
                     client.guilds.cache.get(BotConstants.getBotConstants().guildId).channels.cache.get(channel).send(embed).then((message2) => {
@@ -278,7 +278,7 @@ roleManager.postMessage = async function (msg, args, MySQLManager, logger) {
         embed.setDescription("Want to " + ((type === "NOTIF") ? "get notified when we go live, or want to know when we do bot updates?" : "play some games with some pretty cool people?") + " React to this message to add yourself to some of our roles and take part in all the fun!");
         for (let z of roles.values()) {
             if (z.type === type) {
-                embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with <:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + "> to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description)
+                embed.addField(client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name, "React with " + ((client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji) !== undefined)?"<:" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).emojis.cache.get(z.reaction_emoji).identifier + ">":z.reaction_emoji) + " to join the `" + client.guilds.cache.get(BotConstants.getBotConstants().guildId).roles.cache.get(z.role_id).name + "` role.\n\n" + z.description);
             }
         }
         client.guilds.cache.get(BotConstants.getBotConstants().guildId).channels.cache.get(channel).send(embed).then((message) => {
