@@ -8,7 +8,7 @@ module.exports = {
     allowed_channels: null,
     joinable_role: null,
     allow_in_dm: true,
-    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger) {
         let Discord = require("discord.js");
         //Welcome message.
         msg.author.createDM().then(dmchannel => {

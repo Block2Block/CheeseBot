@@ -46,6 +46,7 @@ client.on('ready', () => {
     logger.info("Bot is ready!");
     EventManager.ready(client, CommandManager, logger);
     StreamManager.load(client, logger);
+    CommandManager.getRoleManager().init(client, CommandManager.getPunishmentManager().getMySQLManager(), logger);
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -177,6 +178,19 @@ client.on('message', (msg) => {
     if (msg.content.startsWith(botConstants.commandPrefix)) {
         CommandManager.onCommand(msg, client, logger);
     }
+});
+
+client.on('messageReactionAdd', (reaction, user) => {
+        if (!user.bot) {
+            CommandManager.getRoleManager().reactionAdded(reaction, user);
+        }
+    }
+);
+
+client.on('messageReactionRemove', (reaction, user) => {
+        if (!user.bot) {
+            CommandManager.getRoleManager().reactionRemoved(reaction, user);
+        }
 });
 
 client.on('error', (error) => {

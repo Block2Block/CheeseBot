@@ -8,7 +8,7 @@ module.exports = {
     allowed_channels: ["439114294307717131","629807458864463883"],
     joinable_role: null,
     allow_in_dm: true,
-    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger) {
         let botConstants = require("../../utils/Constants.js").getBotConstants();
 
         if (msg.client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {

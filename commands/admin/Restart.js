@@ -8,7 +8,7 @@ module.exports = {
     allowed_channels: null,
     joinable_role: null,
     allow_in_dm: true,
-    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger) {
         const Bot = require("../../utils/Constants.js");
 
         const client = msg.client;

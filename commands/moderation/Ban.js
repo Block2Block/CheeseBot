@@ -8,7 +8,7 @@ module.exports = {
     allowed_channels: null,
     joinable_role: null,
     allow_in_dm: false,
-    run: async function(msg, args, ConnectionManager, PunishmentManager, logger) {
+    run: async function(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger) {
         await PunishmentManager.punish(msg, args, 2, msg.client, logger);
     }
 };

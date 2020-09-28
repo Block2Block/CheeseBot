@@ -5,6 +5,8 @@ const fs = require("fs");
 //loading internal libraries.
 const PunishmentManager = require("./PunishmentManager.js");
 const ConnectionManager = require("./ConnectionManager.js");
+const RoleManager = require("./RoleManager.js");
+
 
 const botConstants = Bot.getBotConstants();
 
@@ -260,7 +262,7 @@ commandManager.onCommand = async function (msg, client, logger) {
     if (commandInfo.joinable_role == null) {
         //Run the command,
         logger.info(msg.author.tag + " has executed command !" + commandInfo.cmd + " " + args.join(" "));
-        commandInfo.run(msg, args, ConnectionManager, PunishmentManager, logger);
+        commandInfo.run(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger);
     } else {
         //This is a joinable role command. Execute role command.
         if (msg.member.roles.cache.keyArray().includes(commandInfo.joinable_role)) {
@@ -297,6 +299,9 @@ commandManager.getPunishmentManager = function () {
 };
 commandManager.getConnectionManager = function () {
     return ConnectionManager;
+};
+commandManager.getRoleManager = function () {
+    return RoleManager;
 };
 
 module.exports = commandManager;
