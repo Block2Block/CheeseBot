@@ -10,18 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
-    "discord.js": "github:discordjs/discord.js",
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^3.0.0",
     "log4js": "^6.2.1",
     "mysql": "^2.18.1",
     "node-opus": "^0.3.3",
     "simple-git": "^1.132.0",
-    "twitch": "^3.7.1",
-    "twitch-webhooks": "^3.7.3",
-    "ytdl-core": "^2.1.7",
-    "ytpl": "github:TimeForANinja/node-ytpl#master",
-    "ytsr": "^0.1.13"
+    "twitch": "^4.2.5",
+    "twitch-webhooks": "^4.2.5",
+    "ytdl-core": "^3.3.0",
+    "ytpl": "^1.0.1",
+    "ytsr": "^1.0.3"
   }
 }
