@@ -39,7 +39,7 @@ connectionManager.joinChannel = async function (channel, msg, client, callback) 
             callback(true);
         }
     ).catch((error) => {
-        client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error has occurred when trying to join a voice channel. Error: " + error);
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error has occurred when trying to join a voice channel. Error: " + error);
         callback(false);
     });
 };
@@ -59,93 +59,141 @@ connectionManager.leave = function () {
 connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
     let client = msg.client;
     //If it is detected as a value YouTube Playlist URL, create an array with the URLS of each song onto it, then add that to the queue.
-    if (await YTPL.validateURL(URL)) {
-        YTPL(URL, {limit: 0}, async function (err, playlist) {
+    YTPL.getPlaylistID(URL).then(async function (id) {
+        if (id !== undefined && id !== null) {
+            YTPL(URL, {limit: 0}).then(async function (playlist) {
+                //If the bot is not already in the channel, force it to join.
+                if (connection == null || !connection) {
+                    await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
+                    });
+                }
+
+                //For each song in the playlist.
+                for (let i = 0; i < playlist.items.length; i++) {
+                    let s = playlist.items[i];
+                    const song = {
+                        title: s.title,
+                        id: s.id,
+                        url: s.url_simple,
+                    };
+                    queue.push(song);
+                }
+
+                //If lengths are the same, then the queue was empty before we started, so start playing the songs.
+                if (queue.length === playlist.items.length) {
+                    if (isShuffle) {
+                        logger.info("The queue was shuffled");
+                        queue = shuffle(queue);
+                    }
+                    await play(queue[0], client, logger);
+                    await msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
+                } else {
+                    await msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
+                }
+            }).catch(err => {
+                if (err) {
+                    msg.reply("An error occurred: " + err);
+                }
+            });
+            return;
+        } else {
+            if (await YTDL.validateURL(URL)) {
+                //If the bot is not already in the channel, force it to join.
+                if (connection == null || !connection) {
+                    await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
+
+                    });
+                }
+
+                //Get the song info and put it into an object.
+                await YTDL.getInfo(URL).then(songInfo => {
+                    const song = {
+                        title: songInfo.videoDetails.title,
+                        id: songInfo.videoDetails.videoId,
+                        url: songInfo.videoDetails.video_url,
+                    };
+
+                    //Add it to the queue.
+                    queue.push(song);
+                    msg.reply("Song " + song.title + " added to the queue.");
+
+                    //If it is the only song in the queue, play it.
+                    if (queue.length === 1) {
+                        play(song, client, logger);
+                    }
+                }).catch((err) => {
+                    logger.error(err);
+                });
+            } else {
+                //It is not a valid YouTube URL, search YouTube for it instead.
+                let search = (msg.content.split(" "));
+                search.shift();
+                search = search.join(" ");
+                if (validURL(search)) {
+                    msg.reply("That is not a valid YouTube URL or search query.");
+                    return;
+                }
+                msg.reply("Searching for `" + search + "`...");
+                YTSR(search, {limit: 1}).then((searchResults) => {
+                    //Execute this function again with the URL of the first item found with the search term.
+                    connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
+                    msg.reply("Result found, playing " + searchResults.items[0].title + ".");
+                }).catch(err => {
+                    if (err) {
+                        msg.reply("Something went wrong when trying to search that term. Please try again.");
+                    }
+                });
+            }
+        }
+    }).catch(async function () {
+        if (YTDL.validateURL(URL)) {
             //If the bot is not already in the channel, force it to join.
             if (connection == null || !connection) {
-                await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
+                connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
 
                 });
             }
 
-            //If there was an error, let the user know.
-            if (err) {
-                await msg.reply("An error occurred: " + err);
+            //Get the song info and put it into an object.
+            await YTDL.getInfo(URL).then(songInfo => {
+                const song = {
+                    title: songInfo.videoDetails.title,
+                    id: songInfo.videoDetails.videoId,
+                    url: songInfo.videoDetails.video_url,
+                };
+
+                //Add it to the queue.
+                queue.push(song);
+                msg.reply("Song " + song.title + " added to the queue.");
+
+                //If it is the only song in the queue, play it.
+                if (queue.length === 1) {
+                    play(song, client, logger);
+                }
+            }).catch((err) => {
+                logger.error(err);
+            });
+        } else {
+            //It is not a valid YouTube URL, search YouTube for it instead.
+            let search = (msg.content.split(" "));
+            search.shift();
+            search = search.join(" ");
+            if (validURL(search)) {
+                msg.reply("That is not a valid YouTube URL or search query.");
                 return;
             }
-
-            //For each song in the playlist.
-            for (let i = 0; i < playlist.items.length; i++) {
-                let s = playlist.items[i];
-                const song = {
-                    title: s.title,
-                    id: s.id,
-                    url: s.url_simple,
-                };
-                queue.push(song);
-            }
-
-            //If lengths are the same, then the queue was empty before we started, so start playing the songs.
-            if (queue.length === playlist.items.length) {
-                if (isShuffle) {
-                    logger.info("The queue was shuffled");
-                    queue = shuffle(queue);
+            msg.reply("Searching for `" + search + "`...");
+            YTSR(search, {limit: 1}).then((searchResults) => {
+                //Execute this function again with the URL of the first item found with the search term.
+                connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
+                msg.reply("Result found, playing " + searchResults.items[0].title + ".");
+            }).catch(err => {
+                if (err) {
+                    msg.reply("Something went wrong when trying to search that term. Please try again.");
                 }
-                await play(queue[0], client, logger);
-                await msg.reply("Playlist " + playlist.title + " now playing with " + playlist.items.length + " total songs in the queue.");
-            } else {
-                await msg.reply("Playlist " + playlist.title + " added to the queue with " + playlist.items.length + " songs added to the list.");
-            }
-        });
-
-        //If it was detected as a valid YouTube Video URL.
-    } else if (await YTDL.validateURL(URL)) {
-        //If the bot is not already in the channel, force it to join.
-        if (connection == null || !connection) {
-            await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
-                
             });
         }
-
-        //Get the song info and put it into an object.
-        const songInfo = await YTDL.getInfo(URL).catch((err) => {
-            logger.error(err);
-        });
-        const song = {
-            title: songInfo.title,
-            id: songInfo.video_id,
-            url: songInfo.video_url,
-        };
-
-        //Add it to the queue.
-        queue.push(song);
-        await msg.reply("Song " + song.title + " added to the queue.");
-
-        //If it is the only song in the queue, play it.
-        if (queue.length === 1) {
-            play(song, client, logger);
-        }
-    } else {
-        //It is not a valid YouTube URL, search YouTube for it instead.
-        let search = (msg.content.split(" "));
-        search.shift();
-        search = search.join(" ");
-        if (validURL(search)) {
-            msg.reply("That is not a valid YouTube URL or search query.");
-            return;
-        }
-        await msg.reply("Searching for `" + search + "`...");
-        YTSR(search, {limit: 1}, (err, searchResults) => {
-            if (err) {
-                msg.reply("Something went wrong when trying to search that term. Please try again.");
-                return;
-            }
-
-            //Execute this function again with the URL of the first item found with the search term.
-            connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
-            msg.reply("Result found, playing " + searchResults.items[0].title + ".");
-        });
-    }
+    })
 };
 
 async function play(song, client, logger) {

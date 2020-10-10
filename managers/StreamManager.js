@@ -1,6 +1,6 @@
 const streammanager = {};
 
-const Twitch = require('twitch').default;
+const Twitch = require('twitch').ApiClient;
 
 const clientId = process.env.TWITCH_ID;
 const clientSecret = process.env.TWITCH_SECRET;
