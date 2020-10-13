@@ -61,7 +61,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
     //If it is detected as a value YouTube Playlist URL, create an array with the URLS of each song onto it, then add that to the queue.
     YTPL.getPlaylistID(URL).then(async function (id) {
         if (id !== undefined && id !== null) {
-            YTPL(URL, {limit: 0}).then(async function (playlist) {
+            YTPL(URL, {limit: Infinity}).then(async function (playlist) {
                 //If the bot is not already in the channel, force it to join.
                 if (connection == null || !connection) {
                     await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
