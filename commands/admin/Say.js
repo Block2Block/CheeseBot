@@ -1,7 +1,7 @@
 module.exports = {
     cmd: "say",
     arguments: "say",
-    aliases: ["repeat"],
+    aliases: [],
     desc: "Forced the bot to say something.",
     category: "admin",
     permission: "admin",
