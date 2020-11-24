@@ -189,6 +189,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
                 msg.reply("Result found, playing " + searchResults.items[0].title + ".");
             }).catch(err => {
                 if (err) {
+                    logger.error(err);
                     msg.reply("Something went wrong when trying to search that term. Please try again.");
                 }
             });
