@@ -26,6 +26,22 @@ module.exports = {
                 await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("**Changes: **" + result.summary.changes + "\n" +
                     "**Insertions: **" + result.summary.insertions + "\n" +
                     "**Deletions: **" + result.summary.deletions);
+                if (result.insertions.hasOwnProperty("package.json") || result.insertions.hasOwnProperty("package-lock.json")) {
+                    await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("It seems the bot dependencies have changed, performing dependency update...");
+                    let npm = require('npm');
+                    npm.load(async function (err){
+                        await npm.commands.install(function (err, data) {
+                            if (err) {
+                                logger.error(err);
+                            }
+                        });
+
+                        await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Dependency update complete!");
+                        await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Restarting...");
+                        process.exit(0);
+                    })
+                    return;
+                }
                 await client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("Restarting...");
                 process.exit(0);
             }
