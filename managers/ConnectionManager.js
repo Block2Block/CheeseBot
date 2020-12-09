@@ -74,7 +74,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
                     const song = {
                         title: s.title,
                         id: s.id,
-                        url: s.url_simple,
+                        url: s.shortUrl,
                     };
                     queue.push(song);
                 }
