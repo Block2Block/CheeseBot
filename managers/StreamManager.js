@@ -12,6 +12,7 @@ let listener;
 let subscriptions = [];
 
 let live = [];
+let cooldown = [];
 
 streammanager.load = async function (client, logger) {
     logger.info("Loading Twitch Webhooks...");
@@ -28,8 +29,17 @@ streammanager.load = async function (client, logger) {
                 let game = "";
                 stream.getGame().then((twitchGame) => {
                     game = twitchGame.name;
+                    if (cooldown.includes(x)) {
+                        //Add to live but don't push notification.
+                        live.push(x);
+                        return;
+                    }
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.livestreamChannel).send("<@&" + botConstants.livestreamRole + "> " + stream.userDisplayName + " has just gone live with " + game + ": `" + stream.title + "`! Join at https://twitch.tv/" + stream.userDisplayName + " !");
-                    live.push(x)
+                    live.push(x);
+                    cooldown.push(x);
+                    setTimeout(() => {
+                        cooldown.shift();
+                    }, 86400000);
                 });
             } else {
                 if (live.includes(x)) {
