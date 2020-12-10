@@ -177,6 +177,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 client.on('message', (msg) => {
     if (msg.content.startsWith(botConstants.commandPrefix)) {
         CommandManager.onCommand(msg, client, logger);
+    } else if (msg.channel.type === 'news') {
+        msg.crosspost();
     }
 });
 
