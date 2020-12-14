@@ -3,7 +3,7 @@ This  is the official Cult of Cheese Discord Bot GitHub Repository. This is used
 
 
 ## About the Discord Server
-The Cult of Cheese is a Discord server owned by Block2Block, Bunni and SimplyBrandon. As the name suggests, we are a Cheese themed Discord. Join [here](https://discord.gg/).
+The Cult of Cheese is a Discord server owned by Block2Block, Bunni and SimplyBrandon. As the name suggests, we are a Cheese themed Discord. Join [here](https://cultofcheese.com/).
 
 ## How to host the bot
 The bot is currently setup for use in our Discord, but adapting it for use in other servers is super easy. Heres the step by step:
