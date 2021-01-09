@@ -16,12 +16,11 @@
     "ffmpeg-static": "^4.2.7",
     "log4js": "^6.3.0",
     "mysql": "^2.18.1",
-    "node-opus": "^0.3.3",
-    "simple-git": "^2.26.0",
-    "twitch": "^4.3.6",
-    "twitch-webhooks": "^4.3.6",
-    "ytdl-core": "^4.1.4",
-    "ytpl": "^2.0.0-alpha.3",
-    "ytsr": "^1.0.4"
+    "simple-git": "^2.31.0",
+    "twitch": "^4.3.8",
+    "twitch-webhooks": "^4.3.8",
+    "ytdl-core": "^4.4.1",
+    "ytpl": "^2.0.4",
+    "ytsr": "^3.2.1"
   }
 }

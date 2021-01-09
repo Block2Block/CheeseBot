@@ -11,6 +11,9 @@ const botConstants = {
     memberRole: "664631743499993098",
     agreeChannel: "684894179112779828",
     gameRole: "664626926127677440",
+    initiateRole: "320671208813232130",
+    modRole: "665237632082640906",
+    adminRole: "207084647962771457",
     commandPrefix: "!",
     twitchSubscriptions: ["53100459","41451481","62033506","138310205"]
 };
