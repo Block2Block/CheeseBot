@@ -3,10 +3,10 @@ This  is the official Cult of Cheese Discord Bot GitHub Repository. This is used
 
 
 ## About the Discord Server
-The Cult of Cheese is a Discord server owned by Block2Block, Bunni and SimplyBrandon. As the name suggests, we are a Cheese themed Discord. Join [here](https://cultofcheese.com/).
+The Cult of Cheese is a Discord server owned by Block2Block, Bunni and _Brandon. As the name suggests, we are a Cheese themed Discord. Join [here](https://cultofcheese.com/).
 
 ## How to host the bot
-The bot is currently setup for use in our Discord, but adapting it for use in other servers is super easy. Heres the step by step:
+The bot is currently setup for use in our Discord, but adapting it for use in other servers is super easy. Here's the step by step:
  1) Use `git clone https://github.com/Block2Block/CheeseBot` in a folder of your choice.
  2) Go into the CheeseBot Folder.
  3) If you would like to move its location, do so now. If you make changes in this folder, you will not be able to easily pull updates from GitHub.
@@ -19,17 +19,18 @@ The bot is currently setup for use in our Discord, but adapting it for use in ot
      * `MYSQL_DATABASE`: The name of the database the bot should use.
      * `TWITCH_ID`: This is the client ID of the Twitch Application, found in your Developer dashboard.
      * `TWITCH_SECRET`: The client secret needed to use the Twitch API.
+     * `TWITCH_CALLBACK_URL`: The URL of which the Twitch API calls back to when sending a Webhook Notification (should be the same IP/domain as the server the bot is hosted on). 
+    
  6) Go into the `utils` folder and open the `Constants.js` file.
  7) Modify the values with the specified ids (e.g. for guildId, copy your guild ID). If you do not know how to do this, please refer to [this](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-) article.
- 8) If you have game roles, modify the values in all of the commands in `/commands/game/`, or delete and add commands as wanted.
- 9) Modify the permission roles in all of the files in `/permissions/`. Copy the ID's into the `roles` section
- 10) Make any modifications you wish to make.
- 11) Forward port **8090** TCP/UDP for Twitch API Callbacks to be received from.
- 12) Ensure you have Node.js installed. Find a download link [here](https://nodejs.org/en/). Also ensure you have FFMPEG installed (if you wish for music bot functionality). It can be downloaded [here](https://www.ffmpeg.org/download.html)
- 13) Open a Node.js console window.
- 14) Use the `cd` command to navigate to the directory of the bot files.
- 15) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
- 16) Once all of the dependencies are installed, do `node Bot.js`. This will start the bot.
+ 8) Modify the permission roles in all of the files in `/permissions/`. Copy the ID's into the `roles` section
+ 9) Make any modifications you wish to make.
+ 10) Forward port **8090** TCP/UDP for Twitch API Callbacks to be received from.
+ 11) Ensure you have Node.js installed. Find a download link [here](https://nodejs.org/en/). Also ensure you have FFMPEG installed (if you wish for music bot functionality). It can be downloaded [here](https://www.ffmpeg.org/download.html). It is listed as a Node.js dependency but do not rely on Node.js to install it properly for you.
+ 12) Open a Node.js console window.
+ 13) Use the `cd` command to navigate to the directory of the bot files.
+ 14) Do `npm install`. If you are using Windows, you must first do `npm install --global --production windows-build-tools`.
+ 15) Once all the dependencies are installed, do `node Bot.js`. This will start the bot.
  
 ## Contributing
 If you want to contribute to the bot, whether that is in the form of a pull request, bug report or feature suggestion, you are more than welcome. Please read [this guide](CONTRIBUTING.md) on how to contribute effectively. All contributions must follow the [code  of conduct](CODE_OF_CONDUCT.md).
@@ -46,13 +47,12 @@ For a web interface, then do `pm2 plus`. This will launch a browser window, foll
 **A:** Unfortunately, there is no quick way of doing this. As the bot was built for the sole purpose of serving out specific needs, the MySQL and Punishment systems are deeply integrated into the features.
 
 If you want to disable this, you will need to delete section of code/delete the following files:
- * `/utils/MySQLManager.js` - Delete this file completely.
- * `/managers/PunishmentManager.js` - Delete this file completely.
+ * `/utils/MySQLManager.js` - Remove relevant functions in this file. Please note that not all functions in this file are relating to punishments, as role assignments are also stored in the Database.
+ * `/managers/PunishmentManager.js` - You are welcome to remove functions in this file, but do not delete it and do not remove the `getMySQLManager()` function along with line 1, as this will break the role system.
  * `/commands/moderation/*.js` - Delete every file in this directory.
  * `/permissions/Moderation.js` - Delete this file completely.
  * `/categories/Moderation.js` - Delete this file completely.
- * `/managers/EventManager.js` - Sieve through the file and remove anything related to the MySQL or Punishments (be careful, some of the normal code is within a callback from a MySQL function).
- * `/managers/CommandManager.js` - Replace the line `const PunishmentManager = require("./PunishmentManager.js");` with `const PunishmentManager = null;`
+ * `/managers/EventManager.js` - Sieve through the file and remove anything related to the MySQL or Punishments (be careful, some normal code is within a callback from a MySQL function).
  
  
 >**Q:** How do I create a new command/category/permission node?
@@ -81,11 +81,13 @@ Eventually the bot will have downloaded a large enough cache to the point where 
 
 >**Q:** I do not wish for Twitch integration, how do I remove it?
 
-**A:** This is relatively simple. All you have to do is remove lines 17 -> 41 of the `managers/StreamManager.js` file so that the `load` function is empty. This will stop the Stream manager from loading anything for the Twitch API.
+**A:** This is relatively simple. All you have to do is remove lines 21 -> 54 of the `managers/StreamManager.js` file so that the `load` function is empty. This will stop the Stream manager from loading anything for the Twitch API.
 
 >**Q:** Help! The bot stopped working after I updated it from GitHub!
 
 **A:** If I have updated dependencies in a specific update, it can sometimes mean that you need to re-install the dependencies to bring them up to date. In order to do this, just run `npm install` again and it will update all dependencies for you.
+
+The !pull command does try to automatically update all the dependencies if it detects that dependencies have changed, but in the event it is unsuccessful you will need to perform a manual re-install.
 
 >**Q:** My question isn't listed here!
 

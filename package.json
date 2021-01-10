@@ -18,6 +18,7 @@
     "mysql": "^2.18.1",
     "simple-git": "^2.31.0",
     "twitch": "^4.3.8",
+    "twitch-auth": "^4.3.8",
     "twitch-webhooks": "^4.3.8",
     "ytdl-core": "^4.4.1",
     "ytpl": "^2.0.4",

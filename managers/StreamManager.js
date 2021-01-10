@@ -2,11 +2,14 @@ const streammanager = {};
 
 const Twitch = require('twitch').ApiClient;
 
+const { ApiClient } = require('twitch');
+const { ClientCredentialsAuthProvider } = require('twitch-auth');
+const { WebHookListener, SimpleAdapter } = require('twitch-webhooks');
+
 const clientId = process.env.TWITCH_ID;
 const clientSecret = process.env.TWITCH_SECRET;
-const twitchClient = Twitch.withClientCredentials(clientId, clientSecret);
-
-const WebHookListener = require('twitch-webhooks').default;
+const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
+const twitchClient = new ApiClient({ authProvider });
 
 let listener;
 let subscriptions = [];
@@ -16,8 +19,8 @@ let cooldown = [];
 
 streammanager.load = async function (client, logger) {
     logger.info("Loading Twitch Webhooks...");
-    listener = await WebHookListener.create(twitchClient, {port: 8090});
-    listener.listen();
+    listener = new WebHookListener(twitchClient, new SimpleAdapter({hostName: process.env.TWITCH_CALLBACK_URL ,listenerPort: 8090}));
+    await listener.listen();
     const botConstants = require("../utils/Constants.js").getBotConstants();
     for (let x of botConstants.twitchSubscriptions) {
         logger.info("Webhook for twitch ID " + x + " loaded.");
