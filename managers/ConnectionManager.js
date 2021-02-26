@@ -136,7 +136,8 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
                 msg.reply("Searching for `" + search + "`...");
                 YTSR(search, {limit: 1}).then((searchResults) => {
                     //Execute this function again with the URL of the first item found with the search term.
-                    connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
+                    connectionManager.playCommand(searchResults.items[0].url, msg, logger, isShuffle);
+                    logger.info(searchResults.items[0].url);
                     msg.reply("Result found, playing " + searchResults.items[0].title + ".");
                 }).catch(err => {
                     if (err) {
@@ -185,7 +186,7 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
             msg.reply("Searching for `" + search + "`...");
             YTSR(search, {limit: 1}).then((searchResults) => {
                 //Execute this function again with the URL of the first item found with the search term.
-                connectionManager.playCommand(searchResults.items[0].link, msg, logger, isShuffle);
+                connectionManager.playCommand(searchResults.items[0].url, msg, logger, isShuffle);
                 msg.reply("Result found, playing " + searchResults.items[0].title + ".");
             }).catch(err => {
                 if (err) {
