@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
+    "@discordjs/opus": "^0.4.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.7",
@@ -20,8 +20,8 @@
     "twitch": "^4.3.8",
     "twitch-auth": "^4.3.8",
     "twitch-webhooks": "^4.3.8",
-    "ytdl-core": "^4.4.1",
-    "ytpl": "^2.0.4",
-    "ytsr": "^3.2.1"
+    "ytdl-core": "^4.5.0",
+    "ytpl": "^2.0.5",
+    "ytsr": "^3.3.1"
   }
 }

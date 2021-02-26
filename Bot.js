@@ -200,7 +200,7 @@ client.on('error', (error) => {
     if (client.status === 5) {
         connect();
     } else if (client.status === 3 || client.status === 0) {
-        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occured. Error: ```" + error.code + ": " + error.stack + "```")
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((error.fatal)?" fatal ":"n ") +  "error has occurred. Error: ```" + error.code + ": " + error.stack + "```")
     }
 
 });
@@ -223,7 +223,7 @@ process.on('exit', () => {
 //Catching any uncaught exceptions, then restart the process.
 process.on('uncaughtException', function(err) {
     if (client.status === 3 || client.status === 0) {
-        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occured and the bot is shutting down. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
+        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("A" + ((err.fatal)?" fatal ":"n ") +  "error has occurred and the bot is shutting down. Error: ```" + err.code + ": " + err.stack + "```").then(() => {
             logger.error('Caught an uncaught exception: ' + err + ": \n" +  err.stack);
             process.exit(1)
         })
