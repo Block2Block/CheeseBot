@@ -2,7 +2,7 @@ module.exports = {
     cmd: "volume",
     arguments: "volume [1-10]",
     aliases: ["vol","v"],
-    desc: "Makes the bot leave the channel it is currently in.",
+    desc: "Change the current volume of the bot.",
     category: "music",
     permission: "music",
     allowed_channels: ["439114294307717131","629807458864463883"],
