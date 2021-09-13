@@ -26,7 +26,7 @@ const logger = log4js.getLogger("CheeseBot");
 //Loading in internal libraries.
 const CommandManager = require("./managers/CommandManager.js");
 const SpamManager = require("./managers/SpamManager.js");
-CommandManager.load(logger);
+CommandManager.load(logger, SpamManager);
 const StreamManager = require("./managers/StreamManager.js");
 logger.info("All libraries loaded.");
 
