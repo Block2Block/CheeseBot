@@ -6,6 +6,7 @@ const fs = require("fs");
 const PunishmentManager = require("./PunishmentManager.js");
 const ConnectionManager = require("./ConnectionManager.js");
 const RoleManager = require("./RoleManager.js");
+let SpamManager;
 
 
 const botConstants = Bot.getBotConstants();
@@ -17,7 +18,8 @@ const permissions = new Map();
 const helpStrings = new Map();
 const ranks = [];
 
-commandManager.load = function (logger) {
+commandManager.load = function (logger, spamManager) {
+    SpamManager = spamManager;
     //Load all of the permissions, categories, commands and aliases.
     //Starting off with permissions.
     let files = fs.readdirSync('./permissions/', {withFileTypes: true});
@@ -262,7 +264,7 @@ commandManager.onCommand = async function (msg, client, logger) {
     if (commandInfo.joinable_role == null) {
         //Run the command,
         logger.info(msg.author.tag + " has executed command !" + commandInfo.cmd + " " + args.join(" "));
-        commandInfo.run(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger);
+        commandInfo.run(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger, SpamManager);
     } else {
         //This is a joinable role command. Execute role command.
         if (msg.member.roles.cache.has(commandInfo.joinable_role)) {

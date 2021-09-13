@@ -71,7 +71,7 @@ mySQLManager.getPunishOnLoad = async function (callback, logger) {
 };
 
 mySQLManager.getExpiredPunishments = async function (callback, logger) {
-    MySQLClient.query("SELECT *  FROM punishments WHERE status = 1 AND expire <= " + (new Date).getTime(), function (err, result) {
+    MySQLClient.query("SELECT *  FROM punishments WHERE status = 1 AND expire <= " + (new Date).getTime() + " AND expire <> -1", function (err, result) {
         if (err) {
             logger.error(err);
         }

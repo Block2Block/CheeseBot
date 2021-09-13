@@ -168,4 +168,15 @@ spamManager.processMessage = async function (msg, commandManager, logger) {
 
 }
 
+spamManager.addToWhitelist = function (domain) {
+    whitelisted.push(domain);
+}
+
+spamManager.removeFromWhitelist = function (domain) {
+    const index = whitelisted.indexOf(domain);
+    if (index > -1) {
+        whitelisted.splice(index, 1);
+    }
+}
+
 module.exports = spamManager;

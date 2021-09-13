@@ -26,6 +26,8 @@ punishmentManager.init = function (client, logger) {
                 } else if (punishment.type === 2) {
                     client.guilds.cache.get(botConstants.guildId).bans.remove(punishment.user, "Punishment expired.").then(r => {
 
+                    }).catch(err => {
+
                     });
 
                 }
