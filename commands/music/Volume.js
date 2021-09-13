@@ -15,7 +15,7 @@ module.exports = {
         const botConstants = Bot.getBotConstants();
 
 
-        if (client.voice.connections.keyArray().includes(botConstants.guildId)) {
+        if (client.voice.connections.has(botConstants.guildId)) {
             if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
                 if (client.voice.connections.get(botConstants.guildId).channel.id !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");

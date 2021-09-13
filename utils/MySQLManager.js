@@ -23,7 +23,7 @@ mySQLManager.connect = function(logger) {
         logger.info('MySQL Connection Pool: Connection %d released', connection.threadId);
     });
 
-    MySQLClient.query("CREATE TABLE IF NOT EXISTS `punishments` ( `id` INT NOT NULL AUTO_INCREMENT , `discord_id` TEXT NOT NULL , `punisher` TEXT NOT NULL , `type` INT NOT NULL , `reason` TEXT NOT NULL , `timestamp` TEXT NOT NULL , `expire` TEXT NOT NULL , `status` INT NOT NULL , `removal_reason` TEXT NULL DEFAULT NULL , `remover` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;", function (err, result) {
+    MySQLClient.query("CREATE TABLE IF NOT EXISTS `punishments` ( `id` INT NOT NULL AUTO_INCREMENT , `discord_id` TEXT NOT NULL , `punisher` TEXT NOT NULL , `type` INT NOT NULL , `reason` TEXT NOT NULL , `timestamp` BIGINT NOT NULL , `expire` BIGINT NOT NULL , `status` INT NOT NULL , `removal_reason` TEXT NULL DEFAULT NULL , `remover` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;", function (err, result) {
         if (err) {
             logger.error(err);
         }
@@ -38,10 +38,40 @@ mySQLManager.connect = function(logger) {
             logger.error(err);
         }
     })
+    MySQLClient.query("CREATE TABLE IF NOT EXISTS `whitelisted_links` ( `domain` TEXT NOT NULL ) ENGINE = InnoDB;", function (err, result) {
+        if (err) {
+            logger.error(err);
+        }
+    })
 };
 
 mySQLManager.getPunishOnLoad = async function (callback, logger) {
     MySQLClient.query("SELECT *  FROM punishments WHERE status = 1", function (err, result) {
+        if (err) {
+            logger.error(err);
+        }
+        let punishments = [];
+        for (let x of result) {
+            let punishment = {
+                id: x.id,
+                user: x.discord_id,
+                type: parseInt(x.type),
+                timestamp: parseInt(x.timestamp),
+                expire: parseInt(x.expire),
+                punisher: x.punisher,
+                reason: x.reason,
+                timer: null,
+                status: parseInt(x.status),
+                removal_reason: x.removal_reason,
+            };
+            punishments.push(punishment);
+        }
+        callback(punishments);
+    })
+};
+
+mySQLManager.getExpiredPunishments = async function (callback, logger) {
+    MySQLClient.query("SELECT *  FROM punishments WHERE status = 1 AND expire <= " + (new Date).getTime(), function (err, result) {
         if (err) {
             logger.error(err);
         }
@@ -162,6 +192,41 @@ mySQLManager.getRoles = async function (logger, callback) {
             })
         }
         callback(messages);
+    });
+}
+
+mySQLManager.getWhitelist = async function (logger, callback) {
+    MySQLClient.query("SELECT * FROM whitelisted_links", function (err, result) {
+        if (err) {
+            logger.error(err)
+        }
+        let links = []
+        for (let x of result) {
+            links.push(x.domain)
+        }
+        callback(links);
+    });
+}
+
+mySQLManager.addToWhitelist = async function (domain, logger) {
+    let sql = "INSERT INTO whitelisted_links(domain) VALUES(?)";
+    let inserts = [domain];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
+        if (err) {
+            logger.error(err)
+        }
+    });
+}
+
+mySQLManager.removeFromWhitelist = async function (domain, logger) {
+    let sql = "DELETE FROM whitelisted_links WHERE domain = ?";
+    let inserts = [domain];
+    sql = mysql.format(sql, inserts)
+    MySQLClient.query(sql, function (err) {
+        if (err) {
+            logger.error(err)
+        }
     });
 }
 

@@ -32,18 +32,18 @@ module.exports = {
                 }
             }
 
-            if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
-                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.initiateRole)) {
+            if (client.guilds.cache.get(botConstants.guildId).members.cache.has(user)) {
+                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.initiateRole)) {
                     await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.initiateRole);
-                    if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.memberRole)) {
-                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.modRole) && !client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.adminRole)) {
+                    if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.memberRole)) {
+                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.modRole) && !client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.adminRole)) {
                             await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.memberRole);
                         }
                     }
                     msg.reply("<@" + user + "> has been un-initiated!");
                 } else {
                     await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.initiateRole);
-                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.memberRole)) {
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.memberRole)) {
                         await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.memberRole);
                     }
                     msg.reply("<@" + user + "> has been initiated!");

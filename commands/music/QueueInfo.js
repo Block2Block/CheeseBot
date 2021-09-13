@@ -14,7 +14,7 @@ module.exports = {
         const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
-        if (client.voice.connections.keyArray().includes(botConstants.guildId)) {
+        if (client.voice.connections.has(botConstants.guildId)) {
             await ConnectionManager.queueInfo(msg);
         } else {
             await msg.reply("The bot must be in a channel in order to use that command.");

@@ -315,11 +315,11 @@ roleManager.reactionAdded = async function (reaction, user) {
             return;
         }
 
-        if (!reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().includes(role.role_id)) {
+        if (!reaction.message.guild.members.cache.get(user.id).roles.cache.has(role.role_id)) {
             reaction.message.guild.members.cache.get(user.id).roles.add(role.role_id).catch((err) => {
                 client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
             }).then(() => {
-                let x = reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().filter(value => roleIds.includes(value));
+                let x = Array.from(reaction.message.guild.members.cache.get(user.id).roles.cache.keys()).filter(value => roleIds.includes(value));
                 if (x >= 1) {
                     reaction.message.guild.members.cache.get(user.id).roles.add(botConstants.gameRole).catch((err) => {
                         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
@@ -327,7 +327,7 @@ roleManager.reactionAdded = async function (reaction, user) {
                 }
             });
         } else {
-            let x = reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().filter(value => roleIds.includes(value));
+            let x = Array.from(reaction.message.guild.members.cache.get(user.id).roles.cache.keys()).filter(value => roleIds.includes(value));
             if (x >= 1) {
                 reaction.message.guild.members.cache.get(user.id).roles.add(botConstants.gameRole).catch((err) => {
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to add a role. Error: " + err);
@@ -351,11 +351,11 @@ roleManager.reactionRemoved = async function (reaction, user) {
             return;
         }
 
-        if (reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().includes(role.role_id)) {
+        if (reaction.message.guild.members.cache.get(user.id).roles.cache.has(role.role_id)) {
             reaction.message.guild.members.cache.get(user.id).roles.remove(role.role_id).catch((err) => {
                 client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
             }).then(() => {
-                let x = reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().filter(value => roleIds.includes(value));
+                let x = Array.from(reaction.message.guild.members.cache.get(user.id).roles.cache.keys()).filter(value => roleIds.includes(value));
                 if (x <= 0) {
                     reaction.message.guild.members.cache.get(user.id).roles.remove(botConstants.gameRole).catch((err) => {
                         client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
@@ -363,7 +363,7 @@ roleManager.reactionRemoved = async function (reaction, user) {
                 }
             });
         } else {
-            let x = reaction.message.guild.members.cache.get(user.id).roles.cache.keyArray().filter(value => roleIds.includes(value));
+            let x = Array.from(reaction.message.guild.members.cache.get(user.id).roles.cache.keys()).filter(value => roleIds.includes(value));
             if (x <= 0) {
                 reaction.message.guild.members.cache.get(user.id).roles.remove(botConstants.gameRole).catch((err) => {
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);

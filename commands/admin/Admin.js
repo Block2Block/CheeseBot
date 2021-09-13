@@ -32,18 +32,18 @@ module.exports = {
                 }
             }
 
-            if (client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(user)) {
-                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.adminRole)) {
+            if (client.guilds.cache.get(botConstants.guildId).members.cache.has(user)) {
+                if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.adminRole)) {
                     await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.adminRole);
-                    if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.memberRole)) {
-                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.initiateRole) && !client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.modRole)) {
+                    if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.memberRole)) {
+                        if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.initiateRole) && !client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.modRole)) {
                             await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.memberRole);
                         }
                     }
                     msg.reply("<@" + user + "> has been removed as a master!");
                 } else {
                     await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.add(botConstants.adminRole);
-                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.keyArray().includes(botConstants.memberRole)) {
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.cache.has(botConstants.memberRole)) {
                         await client.guilds.cache.get(botConstants.guildId).members.cache.get(user).roles.remove(botConstants.memberRole);
                     }
                     msg.reply("<@" + user + "> has been made a master!");

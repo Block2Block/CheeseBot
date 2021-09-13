@@ -1,11 +1,19 @@
 const connectionManager = {};
 
 //Loading external libraries.
-const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
 const YTPL = require("ytpl");
 const YTSR = require("ytsr");
 const FS = require("fs");
+
+const {
+    AudioPlayerStatus,
+    StreamType,
+    createAudioPlayer,
+    createAudioResource,
+    joinVoiceChannel, VoiceConnectionState,VoiceConnectionStatus,entersState, getVoiceConnection,NoSubscriberBehavior
+} = require('@discordjs/voice');
+const { join } = require('path');
 
 //Loading internal libraries.
 const Bot = require("../utils/Constants.js");
@@ -14,9 +22,8 @@ const Bot = require("../utils/Constants.js");
 //Loading bot variables.
 const botConstants = Bot.getBotConstants();
 
-//Connection variables.
-let connection = null;
-let dispatcher = null;
+let audioPlayer;
+let audioResource;
 
 //Playback settings
 let volume = 10;
@@ -26,33 +33,32 @@ let repeat = false;
 let queue = [];
 
 connectionManager.joinChannel = async function (channel, msg, client, callback) {
-    await channel.join().then(voiceConnection => {
-            connection = voiceConnection;
-            connection.on('disconnect', () => {
-                connection = null;
-                queue = [];
-                if (dispatcher != null) {
-                    dispatcher.end();
-                }
-                client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
-            })
-            callback(true);
+    let connection = joinVoiceChannel({
+        channelId: channel.id,
+        guildId: channel.guild.id,
+        adapterCreator: channel.guild.voiceAdapterCreator,
+    });
+    connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+        try {
+            await Promise.race([
+                entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
+                entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
+            ]);
+            // Seems to be reconnecting to a new channel - ignore disconnect
+        } catch (error) {
+            // Seems to be a real disconnect which SHOULDN'T be recovered from
+            connection.destroy();
         }
-    ).catch((error) => {
-        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error has occurred when trying to join a voice channel. Error: " + error);
-        callback(false);
     });
-};
-
-connectionManager.inChannel = function () {
-    return new Promise(function (resolve, reject) {
-        resolve(connection != null);
-    });
+    callback(true)
 };
 
 connectionManager.leave = function () {
-    if (connection != null) {
+    let connection = getVoiceConnection(botConstants.guildId);
+    if (connection) {
         connection.disconnect();
+        connection.destroy();
+
     }
 };
 
@@ -63,7 +69,8 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         if (id !== undefined && id !== null) {
             YTPL(URL, {limit: Infinity}).then(async function (playlist) {
                 //If the bot is not already in the channel, force it to join.
-                if (connection == null || !connection) {
+                let connection = getVoiceConnection(botConstants.guildId);
+                if (!connection) {
                     await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
                     });
                 }
@@ -99,7 +106,8 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
         } else {
             if (await YTDL.validateURL(URL)) {
                 //If the bot is not already in the channel, force it to join.
-                if (connection == null || !connection) {
+                let connection = getVoiceConnection(botConstants.guildId);
+                if (!connection) {
                     await connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
 
                     });
@@ -149,9 +157,9 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
     }).catch(async function () {
         if (YTDL.validateURL(URL)) {
             //If the bot is not already in the channel, force it to join.
-            if (connection == null || !connection) {
+            let connection = getVoiceConnection(botConstants.guildId);
+            if (!connection) {
                 connectionManager.joinChannel(client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel, msg, client, (success) => {
-
                 });
             }
 
@@ -201,9 +209,11 @@ connectionManager.playCommand = async function (URL, msg, logger, isShuffle) {
 async function play(song, client, logger) {
 
     //If there are no more songs in the playlist or the connection has ended, state playback has ended.
-    if (!song || connection == null) {
+    let connection = getVoiceConnection(botConstants.guildId);
+    if (!song || !connection) {
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
+        audioResource = undefined;
         return;
     }
 
@@ -271,13 +281,14 @@ async function play(song, client, logger) {
         }
     }
 
-    //Create the dispatcher and play the song.
-    dispatcher = connection.play("./musiccache/" + song.id + ".m4a")
-        .on('start', () => {
+    if (!audioPlayer) {
+        audioPlayer = createAudioPlayer({behaviors: {
+                noSubscriber: NoSubscriberBehavior.Play,
+            }}).on(AudioPlayerStatus.Playing, () => {
             logger.info("Playing " + song.title + " now.");
             client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
-        })
-        .on('finish', () => {
+             })
+            .on(AudioPlayerStatus.Idle, () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
                 play(false, client, logger);
@@ -294,15 +305,20 @@ async function play(song, client, logger) {
             //Play the next song.
             play(queue[0], client, logger);
         })
-        //If theres an error, log the error.
-        .on('error', error => {
-            logger.error(error);
-        });
-    dispatcher.setVolumeLogarithmic(volume / 10);
-    dispatcher.setBitrate(128);
+            //If theres an error, log the error.
+            .on('error', error => {
+                logger.error(error);
+            });
+        connection.subscribe(audioPlayer);
+    }
+
+
+    audioResource = createAudioResource(join(__dirname, "../musiccache/" + song.id + ".m4a"), { inlineVolume: true });
+    audioResource.volume.setVolume(volume / 10);
+    audioPlayer.play(audioResource);
 }
 
-connectionManager.skip = function (msg) {
+connectionManager.skip = function (msg, logger) {
     let client = msg.client;
 
     //Making sure the user is in the same voice channel as the bot.
@@ -316,14 +332,29 @@ connectionManager.skip = function (msg) {
     if (queue.length === 0) return msg.reply('There is no song that I could skip!');
     msg.reply("Song skipped.");
 
+    if (queue.length === 0) {
+        play(false, client, logger);
+        return;
+    }
+
+    //If on repeat, add the song to the end of the playlist.
+    if (repeat) {
+        queue.push(queue.shift());
+    } else {
+        queue.shift();
+    }
+
+    //Play the next song.
+    play(queue[0], client, logger);
     //Ends the dispatcher, which will automatically move onto the next song.
-    dispatcher.end();
+
 };
 
 connectionManager.stop = async function (msg) {
     if (queue.length > 0) {
         queue = [];
-        dispatcher.end();
+        audioPlayer.stop();
+        audioResource = undefined;
         await msg.reply("Playback has stopped and the queue has been cleared.");
     } else {
         await msg.reply("You cannot stop playback as there is nothing playing.");
@@ -340,16 +371,11 @@ connectionManager.nowPlaying = function (msg) {
 };
 
 connectionManager.volume = function (msg, vl) {
-    if (queue.length > 0 && dispatcher != null) {
-        if (!dispatcher.destroyed) {
+    if (queue.length > 0 && audioResource != null) {
             //Logarithmic volume means that doubling value means doubling volume.
-            dispatcher.setVolumeLogarithmic(vl / 10);
+            audioResource.volume.setVolume(vl / 10);
             msg.reply("You have set the volume to " + vl + ".");
             volume = vl;
-        } else {
-            volume = vl;
-            msg.reply("You have set the volume to " + vl + ".")
-        }
     } else {
         volume = vl;
         msg.reply("You have set the volume to " + vl + ".")
@@ -369,7 +395,7 @@ connectionManager.clearQueue = function (msg) {
 
 connectionManager.pause = function (msg) {
     if (queue.length > 0) {
-        dispatcher.pause();
+        audioPlayer.pause();
         msg.reply("Playback has been paused.");
     } else {
         msg.reply("There is nothing currently playing.");
@@ -378,7 +404,7 @@ connectionManager.pause = function (msg) {
 
 connectionManager.resume = function (msg) {
     if (queue.length > 0) {
-        dispatcher.resume();
+        audioPlayer.unpause();
         msg.reply("Playback has been resumed.");
     } else {
         msg.reply("There is nothing currently playing.");
@@ -395,7 +421,7 @@ connectionManager.repeat = function (msg) {
     }
 };
 
-connectionManager.shuffle = function (msg) {
+connectionManager.shuffle = function (msg, logger) {
     msg.reply("The queue has been shuffled.");
     let currentSong = queue.shift();
     queue = shuffle(queue);

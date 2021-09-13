@@ -105,11 +105,11 @@ commandManager.onCommand = async function (msg, client, logger) {
 
             if (permission.roles != null) {
                 logger.debug("Roles is not null");
-                let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
+                let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.has(value.toString()));
                 if (z.length < 1) {
                     if (permission.roles.length === 1) {
                         if (permission.roles[0].localeCompare("-1") === 0) {
-                            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length !== 1) {
+                            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.size !== 1) {
                                 await msg.reply("You do not have permission to view this command");
                                 return;
                             }
@@ -122,7 +122,7 @@ commandManager.onCommand = async function (msg, client, logger) {
                         return;
                     }
                 }
-            } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length === 1) {
+            } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.size === 1) {
                 //User is unverified, ignore the command.
                 return;
             }
@@ -165,11 +165,11 @@ commandManager.onCommand = async function (msg, client, logger) {
                     let catPermissions = x.permission_visibility;
                     for (let y of catPermissions) {
                         let permission = permissions.get(y);
-                        if (permission.roles == null && client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length > 0) {
+                        if (permission.roles == null && client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.size > 0) {
                             help += helpStrings.get(x.node);
                             break;
                         }
-                        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
+                        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.has(value.toString()));
                         if (z.length >= 1) {
                             help += helpStrings.get(x.node);
                             break;
@@ -221,7 +221,7 @@ commandManager.onCommand = async function (msg, client, logger) {
     }
 
     if (msg.guild == null) {
-        if (!client.guilds.cache.get(botConstants.guildId).members.cache.keyArray().includes(msg.author.id)) {
+        if (!client.guilds.cache.get(botConstants.guildId).members.cache.has(msg.author.id)) {
             msg.channel.send("You are not a part of The Cult of Cheese Discord. You must be a part of the Discord in order to use this bot. Please join here: http://discord.gg/vmT6wY7/");
             return;
         } else {
@@ -236,11 +236,11 @@ commandManager.onCommand = async function (msg, client, logger) {
 
     if (permission.roles != null) {
         logger.debug("Roles is not null");
-        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().includes(value.toString()));
+        let z = permission.roles.filter(value => client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.has(value.toString()));
         if (z.length < 1) {
             if (permission.roles.length === 1) {
                 if (permission.roles[0].localeCompare("-1") === 0) {
-                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length !== 1) {
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.size !== 1) {
                         await msg.reply("You do not have permission to execute this command");
                         return;
                     }
@@ -253,7 +253,7 @@ commandManager.onCommand = async function (msg, client, logger) {
                 return;
             }
         }
-    } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.keyArray().length === 1) {
+    } else if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).roles.cache.size === 1) {
         //User is unverified, ignore the command.
         return;
     }
@@ -265,13 +265,13 @@ commandManager.onCommand = async function (msg, client, logger) {
         commandInfo.run(msg, args, ConnectionManager, PunishmentManager, RoleManager, logger);
     } else {
         //This is a joinable role command. Execute role command.
-        if (msg.member.roles.cache.keyArray().includes(commandInfo.joinable_role)) {
+        if (msg.member.roles.cache.has(commandInfo.joinable_role)) {
             //leave the role
             await msg.member.roles.remove(commandInfo.joinable_role).catch((err) => {
                 client.guilds.get(botConstants.guildId).channels.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
             });
             await msg.reply("You have been removed from the role '" + client.guilds.cache.get(botConstants.guildId).roles.cache.get(commandInfo.joinable_role).name + "'.");
-            let x = msg.member.roles.cache.keyArray().filter(value => ranks.includes(value));
+            let x = Array.from(msg.member.roles.cache.keys()).filter(value => ranks.includes(value));
             if (x.size < 1) {
                 msg.member.roles.remove(botConstants.gameRole).catch((err) => {
                     client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
@@ -303,5 +303,8 @@ commandManager.getConnectionManager = function () {
 commandManager.getRoleManager = function () {
     return RoleManager;
 };
+commandManager.getPermissions = function () {
+    return permissions;
+}
 
 module.exports = commandManager;
