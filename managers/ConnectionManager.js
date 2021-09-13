@@ -324,8 +324,13 @@ connectionManager.skip = function (msg, logger) {
     //Making sure the user is in the same voice channel as the bot.
     if (!client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
         return msg.reply("You must be in the same channel as the bot in order to use music commands.")
-    } else if (client.voice.connections.size > 1) {
-        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id !== client.voice.connections.first().id) {
+    } else if (client.voice.adapters.size > 1) {
+        let connection = getVoiceConnection(botConstants.guildId);
+        if (connection) {
+            if (connection.joinConfig.channelId !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
+                return msg.reply("You must be in the same channel as the bot in order to use music commands.");
+            }
+        } else {
             return msg.reply("You must be in the same channel as the bot in order to use music commands.");
         }
     }
@@ -373,7 +378,7 @@ connectionManager.nowPlaying = function (msg) {
 connectionManager.volume = function (msg, vl) {
     if (queue.length > 0 && audioResource != null) {
             //Logarithmic volume means that doubling value means doubling volume.
-            audioResource.volume.setVolume(vl / 10);
+            audioResource.volume.setVolumeLogarithmic(vl / 10);
             msg.reply("You have set the volume to " + vl + ".");
             volume = vl;
     } else {
