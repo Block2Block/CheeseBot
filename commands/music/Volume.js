@@ -1,3 +1,4 @@
+const {getVoiceConnection} = require("@discordjs/voice");
 module.exports = {
     cmd: "volume",
     arguments: "volume [1-10]",
@@ -15,9 +16,12 @@ module.exports = {
         const botConstants = Bot.getBotConstants();
 
 
-        if (client.voice.connections.has(botConstants.guildId)) {
-            if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
-                if (client.voice.connections.get(botConstants.guildId).channel.id !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
+        const { getVoiceConnection } = require('@discordjs/voice');
+
+        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
+            let connection = getVoiceConnection(botConstants.guildId);
+            if (connection) {
+                if (connection.joinConfig.channelId !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");
                     return;
                 }

@@ -1,3 +1,4 @@
+const {getVoiceConnection} = require("@discordjs/voice");
 module.exports = {
     cmd: "clearqueue",
     arguments: "clearqueue",
@@ -14,9 +15,12 @@ module.exports = {
         const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
-        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
-            if (client.voice.connections.has(botConstants.guildId)) {
-                if (client.voice.connections.get(botConstants.guildId).channel.id === client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
+        const { getVoiceConnection } = require('@discordjs/voice');
+
+        if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
+            let connection = getVoiceConnection(botConstants.guildId);
+            if (connection) {
+                if (connection.joinConfig.channelId !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await ConnectionManager.clearQueue(msg);
                 } else {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");

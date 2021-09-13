@@ -1,3 +1,4 @@
+const {getVoiceConnection} = require("@discordjs/voice");
 module.exports = {
     cmd: "pause",
     arguments: "pause",
@@ -14,12 +15,15 @@ module.exports = {
         const client = msg.client;
         const botConstants = Bot.getBotConstants();
 
+        const { getVoiceConnection } = require('@discordjs/voice');
+
         if (client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel) {
-            if (client.voice.connections.has(botConstants.guildId)) {
-                if (client.voice.connections.get(botConstants.guildId).channel.id === client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
-                    await ConnectionManager.pause(msg);
-                } else {
+            let connection = getVoiceConnection(botConstants.guildId);
+            if (connection) {
+                if (connection.joinConfig.channelId !== client.guilds.cache.get(botConstants.guildId).members.cache.get(msg.author.id).voice.channel.id) {
                     await msg.reply("You must be in the same voice channel as the bot in order to do that.");
+                } else {
+                    await ConnectionManager.pause(msg);
                 }
             } else {
                 await msg.reply("The bot must be in a channel in order to use that command.");
