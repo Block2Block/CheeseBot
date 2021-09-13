@@ -214,6 +214,7 @@ async function play(song, client, logger) {
         await client.user.setActivity("on the Cult of Cheese", {type: "PLAYING"});
         queue = [];
         audioResource = undefined;
+        audioPlayer.stop();
         return;
     }
 
