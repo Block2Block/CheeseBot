@@ -285,10 +285,7 @@ async function play(song, client, logger) {
     if (!audioPlayer) {
         audioPlayer = createAudioPlayer({behaviors: {
                 noSubscriber: NoSubscriberBehavior.Play,
-            }}).on(AudioPlayerStatus.Playing, () => {
-            logger.info("Playing " + song.title + " now.");
-            client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
-             })
+            }})
             .on(AudioPlayerStatus.Idle, () => {
             //When it ends, if there are no more song in the playlist, end the playback.
             if (queue.length === 0) {
@@ -317,6 +314,8 @@ async function play(song, client, logger) {
     audioResource = createAudioResource(join(__dirname, "../musiccache/" + song.id + ".m4a"), { inlineVolume: true });
     audioResource.volume.setVolume(volume / 10);
     audioPlayer.play(audioResource);
+    logger.info("Playing " + song.title + " now.");
+    client.user.setActivity("🎶 " + song.title + " 🎶", {type: "PLAYING"});
 }
 
 connectionManager.skip = function (msg, logger) {
