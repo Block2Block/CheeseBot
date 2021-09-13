@@ -18,9 +18,11 @@ punishmentManager.init = function (client, logger) {
             for (let punishment of punishments) {
                 punishmentManager.expire(punishment.user, punishment.id);
                 if (punishment.type === 1) {
-                    client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.remove(botConstants.mutedRole).catch((err) => {
-                        client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
-                    });
+                    if (client.guilds.cache.get(botConstants.guildId).members.cache.has(punishment.user)) {
+                        client.guilds.cache.get(botConstants.guildId).members.cache.get(punishment.user).roles.remove(botConstants.mutedRole).catch((err) => {
+                            client.guilds.cache.get(botConstants.guildId).channels.cache.get(botConstants.botLoggingChannel).send("An error occurred when trying to remove a role. Error: " + err);
+                        });
+                    }
                 } else if (punishment.type === 2) {
                     client.guilds.cache.get(botConstants.guildId).bans.remove(punishment.user, "Punishment expired.").then(r => {
 
