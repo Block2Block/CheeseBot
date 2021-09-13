@@ -47,7 +47,10 @@ connectionManager.joinChannel = async function (channel, msg, client, callback) 
             // Seems to be reconnecting to a new channel - ignore disconnect
         } catch (error) {
             // Seems to be a real disconnect which SHOULDN'T be recovered from
-            connection.destroy();
+            try {
+                connection.destroy();
+            } catch (ignored) {}
+
         }
     });
     callback(true)
