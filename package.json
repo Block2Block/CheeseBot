@@ -17,7 +17,7 @@
     "ffmpeg-static": "^4.4.0",
     "log4js": "^6.3.0",
     "mysql": "^2.18.1",
-    "simple-git": "^2.45.1",
+    "simple-git": "^3.5.0",
     "sodium": "^3.0.2",
     "twitch": "^4.6.7",
     "twitch-auth": "^4.6.7",
